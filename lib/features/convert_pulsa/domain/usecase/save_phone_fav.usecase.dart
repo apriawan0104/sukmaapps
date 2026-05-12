@@ -9,7 +9,7 @@ class SavePhoneFavUseCase extends UseCaseAsync<void, SavePhoneFavParam> {
   final ConvertPulsaRepository _repository;
 
   @override
-  Future<ValueGuard<void>> call(SavePhoneFavParam params) {
-    return _repository.saveNumberFav(params);
+  Future<ValueGuard<void>> call(SavePhoneFavParam params) async {
+    return _repository.savePhoneFav(params);
   }
 }
