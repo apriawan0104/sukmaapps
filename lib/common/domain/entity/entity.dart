@@ -1,1 +1,1 @@
-export 'common_item.entity.dart';
+export 'provider.entity.dart';

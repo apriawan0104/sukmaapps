@@ -13,22 +13,38 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
   final ConvertPulsaRemoteDataSource _remoteDataSource;
 
   @override
-  Future<ValueGuard<List<ConvertPulsaItemEntity>>> getListConvertPulsaItems(
-    NoParams params,
+  Future<ValueGuard<PrefixEntity>> getPrefix(
+    GetPrefixParam params,
   ) async {
-    final result = await _remoteDataSource.getListConvertPulsaItems(params);
-    return result.mapListValue(
-      (ConvertPulsaItemModel item) => item.toEntity(),
+    final result = await _remoteDataSource.getPrefix(params);
+    return result.mapValue(
+      (PrefixModel item) => item.toEntity(),
     );
   }
 
   @override
-  Future<ValueGuard<ConvertPulsaItemEntity>> getConvertPulsaItem(
-    GetConvertPulsaItemParams params,
+  Future<ValueGuard<void>> saveNumberFav(
+    SavePhoneFavParam params,
   ) async {
-    final result = await _remoteDataSource.getConvertPulsaItem(params);
-    return result.mapValue(
-      (ConvertPulsaItemModel item) => item.toEntity(),
+    await _remoteDataSource.saveNumberFav(params);
+    return ValueGuards.success(null);
+  }
+
+  @override
+  Future<ValueGuard<List<PhoneFavEntity>>> getListPhoneFav(
+    NoParams params,
+  ) async {
+    final result = await _remoteDataSource.getListPhoneFav(params);
+    return result.mapListValue(
+      (PhoneFavModel item) => item.toEntity(),
     );
+  }
+
+  @override
+  Future<ValueGuard<void>> deletePhoneFav(
+    DeletePhoneFavParam params,
+  ) async {
+    await _remoteDataSource.deletePhoneFav(params);
+    return ValueGuards.success(null);
   }
 }

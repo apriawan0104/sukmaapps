@@ -1,1 +1,1 @@
-export 'common_item.model.dart';
+export 'provider.model.dart';

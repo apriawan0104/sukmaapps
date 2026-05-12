@@ -192,25 +192,6 @@
       "",
       "  ${3:final int id;}",
       "",
-      "  @override",
-      "  List<Object?> get props => [${4:id}];",
-      "}"
-    ],
-    "description": "Domain param: Equatable + props (no toJson). Use for path/query-only inputs; export from domain/param/param.dart if needed"
-  },
-  "Domain param + toJson": {
-    "scope": "dart",
-    "prefix": "parj",
-    "body": [
-      "import 'package:equatable/equatable.dart';",
-      "",
-      "class ${1:Feature}Param extends Equatable {",
-      "  const ${1:Feature}Param({",
-      "    ${2:required this.id,}",
-      "  });",
-      "",
-      "  ${3:final int id;}",
-      "",
       "  Map<String, dynamic> toJson() => {",
       "        ${5:'id': id,}",
       "      };",
@@ -219,7 +200,7 @@
       "  List<Object?> get props => [${4:id}];",
       "}"
     ],
-    "description": "Domain param: Equatable + flat toJson + props. Extend map for nested bodies (e.g. filters/sortby) as in your API contract"
+    "description": "Domain param: Equatable + toJson + props. Use for params that need serialization (request body / query). Export from domain/param/param.dart if needed"
   },
   "Use case": {
     "scope": "dart",
