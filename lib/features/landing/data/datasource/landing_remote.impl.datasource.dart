@@ -1,11 +1,10 @@
 import 'package:app_core/app_core.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../domain/param/param.dart';
 import '../model/model.dart';
 import 'landing_remote.datasource.dart';
 
-/// Template: VS Code snippet `dsimp` (prefix `dsimp`).
-/// Stub: tidak memanggil jaringan; kembalikan daftar kosong sampai endpoint siap.
+@LazySingleton(as: LandingRemoteDataSource)
 class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   LandingRemoteImplDataSource(this._remoteClient);
 
@@ -13,18 +12,48 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   final HttpClient _remoteClient;
 
   @override
-  Future<ValueGuard<List<LandingItemModel>>> getListLandingItems(
+  Future<ValueGuard<List<BannerModel>>> getBanner(
     NoParams params,
   ) async {
-    return ValueGuards.success(<LandingItemModel>[]);
+    return _remoteClient.get<List<dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((response) {
+      final items = response.data ?? <dynamic>[];
+      return items
+          .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   @override
-  Future<ValueGuard<LandingItemModel>> getLandingItem(
-    GetLandingItemParams params,
+  Future<ValueGuard<List<InformationBannerModel>>> getInformationBanner(
+    NoParams params,
   ) async {
-    return ValueGuards.success(
-      LandingItemModel(id: params.id),
-    );
+    return _remoteClient.get<List<dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((response) {
+      final items = response.data ?? <dynamic>[];
+      return items
+          .map(
+              (e) => InformationBannerModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
+  @override
+  Future<ValueGuard<List<RateModel>>> getRate(
+    NoParams params,
+  ) async {
+    return _remoteClient.get<List<dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((response) {
+      final items = response.data ?? <dynamic>[];
+      return items
+          .map((e) => RateModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
   }
 }

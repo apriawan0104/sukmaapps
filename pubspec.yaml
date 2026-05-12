@@ -39,6 +39,7 @@ dependencies:
 
   app_core:
     path: app_core
+  injectable: ^2.5.1
 
 dev_dependencies:
   flutter_test:

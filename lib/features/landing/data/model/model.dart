@@ -1,1 +1,3 @@
-export 'landing_item.model.dart';
+export 'banner.model.dart';
+export 'information_banner.model.dart';
+export 'rate.model.dart';

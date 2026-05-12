@@ -607,4 +607,49 @@ class ValueGuards {
     await Future.delayed(duration);
     return Right(value);
   }
+
+  /// Maps the right side of [either] into [ValueGuard] while passing failures through.
+  ///
+  /// Same idea as:
+  /// ```dart
+  /// either.fold(
+  ///   (failure) => Left(failure),
+  ///   (right) => Right(transform(right)),
+  /// );
+  /// ```
+  ///
+  /// Use after [HttpClient] calls when [L] is a [Failure] subtype (for example
+  /// [NetworkFailure]) and the API surface should return [ValueGuard].
+  static ValueGuard<T> mapRight<L extends Failure, R, T>(
+    Either<L, R> either,
+    T Function(R right) transform,
+  ) {
+    return either.fold(
+      (failure) => Left<Failure, T>(failure),
+      (right) => Right<Failure, T>(transform(right)),
+    );
+  }
+
+  /// Async variant of [mapRight] for `Future<Either<L, R>>`.
+  static Future<ValueGuard<T>> mapRightAsync<L extends Failure, R, T>(
+    Future<Either<L, R>> future,
+    T Function(R right) transform,
+  ) async {
+    return mapRight(await future, transform);
+  }
+}
+
+/// Maps the success branch of [Either] to [ValueGuard]; failures pass through unchanged.
+extension EitherMapSuccessToValueGuardExtension<L extends Failure, R> on Either<L, R> {
+  /// See [ValueGuards.mapRight].
+  ValueGuard<T> mapSuccess<T>(T Function(R right) transform) =>
+      ValueGuards.mapRight(this, transform);
+}
+
+/// Awaits `Future<Either<...>>` then maps the success branch to [ValueGuard].
+extension FutureEitherMapSuccessToValueGuardExtension<L extends Failure, R>
+    on Future<Either<L, R>> {
+  /// See [ValueGuards.mapRightAsync].
+  Future<ValueGuard<T>> mapSuccess<T>(T Function(R right) transform) =>
+      ValueGuards.mapRightAsync(this, transform);
 }

@@ -13,22 +13,32 @@ class LandingImplRepository implements LandingRepository {
   final LandingRemoteDataSource _remoteDataSource;
 
   @override
-  Future<ValueGuard<List<LandingItemEntity>>> getListLandingItems(
+  Future<ValueGuard<List<BannerEntity>>> getBanner(
     NoParams params,
   ) async {
-    final result = await _remoteDataSource.getListLandingItems(params);
+    final result = await _remoteDataSource.getBanner(params);
     return result.mapListValue(
-      (LandingItemModel item) => item.toEntity(),
+      (BannerModel item) => item.toEntity(),
     );
   }
 
   @override
-  Future<ValueGuard<LandingItemEntity>> getLandingItem(
-    GetLandingItemParams params,
+  Future<ValueGuard<List<InformationBannerEntity>>> getInformationBanner(
+    NoParams params,
   ) async {
-    final result = await _remoteDataSource.getLandingItem(params);
-    return result.mapValue(
-      (LandingItemModel item) => item.toEntity(),
+    final result = await _remoteDataSource.getInformationBanner(params);
+    return result.mapListValue(
+      (InformationBannerModel item) => item.toEntity(),
+    );
+  }
+
+  @override
+  Future<ValueGuard<List<RateEntity>>> getRate(
+    NoParams params,
+  ) async {
+    final result = await _remoteDataSource.getRate(params);
+    return result.mapListValue(
+      (RateModel item) => item.toEntity(),
     );
   }
 }
