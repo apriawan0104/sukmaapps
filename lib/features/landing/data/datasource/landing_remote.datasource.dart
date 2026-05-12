@@ -15,4 +15,8 @@ abstract class LandingRemoteDataSource {
   Future<ValueGuard<List<RateModel>>> getRate(
     NoParams params,
   );
+
+  Future<ValueGuard<StatusAppModel>> checkStatusApp(
+    NoParams params,
+  );
 }

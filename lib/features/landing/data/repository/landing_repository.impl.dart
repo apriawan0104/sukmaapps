@@ -41,4 +41,12 @@ class LandingImplRepository implements LandingRepository {
       (RateModel item) => item.toEntity(),
     );
   }
+
+  @override
+  Future<ValueGuard<StatusAppEntity>> checkStatusApp(NoParams params) async {
+    final result = await _remoteDataSource.checkStatusApp(params);
+    return result.mapValue(
+      (StatusAppModel item) => item.toEntity(),
+    );
+  }
 }

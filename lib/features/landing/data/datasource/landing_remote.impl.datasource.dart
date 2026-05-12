@@ -56,4 +56,14 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
           .toList();
     });
   }
+
+  @override
+  Future<ValueGuard<StatusAppModel>> checkStatusApp(NoParams params) {
+    return _remoteClient.get<Map<String, dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((response) {
+      return StatusAppModel.fromJson(response.data ?? <String, dynamic>{});
+    });
+  }
 }

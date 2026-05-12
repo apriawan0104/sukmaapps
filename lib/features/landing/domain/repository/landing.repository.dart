@@ -15,4 +15,8 @@ abstract class LandingRepository {
   Future<ValueGuard<List<RateEntity>>> getRate(
     NoParams params,
   );
+
+  Future<ValueGuard<StatusAppEntity>> checkStatusApp(
+    NoParams params,
+  );
 }
