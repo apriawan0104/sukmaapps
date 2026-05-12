@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 
+import '../../../../common/common.dart';
 import '../../domain/entity/entity.dart';
 import '../../domain/param/param.dart';
 import '../../domain/repository/convert_pulsa.repository.dart';
@@ -92,5 +93,23 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
     return result.mapValue(
       (TransferModel item) => item.toEntity(),
     );
+  }
+
+  @override
+  Future<ValueGuard<void>> cancelTrans(CancelParam params) async {
+    await _remoteDataSource.cancelTrans(params);
+    return ValueGuards.success(null);
+  }
+
+  @override
+  Future<ValueGuard<void>> deleteImage(DeleteImageParam params) async {
+    await _remoteDataSource.deleteImage(params);
+    return ValueGuards.success(null);
+  }
+
+  @override
+  Future<ValueGuard<void>> uploadImage(UploadImageParam params) async {
+    await _remoteDataSource.uploadImage(params);
+    return ValueGuards.success(null);
   }
 }

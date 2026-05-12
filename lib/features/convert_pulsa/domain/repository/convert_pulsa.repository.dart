@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 
+import '../../../../common/common.dart';
 import '../entity/entity.dart';
 import '../param/param.dart';
 
@@ -39,5 +40,17 @@ abstract class ConvertPulsaRepository {
 
   Future<ValueGuard<TransferEntity>> saveTransKonfirm(
     SaveTransKonfirmParam params,
+  );
+
+  Future<ValueGuard<void>> cancelTrans(
+    CancelParam params,
+  );
+
+  Future<ValueGuard<void>> deleteImage(
+    DeleteImageParam params,
+  );
+
+  Future<ValueGuard<void>> uploadImage(
+    UploadImageParam params,
   );
 }

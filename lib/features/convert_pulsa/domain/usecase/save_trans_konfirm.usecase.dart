@@ -1,7 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
-import '../entity/entity.dart';
+import '../../../../common/common.dart';
 import '../param/param.dart';
 import '../repository/convert_pulsa.repository.dart';
 

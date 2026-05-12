@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../common/common.dart';
 import '../../domain/param/param.dart';
 import '../model/model.dart';
 import 'convert_pulsa_remote.datasource.dart';
@@ -122,6 +123,44 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
     ).mapSuccess(
       (response) =>
           TransferModel.fromJson(response.data ?? <String, dynamic>{}),
+    );
+  }
+
+  @override
+  Future<ValueGuard<void>> cancelTrans(CancelParam params) async {
+    return _remoteClient.get<Map<String, dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess(
+      (response) => PrefixModel.fromJson(
+        response.data ?? <String, dynamic>{},
+      ),
+    );
+  }
+
+  @override
+  Future<ValueGuard<void>> deleteImage(DeleteImageParam params) async {
+    // TODO: implement deleteImage
+    return _remoteClient.get<Map<String, dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess(
+      (response) => PrefixModel.fromJson(
+        response.data ?? <String, dynamic>{},
+      ),
+    );
+  }
+
+  @override
+  Future<ValueGuard<void>> uploadImage(UploadImageParam params) async {
+    // TODO: implement uploadImage
+    return _remoteClient.get<Map<String, dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess(
+      (response) => PrefixModel.fromJson(
+        response.data ?? <String, dynamic>{},
+      ),
     );
   }
 }
