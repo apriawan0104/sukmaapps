@@ -1,7 +1,6 @@
 import 'package:app_core/app_core.dart';
 
 import '../../domain/entity/entity.dart';
-import '../../domain/param/param.dart';
 import '../../domain/repository/landing.repository.dart';
 import '../datasource/landing_remote.datasource.dart';
 import '../model/model.dart';

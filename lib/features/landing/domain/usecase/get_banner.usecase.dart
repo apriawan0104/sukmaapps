@@ -2,7 +2,6 @@ import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
 import '../entity/entity.dart';
-import '../param/param.dart';
 import '../repository/landing.repository.dart';
 
 @lazySingleton
