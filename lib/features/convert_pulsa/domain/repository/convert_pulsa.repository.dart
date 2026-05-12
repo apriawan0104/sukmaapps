@@ -36,4 +36,8 @@ abstract class ConvertPulsaRepository {
   Future<ValueGuard<void>> saveRekeningFav(
     SaveRekeningFavParam params,
   );
+
+  Future<ValueGuard<TransferEntity>> saveTransKonfirm(
+    SaveTransKonfirmParam params,
+  );
 }

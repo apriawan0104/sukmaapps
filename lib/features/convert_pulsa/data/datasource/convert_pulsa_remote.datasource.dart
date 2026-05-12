@@ -36,4 +36,8 @@ abstract class ConvertPulsaRemoteDataSource {
   Future<ValueGuard<void>> saveRekeningFav(
     SaveRekeningFavParam params,
   );
+
+  Future<ValueGuard<TransferModel>> saveTransKonfirm(
+    SaveTransKonfirmParam params,
+  );
 }

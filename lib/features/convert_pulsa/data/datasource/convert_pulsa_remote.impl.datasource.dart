@@ -112,4 +112,16 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
       ),
     );
   }
+
+  @override
+  Future<ValueGuard<TransferModel>> saveTransKonfirm(
+      SaveTransKonfirmParam params) async {
+    return _remoteClient.get<Map<String, dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess(
+      (response) =>
+          TransferModel.fromJson(response.data ?? <String, dynamic>{}),
+    );
+  }
 }

@@ -83,4 +83,14 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
     await _remoteDataSource.saveRekeningFav(params);
     return ValueGuards.success(null);
   }
+
+  @override
+  Future<ValueGuard<TransferEntity>> saveTransKonfirm(
+    SaveTransKonfirmParam params,
+  ) async {
+    final result = await _remoteDataSource.saveTransKonfirm(params);
+    return result.mapValue(
+      (TransferModel item) => item.toEntity(),
+    );
+  }
 }
