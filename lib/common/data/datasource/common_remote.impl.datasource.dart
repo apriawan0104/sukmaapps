@@ -21,4 +21,14 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
       ),
     );
   }
+
+  @override
+  Future<ValueGuard<String>> getWaNumber(NoParams params) async {
+    return _remoteClient.get<Map<String, dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess(
+      (response) => response.data?['wa_number'] ?? '',
+    );
+  }
 }
