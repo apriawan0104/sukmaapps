@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import '../../../../app/app.dart';
 import '../../../../common/common.dart';
+import '../../../../core/core.dart';
 
 class UICardChargeWidget extends StatelessWidget {
   const UICardChargeWidget({super.key, required this.charge});

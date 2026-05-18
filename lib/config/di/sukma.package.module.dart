@@ -1,0 +1,103 @@
+//@GeneratedMicroModule;SukmaappsPackageModule;package:sukmaapps/config/di/sukma.package.module.dart
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// coverage:ignore-file
+
+// ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'dart:async' as _i687;
+
+import 'package:app_core/app_core.dart' as _i130;
+import 'package:injectable/injectable.dart' as _i526;
+import 'package:sukmaapps/common/data/datasource/common_remote.datasource.dart'
+    as _i493;
+import 'package:sukmaapps/common/data/datasource/common_remote.impl.datasource.dart'
+    as _i871;
+import 'package:sukmaapps/common/data/repository/common_repository.impl.dart'
+    as _i564;
+import 'package:sukmaapps/common/domain/repository/common.repository.dart'
+    as _i852;
+import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
+    as _i787;
+import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.datasource.dart'
+    as _i977;
+import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.impl.datasource.dart'
+    as _i15;
+import 'package:sukmaapps/features/auth/data/repository/auth_repository.impl.dart'
+    as _i84;
+import 'package:sukmaapps/features/auth/domain/repository/auth_repository.dart'
+    as _i800;
+import 'package:sukmaapps/features/auth/domain/usecase/login_apple.usecase.dart'
+    as _i761;
+import 'package:sukmaapps/features/auth/domain/usecase/login_google.usecase.dart'
+    as _i476;
+import 'package:sukmaapps/features/auth/domain/usecase/read_term.usecase.dart'
+    as _i655;
+import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_remote.datasource.dart'
+    as _i355;
+import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_remote.impl.datasource.dart'
+    as _i587;
+import 'package:sukmaapps/features/convert_pulsa/domain/repository/convert_pulsa.repository.dart'
+    as _i342;
+import 'package:sukmaapps/features/convert_pulsa/domain/usecase/cancel_trans.usecase.dart'
+    as _i139;
+import 'package:sukmaapps/features/convert_pulsa/domain/usecase/delete_image.usecase.dart'
+    as _i1006;
+import 'package:sukmaapps/features/convert_pulsa/domain/usecase/save_trans_konfirm.usecase.dart'
+    as _i497;
+import 'package:sukmaapps/features/convert_pulsa/domain/usecase/upload_image.usecase.dart'
+    as _i279;
+import 'package:sukmaapps/features/landing/data/datasource/landing_remote.datasource.dart'
+    as _i312;
+import 'package:sukmaapps/features/landing/data/datasource/landing_remote.impl.datasource.dart'
+    as _i1015;
+import 'package:sukmaapps/features/landing/domain/repository/landing.repository.dart'
+    as _i305;
+import 'package:sukmaapps/features/landing/domain/usecase/check_status_app.usecase.dart'
+    as _i971;
+import 'package:sukmaapps/features/landing/domain/usecase/get_banner.usecase.dart'
+    as _i545;
+import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner.usecase.dart'
+    as _i448;
+import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
+    as _i779;
+
+class SukmaappsPackageModule extends _i526.MicroPackageModule {
+// initializes the registration of main-scope dependencies inside of GetIt
+  @override
+  _i687.FutureOr<void> init(_i526.GetItHelper gh) {
+    gh.lazySingleton<_i779.GetRateUseCase>(
+        () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i448.GetInformationBannerUseCase>(
+        () => _i448.GetInformationBannerUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i545.GetBannerUseCase>(
+        () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i971.CheckStatusAppUseCase>(
+        () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i1006.DeleteImageUseCase>(
+        () => _i1006.DeleteImageUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i279.UploadImageUseCase>(
+        () => _i279.UploadImageUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i497.SaveTransKonfirmUseCase>(() =>
+        _i497.SaveTransKonfirmUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i139.CancelTransUseCase>(
+        () => _i139.CancelTransUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i355.ConvertPulsaRemoteDataSource>(
+        () => _i587.ConvertPulsaRemoteImplDataSource(gh<_i130.HttpClient>()));
+    gh.lazySingleton<_i493.CommonRemoteDataSource>(
+        () => _i871.CommonRemoteImplDataSource(gh<_i130.HttpClient>()));
+    gh.lazySingleton<_i312.LandingRemoteDataSource>(
+        () => _i1015.LandingRemoteImplDataSource(gh<_i130.HttpClient>()));
+    gh.lazySingleton<_i977.AuthRemoteDataSource>(
+        () => _i15.AuthRemoteImplDataSource(gh<_i130.HttpClient>()));
+    gh.lazySingleton<_i800.AuthRepository>(
+        () => _i84.AuthImplRepository(gh<_i787.AuthRemoteDataSource>()));
+    gh.lazySingleton<_i852.CommonRepository>(
+        () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
+    gh.lazySingleton<_i761.LoginAppleUseCase>(
+        () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i655.ReadTermUseCase>(
+        () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i476.LoginGoogleUseCase>(
+        () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
+  }
+}

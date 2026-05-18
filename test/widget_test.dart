@@ -1,12 +1,14 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:sukmaapps/config/config.dart';
 import 'package:sukmaapps/main_flavor.dart';
 
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     await dotenv.load(fileName: '.env.dev');
+    configureEnvironmentFromDotenv();
   });
 
   testWidgets('SukmaApp shows app bar and active flavor', (tester) async {
