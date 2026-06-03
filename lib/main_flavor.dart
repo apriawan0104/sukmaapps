@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'config/config.dart';
 
@@ -20,7 +21,7 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
   configureDependencies();
   await dotenv.load(fileName: _envFileName(flavor));
   configureEnvironmentFromDotenv();
-  runApp(SukmaApp(flavor: flavor));
+  runApp(ProviderScope(child: SukmaApp(flavor: flavor)));
 }
 
 class SukmaApp extends StatelessWidget {

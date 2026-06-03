@@ -3,6 +3,8 @@ library;
 // Bridges feature UI to external widgets or platform views when needed.
 import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:app_core/app_core.dart';
+import '../../../../config/navigation/app_router.dart';
+import '../../../../config/navigation/route_names.dart';
 import '../../domain/usecase/usecase.dart';
 import '../controller/auth.controller.dart';
 import '../state/auth.state.dart';
@@ -37,13 +39,21 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
 
   @override
   Future<void> loginWithGoogle() async {
-    final result = await _loginGoogleUseCase(NoParams());
-    state = state.copyWith(
-      loginGoogle: result.fold(
-        (failure) => AsyncValue.error(failure.message),
-        AsyncValue.data,
-      ),
-    );
+    // final result = await _loginGoogleUseCase(NoParams());
+    // result.fold(
+    //   (failure) {
+    //     state = state.copyWith(
+    //       loginGoogle: AsyncValue.error(failure.message),
+    //     );
+    //   },
+    //   (_) {
+    //     state = state.copyWith(
+    //       loginGoogle: const AsyncValue.data(null),
+    //     );
+    //     appRouter.goNamed(RouteNames.landing);
+    //   },
+    // );
+    appRouter.goNamed(RouteNames.landing);
   }
 
   @override

@@ -20,4 +20,6 @@ abstract class LandingController {
   Future<void> removePhoneFav({required String phoneNumber});
 
   Future<void> removeRekeningFav();
+
+  void changeIndexNav(int index);
 }

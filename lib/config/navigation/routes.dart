@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import '../../common/common.dart';
 import '../../features/auth/presentation/screen/screen.dart';
+import '../../features/landing/presentation/screen/landing.screen.dart';
 import '../environment/environment.dart';
 import 'route_names.dart';
 
@@ -24,5 +25,10 @@ List<RouteBase> routes = [
     name: RouteNames.termCondition,
     builder: (context, state) =>
         const TermConditionScreen(mdFileName: 'term_condition.md'),
+  ),
+  GoRoute(
+    path: '/landing',
+    name: RouteNames.landing,
+    builder: (context, state) => const LandingScreen(),
   ),
 ];
