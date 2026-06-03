@@ -48,4 +48,13 @@ class LandingImplRepository implements LandingRepository {
       (StatusAppModel item) => item.toEntity(),
     );
   }
+
+  @override
+  Future<ValueGuard<List<HistoryConvertEntity>>> getHistoryConvert(
+      NoParams params) async {
+    final result = await _remoteDataSource.getHistoryConvert(params);
+    return result.mapListValue(
+      (HistoryConvertModel item) => item.toEntity(),
+    );
+  }
 }

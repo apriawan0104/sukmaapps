@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../common/common.dart';
 
-class HistoryEntity extends Equatable {
-  const HistoryEntity({
+class HistoryConvertEntity extends Equatable {
+  const HistoryConvertEntity({
     this.dialupCode,
     this.total,
     this.nominal,

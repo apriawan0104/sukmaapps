@@ -1,8 +1,8 @@
 import '../../../../common/common.dart';
 import '../../domain/entity/entity.dart';
 
-class HistoryModel {
-  const HistoryModel({
+class HistoryConvertModel {
+  const HistoryConvertModel({
     this.dialupCode,
     this.total,
     this.nominal,
@@ -48,8 +48,8 @@ class HistoryModel {
   final bool? isHold;
   final bool? cancelByAdmin;
 
-  factory HistoryModel.fromJson(Map<String, dynamic> json) {
-    return HistoryModel(
+  factory HistoryConvertModel.fromJson(Map<String, dynamic> json) {
+    return HistoryConvertModel(
       dialupCode: json['dialup_code'] as String?,
       total: json['total'] as int?,
       nominal: json['nominal'] as int?,
@@ -74,8 +74,8 @@ class HistoryModel {
     );
   }
 
-  HistoryEntity toEntity() {
-    return HistoryEntity(
+  HistoryConvertEntity toEntity() {
+    return HistoryConvertEntity(
       dialupCode: dialupCode,
       total: total,
       nominal: nominal,

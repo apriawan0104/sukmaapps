@@ -14,34 +14,32 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0D397C),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const REdgeInsets.fromLTRB(0, 16, 0, 16),
-                child: ListView(
-                  children: [
-                    UITextPrimaryWidget(
-                        title: 'Sukma Convert Pulsa',
-                        fontSize: 28.sp,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        align: TextAlign.center),
-                    Center(
-                      child: Lottie.asset(
-                        ImageLoginConstant.welcome,
-                        fit: BoxFit.fill,
-                      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const REdgeInsets.fromLTRB(0, 16, 0, 16),
+              child: ListView(
+                children: [
+                  UITextPrimaryWidget(
+                      title: 'Sukma Convert Pulsa',
+                      fontSize: 28.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      align: TextAlign.center),
+                  Center(
+                    child: Lottie.asset(
+                      ImageLoginConstant.welcome,
+                      fit: BoxFit.fill,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            buttonBottom()
-          ],
-        ),
-      ),
+          ),
+          buttonBottom()
+        ],
+      ).withSafeArea(),
     );
   }
 

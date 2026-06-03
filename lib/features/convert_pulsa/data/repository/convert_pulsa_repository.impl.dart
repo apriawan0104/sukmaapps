@@ -32,24 +32,6 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
   }
 
   @override
-  Future<ValueGuard<List<PhoneFavEntity>>> getListPhoneFav(
-    NoParams params,
-  ) async {
-    final result = await _remoteDataSource.getListPhoneFav(params);
-    return result.mapListValue(
-      (PhoneFavModel item) => item.toEntity(),
-    );
-  }
-
-  @override
-  Future<ValueGuard<void>> deletePhoneFav(
-    DeletePhoneFavParam params,
-  ) async {
-    await _remoteDataSource.deletePhoneFav(params);
-    return ValueGuards.success(null);
-  }
-
-  @override
   Future<ValueGuard<List<BankEntity>>> getListBank(
     NoParams params,
   ) async {
@@ -57,24 +39,6 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
     return result.mapListValue(
       (BankModel item) => item.toEntity(),
     );
-  }
-
-  @override
-  Future<ValueGuard<List<RekeningFavEntity>>> getListRekeningFav(
-    NoParams params,
-  ) async {
-    final result = await _remoteDataSource.getListRekeningFav(params);
-    return result.mapListValue(
-      (RekeningFavModel item) => item.toEntity(),
-    );
-  }
-
-  @override
-  Future<ValueGuard<void>> deleteRekeningFav(
-    DeleteRekeningFavParam params,
-  ) async {
-    await _remoteDataSource.deleteRekeningFav(params);
-    return ValueGuards.success(null);
   }
 
   @override

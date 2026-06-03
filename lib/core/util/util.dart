@@ -1,3 +1,4 @@
+export 'platform_safe_area.extension.dart';
 export 'format.helper.dart';
 export 'icon_provider.helper.dart';
 export 'icon_bank.helper.dart';

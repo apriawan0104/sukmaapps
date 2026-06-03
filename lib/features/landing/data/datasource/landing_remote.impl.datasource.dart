@@ -66,4 +66,18 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
       return StatusAppModel.fromJson(response.data ?? <String, dynamic>{});
     });
   }
+
+  @override
+  Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
+      NoParams params) {
+    return _remoteClient.get<List<dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((response) {
+      final items = response.data ?? <dynamic>[];
+      return items
+          .map((e) => HistoryConvertModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
+  }
 }

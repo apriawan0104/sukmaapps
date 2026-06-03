@@ -19,4 +19,8 @@ abstract class LandingRepository {
   Future<ValueGuard<StatusAppEntity>> checkStatusApp(
     NoParams params,
   );
+
+  Future<ValueGuard<List<HistoryConvertEntity>>> getHistoryConvert(
+    NoParams params,
+  );
 }

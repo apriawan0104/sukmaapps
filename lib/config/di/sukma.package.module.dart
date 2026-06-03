@@ -16,6 +16,14 @@ import 'package:sukmaapps/common/data/repository/common_repository.impl.dart'
     as _i564;
 import 'package:sukmaapps/common/domain/repository/common.repository.dart'
     as _i852;
+import 'package:sukmaapps/common/domain/usecase/delete_phone_fav.usecase.dart'
+    as _i178;
+import 'package:sukmaapps/common/domain/usecase/delete_rekening_fav.usecase.dart'
+    as _i780;
+import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart'
+    as _i945;
+import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart'
+    as _i584;
 import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
     as _i787;
 import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.datasource.dart'
@@ -56,6 +64,8 @@ import 'package:sukmaapps/features/landing/domain/usecase/check_status_app.useca
     as _i971;
 import 'package:sukmaapps/features/landing/domain/usecase/get_banner.usecase.dart'
     as _i545;
+import 'package:sukmaapps/features/landing/domain/usecase/get_history_convert.usecase.dart'
+    as _i829;
 import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner.usecase.dart'
     as _i448;
 import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
@@ -67,6 +77,8 @@ class SukmaappsPackageModule extends _i526.MicroPackageModule {
   _i687.FutureOr<void> init(_i526.GetItHelper gh) {
     gh.lazySingleton<_i779.GetRateUseCase>(
         () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i829.GetHistoryConvertUseCase>(
+        () => _i829.GetHistoryConvertUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i448.GetInformationBannerUseCase>(
         () => _i448.GetInformationBannerUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i545.GetBannerUseCase>(
@@ -99,5 +111,13 @@ class SukmaappsPackageModule extends _i526.MicroPackageModule {
         () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i476.LoginGoogleUseCase>(
         () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i178.DeletePhoneFavUseCase>(
+        () => _i178.DeletePhoneFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i584.GetRekeningFavUseCase>(
+        () => _i584.GetRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i945.GetPhoneFavUseCase>(
+        () => _i945.GetPhoneFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
+        () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
   }
 }

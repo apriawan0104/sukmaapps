@@ -14,24 +14,8 @@ abstract class ConvertPulsaRemoteDataSource {
     SavePhoneFavParam params,
   );
 
-  Future<ValueGuard<List<PhoneFavModel>>> getListPhoneFav(
-    NoParams params,
-  );
-
-  Future<ValueGuard<void>> deletePhoneFav(
-    DeletePhoneFavParam params,
-  );
-
   Future<ValueGuard<List<BankModel>>> getListBank(
     NoParams params,
-  );
-
-  Future<ValueGuard<List<RekeningFavModel>>> getListRekeningFav(
-    NoParams params,
-  );
-
-  Future<ValueGuard<void>> deleteRekeningFav(
-    DeleteRekeningFavParam params,
   );
 
   Future<ValueGuard<void>> saveRekeningFav(

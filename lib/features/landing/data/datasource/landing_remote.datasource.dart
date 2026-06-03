@@ -19,4 +19,8 @@ abstract class LandingRemoteDataSource {
   Future<ValueGuard<StatusAppModel>> checkStatusApp(
     NoParams params,
   );
+
+  Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
+    NoParams params,
+  );
 }
