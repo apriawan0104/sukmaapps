@@ -1,4 +1,4 @@
-import 'package:app_core/app_core.dart';
+import 'package:app_core/app_core.dart' hide configureDependencies, getIt;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,8 +18,8 @@ String _envFileName(AppFlavor flavor) {
 /// Loads the env file for this flavor, then calls [runApp].
 Future<void> runSukmaApp(AppFlavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
   await dotenv.load(fileName: _envFileName(flavor));
+  await configureDependencies();
   configureEnvironmentFromDotenv();
   runApp(ProviderScope(child: SukmaApp(flavor: flavor)));
 }

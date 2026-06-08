@@ -3,7 +3,7 @@ import '../../domain/entity/entity.dart';
 
 abstract class LandingController {
   /// Load many; result lives in [State] (List / pagination).
-  Future<List<BannerEntity>> getBanner();
+  Future<void> getBanner();
 
   Future<List<InformationBannerEntity>> getInformationBanner();
 
@@ -22,4 +22,6 @@ abstract class LandingController {
   Future<void> removeRekeningFav();
 
   void changeIndexNav(int index);
+
+  Future<void> openBannerUrl(String? url);
 }

@@ -15,6 +15,7 @@ import 'package:app_core/src/infrastructure/analytics/contract/crash_reporter.se
 import 'package:app_core/src/infrastructure/background_service/background_service.dart'
     as _i567;
 import 'package:app_core/src/infrastructure/logging/logging.dart' as _i665;
+import 'package:app_core/src/infrastructure/network/network.dart' as _i944;
 import 'package:app_core/src/infrastructure/notification/contract/notification.dart'
     as _i386;
 import 'package:app_core/src/infrastructure/notification/impl/firebase_messaging.service.impl.dart'
@@ -28,6 +29,8 @@ import 'package:app_core/src/infrastructure/responsive/impl/responsive.service.i
 import 'package:app_core/src/infrastructure/secure_storage/secure_storage.dart'
     as _i666;
 import 'package:app_core/src/infrastructure/storage/storage.dart' as _i1014;
+import 'package:app_core/src/infrastructure/url_launcher/url_launcher.dart'
+    as _i2;
 import 'package:firebase_messaging/firebase_messaging.dart' as _i892;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as _i163;
@@ -56,6 +59,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => appCoreModule.secureStorageService);
     gh.lazySingleton<_i1014.StorageService>(() => appCoreModule.storageService);
     gh.lazySingleton<_i665.LogService>(() => appCoreModule.logService);
+    gh.lazySingleton<_i2.UrlLauncherService>(
+        () => appCoreModule.urlLauncherService);
     gh.lazySingleton<_i297.ResponsiveService>(
         () => _i969.ResponsiveServiceImpl());
     gh.lazySingleton<_i158.RepositoryErrorHandler>(
@@ -63,6 +68,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i386.LocalNotificationService>(() =>
         _i835.LocalNotificationServiceImpl(
             localNotifications: gh<_i163.FlutterLocalNotificationsPlugin>()));
+    gh.lazySingleton<_i944.HttpClient>(
+        () => appCoreModule.httpClient(gh<_i944.NetworkConfig>()));
     gh.lazySingleton<_i386.FirebaseMessagingService>(() =>
         _i1038.FirebaseMessagingServiceImpl(
             firebaseMessaging: gh<_i892.FirebaseMessaging>()));

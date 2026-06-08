@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sukmaapps/core/core.dart';
 
 import '../model/model.dart';
 import 'landing_remote.datasource.dart';
@@ -15,10 +16,11 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   Future<ValueGuard<List<BannerModel>>> getBanner(
     NoParams params,
   ) async {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
+    return _remoteClient
+        .get<List<dynamic>>(
+      WebServiceConstant.banner,
+    )
+        .mapSuccess((response) {
       final items = response.data ?? <dynamic>[];
       return items
           .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))

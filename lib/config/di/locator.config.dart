@@ -1,12 +1,16 @@
-//@GeneratedMicroModule;SukmaappsPackageModule;package:sukmaapps/config/di/sukma.package.module.dart
+// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+
+// **************************************************************************
+// InjectableConfigGenerator
+// **************************************************************************
+
 // ignore_for_file: type=lint
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i687;
-
 import 'package:app_core/app_core.dart' as _i130;
+import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:sukmaapps/common/data/datasource/common_remote.datasource.dart'
     as _i493;
@@ -24,6 +28,7 @@ import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart'
     as _i945;
 import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart'
     as _i584;
+import 'package:sukmaapps/config/di/sukma_module.dart' as _i963;
 import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
     as _i787;
 import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.datasource.dart'
@@ -58,6 +63,8 @@ import 'package:sukmaapps/features/landing/data/datasource/landing_remote.dataso
     as _i312;
 import 'package:sukmaapps/features/landing/data/datasource/landing_remote.impl.datasource.dart'
     as _i1015;
+import 'package:sukmaapps/features/landing/data/repository/landing_repository.impl.dart'
+    as _i541;
 import 'package:sukmaapps/features/landing/domain/repository/landing.repository.dart'
     as _i305;
 import 'package:sukmaapps/features/landing/domain/usecase/check_status_app.usecase.dart'
@@ -71,20 +78,20 @@ import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner
 import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
     as _i779;
 
-class SukmaappsPackageModule extends _i526.MicroPackageModule {
+extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
-  @override
-  _i687.FutureOr<void> init(_i526.GetItHelper gh) {
-    gh.lazySingleton<_i779.GetRateUseCase>(
-        () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i829.GetHistoryConvertUseCase>(
-        () => _i829.GetHistoryConvertUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i448.GetInformationBannerUseCase>(
-        () => _i448.GetInformationBannerUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i545.GetBannerUseCase>(
-        () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i971.CheckStatusAppUseCase>(
-        () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
+  Future<_i174.GetIt> init({
+    String? environment,
+    _i526.EnvironmentFilter? environmentFilter,
+  }) async {
+    final gh = _i526.GetItHelper(
+      this,
+      environment,
+      environmentFilter,
+    );
+    await _i130.AppCorePackageModule().init(gh);
+    final sukmaModule = _$SukmaModule();
+    gh.lazySingleton<_i130.NetworkConfig>(() => sukmaModule.networkConfig);
     gh.lazySingleton<_i1006.DeleteImageUseCase>(
         () => _i1006.DeleteImageUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i279.UploadImageUseCase>(
@@ -103,6 +110,18 @@ class SukmaappsPackageModule extends _i526.MicroPackageModule {
         () => _i15.AuthRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i800.AuthRepository>(
         () => _i84.AuthImplRepository(gh<_i787.AuthRemoteDataSource>()));
+    gh.lazySingleton<_i305.LandingRepository>(
+        () => _i541.LandingImplRepository(gh<_i312.LandingRemoteDataSource>()));
+    gh.lazySingleton<_i779.GetRateUseCase>(
+        () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i829.GetHistoryConvertUseCase>(
+        () => _i829.GetHistoryConvertUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i448.GetInformationBannerUseCase>(
+        () => _i448.GetInformationBannerUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i545.GetBannerUseCase>(
+        () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i971.CheckStatusAppUseCase>(
+        () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i852.CommonRepository>(
         () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
     gh.lazySingleton<_i761.LoginAppleUseCase>(
@@ -119,5 +138,8 @@ class SukmaappsPackageModule extends _i526.MicroPackageModule {
         () => _i945.GetPhoneFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    return this;
   }
 }
+
+class _$SukmaModule extends _i963.SukmaModule {}

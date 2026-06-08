@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:app_core/app_core.dart';
 import '../buttons/button_primary.widget.dart';
 
 /// A widget that handles AsyncValue states with support for skipLoadingOnReload
@@ -27,6 +26,9 @@ import '../buttons/button_primary.widget.dart';
 /// Important: When using skipLoadingOnReload: true, make sure to use
 /// value.copyWithLoading() instead of AsyncValue.loading() to preserve
 /// previous data.
+///
+/// When using skipError: true, use value.copyWithError() instead of
+/// AsyncValue.error() to preserve previous data.
 class AsyncValueWidget<T> extends StatelessWidget {
   const AsyncValueWidget({
     required this.value,
@@ -57,7 +59,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
         if (errorWidget != null) {
           return errorWidget!(
             error,
-            stackTrace,
+            stackTrace ?? StackTrace.empty,
           );
         }
         return Center(

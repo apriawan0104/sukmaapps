@@ -3,9 +3,14 @@ import 'package:equatable/equatable.dart';
 
 /// Custom AsyncValue implementation without Riverpod dependency
 ///
-/// Supports skipLoadingOnReload functionality similar to Riverpod's AsyncValue.
-/// When skipLoadingOnReload is true, the widget will show previous data instead
-/// of loading state if available.
+/// Supports [skipLoadingOnReload] and [skipError] functionality similar to
+/// Riverpod's AsyncValue.
+///
+/// When [skipLoadingOnReload] is true, [when] shows previous data instead of
+/// loading state if available.
+///
+/// When [skipError] is true, [when] shows previous data instead of error state
+/// if available.
 class AsyncValue<T> extends Equatable {
   const AsyncValue._({
     required this.isLoading,
@@ -29,36 +34,55 @@ class AsyncValue<T> extends Equatable {
   /// Check if the value is loading
   bool get hasData => !isLoading && error == null && data != null;
 
+  /// Whether a value is available, including previous data during loading/error.
+  bool get hasValue => cachedData != null;
+
   /// Check if the value has error
-  bool get hasError => !isLoading && error != null;
+  bool get hasError => error != null;
 
   /// Get the data if available, otherwise null
   T? get value => data;
 
-  /// Get previous data for skipLoadingOnReload functionality
+  /// Get previous data for skipLoadingOnReload/skipError functionality
   T? get cachedData => previousData ?? data;
+
+  /// Returns the current or previous value.
+  ///
+  /// Throws if no value is available.
+  T get requireValue {
+    final cached = cachedData;
+    if (cached != null) return cached;
+    if (hasError) throw error!;
+    throw StateError(
+      'Tried to call requireValue on an AsyncValue that has no value: $this',
+    );
+  }
 
   /// Pattern matching method similar to Riverpod's AsyncValue
   ///
   /// [skipLoadingOnReload] - If true and we have cached data, shows cached data
   /// instead of loading state. Useful for search operations and background refresh.
+  ///
+  /// [skipError] - If true and we have cached data, shows cached data instead of
+  /// error state. Useful for background refresh that should keep showing stale data.
   R when<R>({
     required R Function() loading,
     required R Function(T data) data,
     required R Function(Object error, StackTrace? stackTrace) error,
     bool skipLoadingOnReload = false,
+    bool skipError = false,
   }) {
     if (isLoading) {
-      // If skipLoadingOnReload is true and we have cached data, return the cached data
-      if (skipLoadingOnReload && cachedData != null) {
-        return data(cachedData as T);
+      if (!(skipLoadingOnReload && hasValue)) {
+        return loading();
       }
-      return loading();
-    } else if (this.error != null) {
-      return error(this.error!, this.stackTrace);
-    } else {
-      return data(this.data as T);
     }
+
+    if (hasError && (!hasValue || !skipError)) {
+      return error(this.error!, this.stackTrace);
+    }
+
+    return data(requireValue);
   }
 
   /// Map the data if available
@@ -94,7 +118,21 @@ class AsyncValue<T> extends Equatable {
       isLoading: true,
       data: null,
       error: null,
-      previousData: data, // Preserve current data as previous data
+      previousData: data ?? previousData,
+    );
+  }
+
+  /// Create an error state while preserving previous data
+  ///
+  /// Use this method instead of [AsyncValue.error] when you want to preserve
+  /// the current data for [skipError] functionality.
+  AsyncValue<T> copyWithError(Object error, [StackTrace? stackTrace]) {
+    return AsyncValue<T>._(
+      isLoading: false,
+      data: null,
+      error: error,
+      stackTrace: stackTrace,
+      previousData: data ?? previousData,
     );
   }
 

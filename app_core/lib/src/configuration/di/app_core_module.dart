@@ -6,9 +6,10 @@ import 'package:injectable/injectable.dart';
 
 import '../../infrastructure/background_service/background_service.dart';
 import '../../infrastructure/logging/logging.dart';
+import '../../infrastructure/network/network.dart';
 import '../../infrastructure/secure_storage/secure_storage.dart';
 import '../../infrastructure/storage/storage.dart';
-import '../../infrastructure/url_launcher/url_launcher.dart'; // ← Tambahkan ini
+import '../../infrastructure/url_launcher/url_launcher.dart';
 
 /// Injectable module for registering third-party/external dependencies
 ///
@@ -46,6 +47,22 @@ abstract class AppCoreModule {
 
   /// Provides singleton instance of UrlLauncherService
   @lazySingleton
-  UrlLauncherService get urlLauncherService =>
-      UrlLauncherServiceImpl(); // ← Tambahkan ini
+  UrlLauncherService get urlLauncherService => UrlLauncherServiceImpl();
+
+  /// Provides singleton instance of HttpClient.
+  ///
+  /// Requires [NetworkConfig] to be registered by the host app before DI init.
+  @lazySingleton
+  HttpClient httpClient(
+    NetworkConfig config,
+  ) {
+    return DioHttpClient(
+      baseUrl: config.baseUrl,
+      headers: config.headers,
+      connectTimeout: config.connectTimeout,
+      receiveTimeout: config.receiveTimeout,
+      sendTimeout: config.sendTimeout,
+      enableLogging: config.enableLogging,
+    );
+  }
 }

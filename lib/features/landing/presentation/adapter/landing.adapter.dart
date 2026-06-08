@@ -1,4 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:app_core/app_core.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:sukmaapps/common/domain/entity/phone_fav.entity.dart';
 import 'package:sukmaapps/common/domain/entity/rekening_fav.entity.dart';
 import 'package:sukmaapps/features/landing/domain/entity/banner.entity.dart';
@@ -6,6 +7,7 @@ import 'package:sukmaapps/features/landing/domain/entity/history_convert.entity.
 import 'package:sukmaapps/features/landing/domain/entity/information_banner.entity.dart';
 import 'package:sukmaapps/features/landing/domain/entity/rate.entity.dart';
 import 'package:sukmaapps/features/landing/domain/entity/status_app.entity.dart';
+import '../../domain/domain.dart';
 import '../controller/landing.controller.dart';
 import '../state/landing.state.dart';
 part 'landing.adapter.g.dart';
@@ -13,13 +15,19 @@ part 'landing.adapter.g.dart';
 @riverpod
 class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     implements LandingController {
+  late UrlLauncherService _urlLauncherService;
+  late GetBannerUseCase _getBannerUseCase;
+
+  void _initDependencies() {
+    _urlLauncherService = getIt<UrlLauncherService>();
+    _getBannerUseCase = getIt<GetBannerUseCase>();
+  }
+
   @override
   LandingState build() {
     _initDependencies();
     return const LandingState();
   }
-
-  void _initDependencies() {}
 
   @override
   void changeIndexNav(int index) {
@@ -33,9 +41,13 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   }
 
   @override
-  Future<List<BannerEntity>> getBanner() {
-    // TODO: implement getBanner
-    throw UnimplementedError();
+  Future<void> getBanner() async {
+    final result = await _getBannerUseCase(NoParams());
+    state = state.copyWith(
+        banner: result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    ));
   }
 
   @override
@@ -78,5 +90,11 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   Future<void> removeRekeningFav() {
     // TODO: implement removeRekeningFav
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> openBannerUrl(String? url) async {
+    if (url == null || url.isEmpty) return;
+    await _urlLauncherService.launchWebUrl(url);
   }
 }

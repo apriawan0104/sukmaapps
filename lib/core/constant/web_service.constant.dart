@@ -1,4 +1,5 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'env.constant.dart';
+import 'env.extension.dart';
 
 class WebServiceConstant {
   static const String rate = 'rate';
@@ -21,5 +22,6 @@ class WebServiceConstant {
   static const String accountDelete = 'auth/account/delete';
   static const String waNumber = 'status/apps';
   static const String statusTransaksiFailed = 'transaction/onhold';
-  static String imageUrl(int imageId) => '${dotenv.env['imageUrl']}/image/$imageId';
+  static String imageUrl(int imageId) =>
+      '${EnvConstant.imageUrl.env}/image/$imageId';
 }

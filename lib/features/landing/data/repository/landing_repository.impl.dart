@@ -1,11 +1,12 @@
 import 'package:app_core/app_core.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../domain/entity/entity.dart';
 import '../../domain/repository/landing.repository.dart';
 import '../datasource/landing_remote.datasource.dart';
 import '../model/model.dart';
 
-/// Template: VS Code snippet `reimp` (prefix `reimp`).
+@LazySingleton(as: LandingRepository)
 class LandingImplRepository implements LandingRepository {
   LandingImplRepository(this._remoteDataSource);
 

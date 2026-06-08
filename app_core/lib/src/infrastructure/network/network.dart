@@ -44,6 +44,9 @@ export 'contract/contracts.dart';
 // Constants
 export 'constants/constants.dart';
 
+// Configuration
+export 'config/network_config.dart';
+
 // Implementations (export so consumer can use, but they depend on contracts)
 export 'impl/impl.dart';
 
