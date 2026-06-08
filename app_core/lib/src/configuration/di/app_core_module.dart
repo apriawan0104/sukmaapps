@@ -63,6 +63,7 @@ abstract class AppCoreModule {
       receiveTimeout: config.receiveTimeout,
       sendTimeout: config.sendTimeout,
       enableLogging: config.enableLogging,
+      dioInterceptors: config.dioInterceptors,
     );
   }
 }

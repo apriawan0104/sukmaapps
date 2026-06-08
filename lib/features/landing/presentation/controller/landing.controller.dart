@@ -2,6 +2,9 @@ import '../../../../common/common.dart';
 import '../../domain/entity/entity.dart';
 
 abstract class LandingController {
+  /// Loads all landing data (initial open and pull-to-refresh).
+  Future<void> loadInitial();
+
   /// Load many; result lives in [State] (List / pagination).
   Future<void> getBanner();
 

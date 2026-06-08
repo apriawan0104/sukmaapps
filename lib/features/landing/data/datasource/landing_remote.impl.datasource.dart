@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sukmaapps/core/core.dart';
 
+import '../../../../common/common.dart';
 import '../model/model.dart';
 import 'landing_remote.datasource.dart';
 
@@ -60,7 +61,7 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   }
 
   @override
-  Future<ValueGuard<StatusAppModel>> checkStatusApp(NoParams params) {
+  Future<ValueGuard<StatusAppModel>> checkStatusApp(NoParams params) async {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
@@ -71,7 +72,7 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
 
   @override
   Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
-      NoParams params) {
+      NoParams params) async {
     return _remoteClient.get<List<dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
@@ -79,6 +80,20 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
       final items = response.data ?? <dynamic>[];
       return items
           .map((e) => HistoryConvertModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
+  @override
+  Future<ValueGuard<List<TransferModel>>> getOutstanding(
+      NoParams params) async {
+    return _remoteClient.get<List<dynamic>>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((response) {
+      final items = response.data ?? <dynamic>[];
+      return items
+          .map((e) => TransferModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
   }

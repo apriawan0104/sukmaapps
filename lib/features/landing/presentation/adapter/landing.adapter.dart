@@ -26,7 +26,21 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   @override
   LandingState build() {
     _initDependencies();
+    Future.microtask(loadInitial);
     return const LandingState();
+  }
+
+  @override
+  Future<void> loadInitial() async {
+    await Future.wait<void>([
+      getBanner(),
+      getInformationBanner(),
+      getRate(),
+      checkStatusApp(),
+      getHistoryConvert(),
+      getPhoneFav(),
+      getRekeningFav(),
+    ], eagerError: false);
   }
 
   @override
@@ -42,12 +56,14 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
 
   @override
   Future<void> getBanner() async {
+    state = state.copyWith(banner: const AsyncValue.loading());
     final result = await _getBannerUseCase(NoParams());
     state = state.copyWith(
-        banner: result.fold(
-      (failure) => AsyncValue.error(failure.message),
-      AsyncValue.data,
-    ));
+      banner: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
   }
 
   @override

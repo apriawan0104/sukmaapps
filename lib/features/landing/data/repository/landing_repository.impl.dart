@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../../../common/common.dart';
 import '../../domain/entity/entity.dart';
 import '../../domain/repository/landing.repository.dart';
 import '../datasource/landing_remote.datasource.dart';
@@ -56,6 +57,15 @@ class LandingImplRepository implements LandingRepository {
     final result = await _remoteDataSource.getHistoryConvert(params);
     return result.mapListValue(
       (HistoryConvertModel item) => item.toEntity(),
+    );
+  }
+
+  @override
+  Future<ValueGuard<List<TransferEntity>>> getOutstanding(
+      NoParams params) async {
+    final result = await _remoteDataSource.getOutstanding(params);
+    return result.mapListValue(
+      (TransferModel item) => item.toEntity(),
     );
   }
 }

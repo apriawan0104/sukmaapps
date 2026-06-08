@@ -1,4 +1,5 @@
 import 'package:app_core/app_core.dart';
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
@@ -11,6 +12,7 @@ abstract class SukmaModule {
   NetworkConfig get networkConfig => NetworkConfig(
         baseUrl: EnvConstant.baseUrl.env,
         enableLogging: _isNonProd,
-        enableHttpInspector: _isNonProd,
+        dioInterceptors:
+            _isNonProd ? [ChuckerDioInterceptor()] : const [],
       );
 }

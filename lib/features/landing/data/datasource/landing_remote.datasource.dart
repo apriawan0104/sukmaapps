@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 
+import '../../../../common/common.dart';
 import '../model/model.dart';
 
 /// Template: VS Code snippet `dsabs` (prefix `dsabs`).
@@ -21,6 +22,10 @@ abstract class LandingRemoteDataSource {
   );
 
   Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
+    NoParams params,
+  );
+
+  Future<ValueGuard<List<TransferModel>>> getOutstanding(
     NoParams params,
   );
 }

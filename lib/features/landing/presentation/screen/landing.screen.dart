@@ -12,12 +12,9 @@ class LandingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(landingRiverpodAdapterProvider);
     final ctrl = ref.read(landingRiverpodAdapterProvider.notifier);
-    ctrl.getBanner();
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () async {
-          return Future.value();
-        },
+        onRefresh: ctrl.loadInitial,
         child: SizedBox(
           child: Column(
             children: [

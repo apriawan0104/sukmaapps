@@ -29,6 +29,7 @@ class DioHttpClient implements HttpClient {
     int receiveTimeout = 30000,
     int sendTimeout = 30000,
     bool enableLogging = false,
+    List<dio.Interceptor> dioInterceptors = const [],
   }) : _dio = dio.Dio(
           dio.BaseOptions(
             baseUrl: baseUrl,
@@ -47,6 +48,10 @@ class DioHttpClient implements HttpClient {
           error: true,
         ),
       );
+    }
+
+    for (final interceptor in dioInterceptors) {
+      _dio.interceptors.add(interceptor);
     }
 
     // Add custom interceptor handler

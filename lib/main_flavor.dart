@@ -1,4 +1,5 @@
 import 'package:app_core/app_core.dart' hide configureDependencies, getIt;
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,10 +19,25 @@ String _envFileName(AppFlavor flavor) {
 /// Loads the env file for this flavor, then calls [runApp].
 Future<void> runSukmaApp(AppFlavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
+  _configureChucker(flavor);
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
   configureEnvironmentFromDotenv();
+  appRouter = createAppRouter(
+    observers: flavor == AppFlavor.prd
+        ? const []
+        : [ChuckerFlutter.navigatorObserver],
+  );
   runApp(ProviderScope(child: SukmaApp(flavor: flavor)));
+}
+
+void _configureChucker(AppFlavor flavor) {
+  if (flavor == AppFlavor.prd) {
+    return;
+  }
+
+  ChuckerFlutter.showOnRelease = false;
+  ChuckerFlutter.showNotification = true;
 }
 
 class SukmaApp extends StatelessWidget {
