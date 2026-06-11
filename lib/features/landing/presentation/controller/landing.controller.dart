@@ -26,5 +26,15 @@ abstract class LandingController {
 
   void changeIndexNav(int index);
 
+  Future<void> launchUrl(String url);
+
+  Future<void> launchWhatsapp(String body);
+
   Future<void> openBannerUrl(String? url);
+
+  Future<String> getVersion();
+
+  Future<void> logout();
+
+  Future<void> deleteAccount();
 }

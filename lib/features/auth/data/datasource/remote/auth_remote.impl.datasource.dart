@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
+import '../../../domain/domain.dart';
 import 'auth_remote.datasource.dart';
 
 @LazySingleton(as: AuthRemoteDataSource)
@@ -26,6 +27,22 @@ class AuthRemoteImplDataSource implements AuthRemoteDataSource {
   @override
   Future<ValueGuard<void>> readTerm(NoParams params) async {
     return _remoteClient.get<void>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((_) {});
+  }
+
+  @override
+  Future<ValueGuard<void>> deleteAccount(DeleteAccountParams params) async {
+    return _remoteClient.delete<void>(
+      '/endpointPath',
+      queryParameters: const {'ver': 'v1'},
+    ).mapSuccess((_) {});
+  }
+
+  @override
+  Future<ValueGuard<void>> logout(NoParams params) async {
+    return _remoteClient.post<void>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
     ).mapSuccess((_) {});

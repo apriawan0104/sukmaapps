@@ -5,4 +5,6 @@ abstract class AuthController {
   Future<void> loginWithGoogle();
   Future<void> loginWithApple();
   Future<void> readTerm();
+  Future<void> logout();
+  Future<void> deleteAccount();
 }

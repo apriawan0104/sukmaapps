@@ -16,4 +16,18 @@ class FormatHelper {
   static String formatInterval(DateTime date) {
     return DateFormat('mm:ss').format(date);
   }
+
+  static String formatCountdown(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    final seconds = duration.inSeconds.remainder(60);
+    final paddedMinutes = minutes.toString().padLeft(2, '0');
+    final paddedSeconds = seconds.toString().padLeft(2, '0');
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:$paddedMinutes:$paddedSeconds';
+    }
+
+    return '$paddedMinutes:$paddedSeconds';
+  }
 }

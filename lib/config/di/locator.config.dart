@@ -28,6 +28,8 @@ import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart'
     as _i945;
 import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart'
     as _i584;
+import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart'
+    as _i389;
 import 'package:sukmaapps/config/di/sukma_module.dart' as _i963;
 import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
     as _i787;
@@ -75,6 +77,8 @@ import 'package:sukmaapps/features/landing/domain/usecase/get_history_convert.us
     as _i829;
 import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner.usecase.dart'
     as _i448;
+import 'package:sukmaapps/features/landing/domain/usecase/get_outstanding.usecase.dart'
+    as _i226;
 import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
     as _i779;
 
@@ -122,6 +126,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i971.CheckStatusAppUseCase>(
         () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i226.GetOutstandingUseCase>(
+        () => _i226.GetOutstandingUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i852.CommonRepository>(
         () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
     gh.lazySingleton<_i761.LoginAppleUseCase>(
@@ -138,6 +144,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i945.GetPhoneFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i389.GetWaNumberUseCase>(
+        () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
     return this;
   }
 }

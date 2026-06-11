@@ -39,26 +39,37 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
 
   @override
   Future<void> loginWithGoogle() async {
-    // final result = await _loginGoogleUseCase(NoParams());
-    // result.fold(
-    //   (failure) {
-    //     state = state.copyWith(
-    //       loginGoogle: AsyncValue.error(failure.message),
-    //     );
-    //   },
-    //   (_) {
-    //     state = state.copyWith(
-    //       loginGoogle: const AsyncValue.data(null),
-    //     );
-    //     appRouter.goNamed(RouteNames.landing);
-    //   },
-    // );
-    appRouter.goNamed(RouteNames.landing);
+    final result = await _loginGoogleUseCase(NoParams());
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          loginGoogle: AsyncValue.error(failure.message),
+        );
+      },
+      (_) {
+        state = state.copyWith(
+          loginGoogle: const AsyncValue.data(null),
+        );
+        appRouter.goNamed(RouteNames.landing);
+      },
+    );
   }
 
   @override
   Future<void> readTerm() {
     // TODO: implement readTerm
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> logout() {
+    // TODO: implement logout
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteAccount() {
+    // TODO: implement deleteAccount
     throw UnimplementedError();
   }
 }
