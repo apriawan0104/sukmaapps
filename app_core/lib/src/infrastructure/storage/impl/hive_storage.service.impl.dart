@@ -98,6 +98,19 @@ class HiveStorageServiceImpl implements StorageService {
   @override
   bool get isInitialized => _isInitialized;
 
+  /// Whether Hive core has been initialized (shared across all instances).
+  static bool _hiveCoreInitialized = false;
+
+  /// Initialize Hive core once before opening any box.
+  static Future<void> _ensureHiveCoreInitialized() async {
+    if (_hiveCoreInitialized) {
+      return;
+    }
+
+    await Hive.initFlutter();
+    _hiveCoreInitialized = true;
+  }
+
   @override
   Future<Either<StorageFailure, void>> initialize() async {
     if (_isInitialized) {
@@ -106,8 +119,7 @@ class HiveStorageServiceImpl implements StorageService {
     }
 
     try {
-      // Initialize Hive Flutter
-      await Hive.initFlutter();
+      await _ensureHiveCoreInitialized();
 
       // Open box (regular or lazy)
       if (useLazyBox) {

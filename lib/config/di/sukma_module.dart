@@ -15,4 +15,19 @@ abstract class SukmaModule {
         dioInterceptors:
             _isNonProd ? [ChuckerDioInterceptor()] : const [],
       );
+
+  @preResolve
+  @Named(TableConstant.tbMUser)
+  @lazySingleton
+  Future<StorageService> tbMUserStorage() async {
+    final storage = HiveStorageServiceImpl(boxName: TableConstant.tbMUser);
+    final result = await storage.initialize();
+
+    return result.fold(
+      (failure) => throw Exception(
+        'Storage initialization failed: ${failure.message}',
+      ),
+      (_) => storage,
+    );
+  }
 }

@@ -39,12 +39,17 @@ import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.impl.
     as _i15;
 import 'package:sukmaapps/features/auth/data/repository/auth_repository.impl.dart'
     as _i84;
+import 'package:sukmaapps/features/auth/domain/domain.dart' as _i647;
 import 'package:sukmaapps/features/auth/domain/repository/auth_repository.dart'
     as _i800;
+import 'package:sukmaapps/features/auth/domain/usecase/delete_account.usecase.dart'
+    as _i76;
 import 'package:sukmaapps/features/auth/domain/usecase/login_apple.usecase.dart'
     as _i761;
 import 'package:sukmaapps/features/auth/domain/usecase/login_google.usecase.dart'
     as _i476;
+import 'package:sukmaapps/features/auth/domain/usecase/logout.usecase.dart'
+    as _i939;
 import 'package:sukmaapps/features/auth/domain/usecase/read_term.usecase.dart'
     as _i655;
 import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_remote.datasource.dart'
@@ -96,6 +101,11 @@ extension GetItInjectableX on _i174.GetIt {
     await _i130.AppCorePackageModule().init(gh);
     final sukmaModule = _$SukmaModule();
     gh.lazySingleton<_i130.NetworkConfig>(() => sukmaModule.networkConfig);
+    await gh.lazySingletonAsync<_i130.StorageService>(
+      () => sukmaModule.tbMUserStorage(),
+      instanceName: 'tb_m_user',
+      preResolve: true,
+    );
     gh.lazySingleton<_i1006.DeleteImageUseCase>(
         () => _i1006.DeleteImageUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i279.UploadImageUseCase>(
@@ -112,12 +122,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1015.LandingRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i977.AuthRemoteDataSource>(
         () => _i15.AuthRemoteImplDataSource(gh<_i130.HttpClient>()));
-    gh.lazySingleton<_i800.AuthRepository>(
-        () => _i84.AuthImplRepository(gh<_i787.AuthRemoteDataSource>()));
     gh.lazySingleton<_i305.LandingRepository>(
         () => _i541.LandingImplRepository(gh<_i312.LandingRemoteDataSource>()));
     gh.lazySingleton<_i779.GetRateUseCase>(
         () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i226.GetOutstandingUseCase>(
+        () => _i226.GetOutstandingUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i829.GetHistoryConvertUseCase>(
         () => _i829.GetHistoryConvertUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i448.GetInformationBannerUseCase>(
@@ -126,14 +136,18 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i971.CheckStatusAppUseCase>(
         () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i226.GetOutstandingUseCase>(
-        () => _i226.GetOutstandingUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i647.AuthRepository>(
+        () => _i84.AuthImplRepository(gh<_i787.AuthRemoteDataSource>()));
     gh.lazySingleton<_i852.CommonRepository>(
         () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
+    gh.lazySingleton<_i76.DeleteAccountUseCase>(
+        () => _i76.DeleteAccountUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i761.LoginAppleUseCase>(
         () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i655.ReadTermUseCase>(
         () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i939.LogoutUseCase>(
+        () => _i939.LogoutUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i476.LoginGoogleUseCase>(
         () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i178.DeletePhoneFavUseCase>(
@@ -142,10 +156,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i584.GetRekeningFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i945.GetPhoneFavUseCase>(
         () => _i945.GetPhoneFavUseCase(gh<_i852.CommonRepository>()));
-    gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
-        () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i389.GetWaNumberUseCase>(
         () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
+        () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
     return this;
   }
 }
