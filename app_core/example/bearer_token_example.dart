@@ -2,7 +2,8 @@
 
 import 'package:app_core/app_core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:get_it/get_it.dart';
+
+import 'example_di.dart';
 
 /// Bearer Token Authentication Example
 ///
@@ -17,8 +18,6 @@ import 'package:get_it/get_it.dart';
 /// - BEARER_TOKEN_SETUP.md
 /// - lib/src/infrastructure/authentication/doc/
 /// - lib/src/infrastructure/network/doc/
-
-final getIt = GetIt.instance;
 
 void main() async {
   print('🔐 Bearer Token Authentication Example\n');

@@ -60,5 +60,6 @@
 library;
 
 export 'error_handler.helper.dart';
+export 'failure_message_resolver.dart';
 export 'repository_error_handler.dart';
 

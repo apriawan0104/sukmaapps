@@ -3,21 +3,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../configuration/di/locator.dart';
-import '../contract/contracts.dart';
-
 /// A wrapper widget for ScreenUtilInit that follows Dependency Inversion Principle.
 ///
-/// This widget initializes the screen utility service through dependency injection
-/// instead of directly depending on the concrete ScreenUtilInit from flutter_screenutil.
-///
-/// The widget uses [ScreenUtilService] from the DI container (GetIt) to initialize
-/// screen adaptation, maintaining loose coupling and following clean architecture principles.
+/// Host apps can still register [ResponsiveService] in their own DI graph for
+/// testability, while this widget handles screen initialization at the root.
 ///
 /// Example:
 /// ```dart
 /// void main() {
-///   configureDependencies(); // Setup DI
 ///   runApp(
 ///     AppScreenUtilInit(
 ///       designSize: const Size(360, 690),
@@ -91,19 +84,8 @@ class AppScreenUtilInit extends StatelessWidget {
       minTextAdapt: minTextAdapt,
       splitScreenMode: splitScreenMode,
       fontSizeResolver: fontSizeResolver,
-      builder: (context, child) {
-        // Initialize our service through DI
-        // This ensures our abstraction is also initialized
-        getIt<ResponsiveService>().init(
-          context,
-          designSize: designSize,
-          minTextAdapt: minTextAdapt,
-          splitScreenMode: splitScreenMode,
-        );
-
-        // Call the provided builder
-        return builder?.call(context, child) ?? const SizedBox.shrink();
-      },
+      builder: (context, child) =>
+          builder?.call(context, child) ?? const SizedBox.shrink(),
       child: child,
     );
   }

@@ -1,7 +1,7 @@
 // ignore_for_file: unused_local_variable, avoid_print
 
 import 'package:app_core/app_core.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Example of using the logging infrastructure with DIP.
 ///
@@ -35,8 +35,6 @@ void main() {
 
 /// Example 1: Setup with logger package (recommended for development).
 void example1SetupWithLoggerPackage() {
-  final getIt = GetIt.instance;
-
   // Option A: Use default configuration
   getIt.registerLazySingleton<LogService>(
     () => LoggerPackageServiceImpl.defaultConfig(),
@@ -78,8 +76,6 @@ void example1SetupWithLoggerPackage() {
 
 /// Example 2: Setup with simple console logging (zero dependencies).
 void example2SetupWithConsole() {
-  final getIt = GetIt.instance;
-
   // Option A: Default (only logs in debug mode)
   getIt.registerLazySingleton<LogService>(
     () => const ConsoleLogServiceImpl(),
@@ -102,8 +98,6 @@ void example2SetupWithConsole() {
 
 /// Example 3: Environment-based setup (different loggers for dev/prod).
 void example3EnvironmentBasedSetup() {
-  final getIt = GetIt.instance;
-
   const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
   if (isProduction) {
@@ -127,7 +121,6 @@ void example3EnvironmentBasedSetup() {
 
 /// Example 4: Using logging in business logic.
 void example4UsingInBusinessLogic() {
-  final getIt = GetIt.instance;
   final logService = getIt<LogService>();
 
   // Different log levels
@@ -161,7 +154,6 @@ void example4UsingInBusinessLogic() {
 
 /// Example 5: Structured logging with metadata.
 void example5StructuredLogging() {
-  final getIt = GetIt.instance;
   final logService = getIt<LogService>();
 
   // User action tracking
@@ -196,7 +188,6 @@ void example5StructuredLogging() {
 
 /// Example 6: Error handling with logging.
 void example6ErrorHandling() {
-  final getIt = GetIt.instance;
   final logService = getIt<LogService>();
 
   // Simulate API call with error handling

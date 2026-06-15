@@ -12,7 +12,9 @@ abstract class LandingController {
 
   Future<List<RateEntity>> getRate();
 
-  Future<StatusAppEntity> checkStatusApp();
+  Future<void> getOutstanding();
+
+  Future<void> checkStatusApp();
 
   Future<List<HistoryConvertEntity>> getHistoryConvert();
 
@@ -37,4 +39,6 @@ abstract class LandingController {
   Future<void> logout();
 
   Future<void> deleteAccount();
+
+  Future<void> getLocalUser();
 }

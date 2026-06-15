@@ -136,7 +136,10 @@ class TransactionOutstandingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AsyncValueWidget<List<TransferEntity>>(
       value: transactionOutstandingAsync,
-      onSuccess: (data) => _transactionOutstandingList(context, data),
+      onSuccess: (data) {
+        if (data.isEmpty) return const SizedBox.shrink();
+        return _transactionOutstandingList(context, data);
+      },
       loadingWidget: _transactionOutstandingLoading(),
       errorWidget: (p0, p1) => Container(padding: EdgeInsets.zero),
       onRetry: onRetry,

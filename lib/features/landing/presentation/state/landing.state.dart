@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
+import '../../../auth/domain/entity/local_user.entity.dart';
 import '../../domain/entity/entity.dart';
 
 class LandingState extends Equatable {
@@ -13,16 +14,20 @@ class LandingState extends Equatable {
     this.historyConvert = const AsyncValue.loading(),
     this.phoneFav = const AsyncValue.loading(),
     this.rekeningFav = const AsyncValue.loading(),
+    this.localUser = const AsyncValue.loading(),
+    this.outstanding = const AsyncValue.loading(),
   });
 
   final int indexNav;
   final AsyncValue<List<BannerEntity>> banner;
   final AsyncValue<List<InformationBannerEntity>> informationBanner;
   final AsyncValue<List<RateEntity>> rate;
+  final AsyncValue<List<TransferEntity>> outstanding;
   final AsyncValue<StatusAppEntity> statusApp;
   final AsyncValue<List<HistoryConvertEntity>> historyConvert;
   final AsyncValue<List<PhoneFavEntity>> phoneFav;
   final AsyncValue<List<RekeningFavEntity>> rekeningFav;
+  final AsyncValue<LocalUserEntity> localUser;
 
   @override
   List<Object?> get props => [
@@ -33,7 +38,9 @@ class LandingState extends Equatable {
         statusApp,
         historyConvert,
         phoneFav,
-        rekeningFav
+        rekeningFav,
+        localUser,
+        outstanding,
       ];
 
   LandingState copyWith({
@@ -45,6 +52,8 @@ class LandingState extends Equatable {
     AsyncValue<List<HistoryConvertEntity>>? historyConvert,
     AsyncValue<List<PhoneFavEntity>>? phoneFav,
     AsyncValue<List<RekeningFavEntity>>? rekeningFav,
+    AsyncValue<LocalUserEntity>? localUser,
+    AsyncValue<List<TransferEntity>>? outstanding,
   }) {
     return LandingState(
       indexNav: indexNav ?? this.indexNav,
@@ -55,6 +64,8 @@ class LandingState extends Equatable {
       historyConvert: historyConvert ?? this.historyConvert,
       phoneFav: phoneFav ?? this.phoneFav,
       rekeningFav: rekeningFav ?? this.rekeningFav,
+      localUser: localUser ?? this.localUser,
+      outstanding: outstanding ?? this.outstanding,
     );
   }
 }

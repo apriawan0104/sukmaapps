@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 // Import the core library
 // In your app, this would be: import 'package:app_core/app_core.dart';
@@ -38,8 +38,6 @@ void main() async {
 
 /// Setup dependencies
 Future<void> setupDependencies() async {
-  final getIt = GetIt.instance;
-
   // Register ConnectivityService
   getIt.registerLazySingleton<ConnectivityService>(
     () => InternetConnectionCheckerPlusServiceImpl(),
@@ -85,7 +83,7 @@ class _ConnectivityExampleAppState extends State<ConnectivityExampleApp>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _connectivity = GetIt.instance<ConnectivityService>();
+    _connectivity = getIt<ConnectivityService>();
   }
 
   @override
@@ -210,7 +208,7 @@ class BasicCheckExample extends StatefulWidget {
 }
 
 class _BasicCheckExampleState extends State<BasicCheckExample> {
-  final _connectivity = GetIt.instance<ConnectivityService>();
+  final _connectivity = getIt<ConnectivityService>();
   bool _isChecking = false;
   String _status = 'Tap button to check connectivity';
   Color _statusColor = Colors.grey;
@@ -305,7 +303,7 @@ class RealTimeMonitoringExample extends StatefulWidget {
 }
 
 class _RealTimeMonitoringExampleState extends State<RealTimeMonitoringExample> {
-  final _connectivity = GetIt.instance<ConnectivityService>();
+  final _connectivity = getIt<ConnectivityService>();
   late StreamSubscription<ConnectivityStatusEntity> _subscription;
   bool _isOnline = false;
   final List<String> _events = [];
@@ -488,7 +486,7 @@ class OfflineBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final connectivity = GetIt.instance<ConnectivityService>();
+    final connectivity = getIt<ConnectivityService>();
 
     return StreamBuilder<ConnectivityStatusEntity>(
       stream: connectivity.onConnectivityChanged,
@@ -535,7 +533,7 @@ class CustomEndpointsExample extends StatefulWidget {
 }
 
 class _CustomEndpointsExampleState extends State<CustomEndpointsExample> {
-  final _connectivity = GetIt.instance<ConnectivityService>();
+  final _connectivity = getIt<ConnectivityService>();
   String _status = 'Using default endpoints';
 
   void _useDefaultEndpoints() {
@@ -632,7 +630,7 @@ class RetryLogicExample extends StatefulWidget {
 }
 
 class _RetryLogicExampleState extends State<RetryLogicExample> {
-  final _connectivity = GetIt.instance<ConnectivityService>();
+  final _connectivity = getIt<ConnectivityService>();
   String _status = 'Ready to fetch';
   bool _isFetching = false;
   Color _statusColor = Colors.grey;

@@ -4,10 +4,12 @@ import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+import 'example_di.dart';
+
 /// Example demonstrating notification module usage
 ///
 /// This example shows:
-/// 1. Setting up notification services using injectable
+/// 1. Setting up notification services in the host app DI graph
 /// 2. Initializing FCM and local notifications
 /// 3. Handling notification callbacks
 /// 4. Showing, scheduling, and managing notifications
@@ -17,13 +19,21 @@ void main() async {
   // Initialize timezone for scheduled notifications
   tz.initializeTimeZones();
 
-  // Setup all services in DI container using injectable
-  configureDependencies();
+  setupDependencies();
 
   // Initialize notifications
   await _initializeNotifications();
 
   runApp(const MyApp());
+}
+
+void setupDependencies() {
+  getIt.registerLazySingleton<LocalNotificationService>(
+    () => LocalNotificationServiceImpl(),
+  );
+  getIt.registerLazySingleton<FirebaseMessagingService>(
+    () => FirebaseMessagingServiceImpl(),
+  );
 }
 
 Future<void> _initializeNotifications() async {

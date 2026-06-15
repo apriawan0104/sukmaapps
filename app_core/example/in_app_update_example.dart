@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Example demonstrating how to use the In-App Update service.
 ///
@@ -34,7 +34,7 @@ void main() async {
   await setupInAppUpdate();
 
   // Check for updates on startup
-  final updateManager = UpdateManager(GetIt.instance<InAppUpdateService>());
+  final updateManager = UpdateManager(getIt<InAppUpdateService>());
   await updateManager.checkForUpdates();
 
   runApp(const InAppUpdateExampleApp());
@@ -42,8 +42,6 @@ void main() async {
 
 /// Setup in-app update service
 Future<void> setupInAppUpdate() async {
-  final getIt = GetIt.instance;
-
   // Register in-app update service
   getIt.registerLazySingleton<InAppUpdateService>(
     () => AndroidInAppUpdateServiceImpl(),
@@ -88,7 +86,7 @@ class InAppUpdateExampleScreen extends StatefulWidget {
 class _InAppUpdateExampleScreenState extends State<InAppUpdateExampleScreen>
     with WidgetsBindingObserver {
   final InAppUpdateService _updateService =
-      GetIt.instance<InAppUpdateService>();
+      getIt<InAppUpdateService>();
   AppUpdateInfo? _updateInfo;
   InstallStatus _installStatus = InstallStatus.unknown;
   bool _isChecking = false;

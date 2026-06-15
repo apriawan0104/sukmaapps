@@ -2,13 +2,12 @@ import 'package:app_core/app_core.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:sukmaapps/common/domain/entity/phone_fav.entity.dart';
+import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart';
+import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart';
 import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart';
+import 'package:sukmaapps/config/config.dart';
 import 'package:sukmaapps/core/core.dart';
 import 'package:sukmaapps/common/domain/entity/rekening_fav.entity.dart';
-import 'package:sukmaapps/features/landing/domain/entity/history_convert.entity.dart';
-import 'package:sukmaapps/features/landing/domain/entity/information_banner.entity.dart';
-import 'package:sukmaapps/features/landing/domain/entity/rate.entity.dart';
-import 'package:sukmaapps/features/landing/domain/entity/status_app.entity.dart';
 import '../../../auth/domain/domain.dart';
 import '../../domain/domain.dart';
 import '../controller/landing.controller.dart';
@@ -21,15 +20,31 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   late UrlLauncherService _urlLauncherService;
   late GetWaNumberUseCase _getWaNumberUseCase;
   late GetBannerUseCase _getBannerUseCase;
+  late GetInformationBannerUseCase _getInformationBannerUseCase;
+  late GetRateUseCase _getRateUseCase;
+  late GetOutstandingUseCase _getOutstandingUseCase;
+  late CheckStatusAppUseCase _checkStatusAppUseCase;
+  late GetHistoryConvertUseCase _getHistoryConvertUseCase;
+  late GetPhoneFavUseCase _getPhoneFavUseCase;
+  late GetRekeningFavUseCase _getRekeningFavUseCase;
   late LogoutUseCase _logoutUseCase;
   late DeleteAccountUseCase _deleteAccountUseCase;
+  late GetLocalUserUseCase _getLocalUserUseCase;
 
   void _initDependencies() {
     _urlLauncherService = getIt<UrlLauncherService>();
     _getWaNumberUseCase = getIt<GetWaNumberUseCase>();
     _getBannerUseCase = getIt<GetBannerUseCase>();
+    _getInformationBannerUseCase = getIt<GetInformationBannerUseCase>();
+    _getRateUseCase = getIt<GetRateUseCase>();
+    _getOutstandingUseCase = getIt<GetOutstandingUseCase>();
+    _checkStatusAppUseCase = getIt<CheckStatusAppUseCase>();
+    _getHistoryConvertUseCase = getIt<GetHistoryConvertUseCase>();
+    _getPhoneFavUseCase = getIt<GetPhoneFavUseCase>();
+    _getRekeningFavUseCase = getIt<GetRekeningFavUseCase>();
     _logoutUseCase = getIt<LogoutUseCase>();
     _deleteAccountUseCase = getIt<DeleteAccountUseCase>();
+    _getLocalUserUseCase = getIt<GetLocalUserUseCase>();
   }
 
   @override
@@ -45,10 +60,12 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
       getBanner(),
       getInformationBanner(),
       getRate(),
+      getOutstanding(),
       checkStatusApp(),
       getHistoryConvert(),
       getPhoneFav(),
       getRekeningFav(),
+      getLocalUser(),
     ], eagerError: false);
   }
 
@@ -58,9 +75,15 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   }
 
   @override
-  Future<StatusAppEntity> checkStatusApp() {
-    // TODO: implement checkStatusApp
-    throw UnimplementedError();
+  Future<void> checkStatusApp() async {
+    state = state.copyWith(banner: const AsyncValue.loading());
+    final result = await _checkStatusAppUseCase(NoParams());
+    state = state.copyWith(
+      statusApp: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
   }
 
   @override
@@ -76,33 +99,75 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   }
 
   @override
-  Future<List<HistoryConvertEntity>> getHistoryConvert() {
-    // TODO: implement getHistoryConvert
-    throw UnimplementedError();
+  Future<List<HistoryConvertEntity>> getHistoryConvert() async {
+    state = state.copyWith(historyConvert: const AsyncValue.loading());
+    final result = await _getHistoryConvertUseCase(NoParams());
+    final AsyncValue<List<HistoryConvertEntity>> asyncValue = result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    );
+    state = state.copyWith(historyConvert: asyncValue);
+    return asyncValue.value ?? [];
   }
 
   @override
-  Future<List<InformationBannerEntity>> getInformationBanner() {
-    // TODO: implement getInformationBanner
-    throw UnimplementedError();
+  Future<List<InformationBannerEntity>> getInformationBanner() async {
+    state = state.copyWith(informationBanner: const AsyncValue.loading());
+    final result = await _getInformationBannerUseCase(NoParams());
+    final AsyncValue<List<InformationBannerEntity>> asyncValue = result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    );
+    state = state.copyWith(informationBanner: asyncValue);
+    return asyncValue.data ?? [];
   }
 
   @override
-  Future<List<PhoneFavEntity>> getPhoneFav() {
-    // TODO: implement getPhoneFav
-    throw UnimplementedError();
+  Future<List<PhoneFavEntity>> getPhoneFav() async {
+    state = state.copyWith(phoneFav: const AsyncValue.loading());
+    final result = await _getPhoneFavUseCase(NoParams());
+    final AsyncValue<List<PhoneFavEntity>> asyncValue = result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    );
+    state = state.copyWith(phoneFav: asyncValue);
+    return asyncValue.value ?? [];
   }
 
   @override
-  Future<List<RateEntity>> getRate() {
-    // TODO: implement getRate
-    throw UnimplementedError();
+  Future<List<RateEntity>> getRate() async {
+    state = state.copyWith(rate: const AsyncValue.loading());
+    final result = await _getRateUseCase(NoParams());
+    final AsyncValue<List<RateEntity>> asyncValue = result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    );
+    state = state.copyWith(rate: asyncValue);
+    return asyncValue.data ?? [];
   }
 
   @override
-  Future<List<RekeningFavEntity>> getRekeningFav() {
-    // TODO: implement getRekeningFav
-    throw UnimplementedError();
+  Future<void> getOutstanding() async {
+    state = state.copyWith(outstanding: const AsyncValue.loading());
+    final result = await _getOutstandingUseCase(NoParams());
+    state = state.copyWith(
+      outstanding: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
+  }
+
+  @override
+  Future<List<RekeningFavEntity>> getRekeningFav() async {
+    state = state.copyWith(rekeningFav: const AsyncValue.loading());
+    final result = await _getRekeningFavUseCase(NoParams());
+    final AsyncValue<List<RekeningFavEntity>> asyncValue = result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    );
+    state = state.copyWith(rekeningFav: asyncValue);
+    return asyncValue.value ?? [];
   }
 
   @override
@@ -157,6 +222,18 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   Future<String> getVersion() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
+  }
+
+  @override
+  Future<void> getLocalUser() async {
+    state = state.copyWith(localUser: const AsyncValue.loading());
+    final result = await _getLocalUserUseCase(NoParams());
+    state = state.copyWith(
+      localUser: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
   }
 
   @override

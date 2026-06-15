@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../app/app.dart';
+import '../../../../config/navigation/app_router.dart';
+import '../buttons/button_primary.widget.dart';
+import '../text/text_primary.widget.dart';
 
 class StaticWidget {
   static Future<dynamic> modalBottomWidget({
@@ -73,6 +76,48 @@ class StaticWidget {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 2);
+  }
+
+  static void showErrorDialog({
+    required String message,
+    BuildContext? context,
+    String title = 'Terjadi Kesalahan',
+    String buttonText = 'OK',
+  }) {
+    final dialogContext = context ?? rootNavigatorKey.currentContext;
+    if (dialogContext == null) {
+      msgToast(message);
+      return;
+    }
+
+    showDialogCustom(
+      context: dialogContext,
+      widget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          UITextPrimaryWidget(
+            title: title,
+            fontSize: 16.sp,
+            color: AppColor.blackMassive,
+            fontWeight: FontWeight.w700,
+            align: TextAlign.center,
+          ),
+          SizedBox(height: 8.h),
+          UITextPrimaryWidget(
+            title: message,
+            fontSize: 14.sp,
+            color: AppColor.blackFair,
+            fontWeight: FontWeight.w400,
+            align: TextAlign.center,
+          ),
+          SizedBox(height: 16.h),
+          UIButtonPrimaryWidget(
+            titleButton: buttonText,
+            onPressed: () => Navigator.of(dialogContext).pop(),
+          ),
+        ],
+      ),
+    );
   }
 
   static void showDialogCustom(

@@ -10,7 +10,6 @@ import 'landing_remote.datasource.dart';
 class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   LandingRemoteImplDataSource(this._remoteClient);
 
-  // ignore: unused_field
   final HttpClient _remoteClient;
 
   @override
@@ -18,12 +17,11 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
     NoParams params,
   ) async {
     return _remoteClient
-        .get<List<dynamic>>(
+        .get<Map<String, dynamic>>(
       WebServiceConstant.banner,
     )
         .mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+      return ApiResponse.unwrapList(response.data)
           .map((e) => BannerModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
@@ -33,14 +31,15 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   Future<ValueGuard<List<InformationBannerModel>>> getInformationBanner(
     NoParams params,
   ) async {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.informationBanner,
+    )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
           .map(
-              (e) => InformationBannerModel.fromJson(e as Map<String, dynamic>))
+            (e) => InformationBannerModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList();
     });
   }
@@ -49,12 +48,12 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   Future<ValueGuard<List<RateModel>>> getRate(
     NoParams params,
   ) async {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.rate,
+    )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
           .map((e) => RateModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
@@ -62,23 +61,24 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
 
   @override
   Future<ValueGuard<StatusAppModel>> checkStatusApp(NoParams params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
-      return StatusAppModel.fromJson(response.data ?? <String, dynamic>{});
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.statusApp,
+    )
+        .mapSuccess((response) {
+      return StatusAppModel.fromJson(ApiResponse.unwrapMap(response.data));
     });
   }
 
   @override
   Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
-      NoParams params) async {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
+    NoParams params,
+  ) async {
+    return _remoteClient.get<Map<String, dynamic>>(
+      WebServiceConstant.transHistory,
       queryParameters: const {'ver': 'v1'},
     ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+      return ApiResponse.unwrapList(response.data)
           .map((e) => HistoryConvertModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
@@ -86,13 +86,14 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
 
   @override
   Future<ValueGuard<List<TransferModel>>> getOutstanding(
-      NoParams params) async {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+    NoParams params,
+  ) async {
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.transGet,
+    )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
           .map((e) => TransferModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });

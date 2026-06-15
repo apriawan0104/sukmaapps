@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:app_core/app_core.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Secure Storage Service Example
 ///
@@ -12,8 +12,6 @@ import 'package:get_it/get_it.dart';
 /// ```bash
 /// dart run example/secure_storage_example.dart
 /// ```
-
-final getIt = GetIt.instance;
 
 Future<void> main() async {
   print('=================================================');

@@ -9,4 +9,8 @@ class DeleteAccountParams {
   });
 
   final String userId;
+
+  Map<String, dynamic> toJson() => {
+        'accessID': userId,
+      };
 }

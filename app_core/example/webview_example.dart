@@ -22,10 +22,8 @@ library;
 
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-final getIt = GetIt.instance;
 
 /// Setup WebView services in DI container
 void setupWebViewServices() {

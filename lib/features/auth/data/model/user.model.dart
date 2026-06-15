@@ -11,7 +11,9 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      user: json['user'] as UserDetailModel?,
+      user: json['user'] == null
+          ? null
+          : UserDetailModel.fromJson(json['user'] as Map<String, dynamic>),
       token: json['token'] as String?,
     );
   }

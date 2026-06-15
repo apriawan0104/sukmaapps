@@ -1,4 +1,3 @@
-import 'package:injectable/injectable.dart';
 import '../foundation/domain/typedef/value_guard.typedef.dart';
 import '../errors/failures.dart';
 import '../infrastructure/analytics/contract/crash_reporter.service.dart';
@@ -62,7 +61,6 @@ import '../infrastructure/analytics/contract/crash_reporter.service.dart';
 /// - [CrashReporterService] - For error reporting configuration
 /// - [ValueGuard] - For result type
 /// - [ErrorHandlerHelper] - For additional error handling utilities
-@lazySingleton
 class RepositoryErrorHandler {
   /// Crash reporter service for error monitoring
   ///

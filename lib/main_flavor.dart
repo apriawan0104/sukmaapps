@@ -1,9 +1,10 @@
-import 'package:app_core/app_core.dart' hide configureDependencies, getIt;
+import 'package:app_core/app_core.dart';
 import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'app/app.dart';
 import 'config/config.dart';
 
 enum AppFlavor { dev, uat, prd }
@@ -20,13 +21,13 @@ String _envFileName(AppFlavor flavor) {
 Future<void> runSukmaApp(AppFlavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   _configureChucker(flavor);
+  await initializeFirebaseApp();
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
   configureEnvironmentFromDotenv();
   appRouter = createAppRouter(
-    observers: flavor == AppFlavor.prd
-        ? const []
-        : [ChuckerFlutter.navigatorObserver],
+    observers:
+        flavor == AppFlavor.prd ? const [] : [ChuckerFlutter.navigatorObserver],
   );
   runApp(ProviderScope(child: SukmaApp(flavor: flavor)));
 }
@@ -54,8 +55,11 @@ class SukmaApp extends StatelessWidget {
       builder: (context, child) => MaterialApp.router(
         title: _appTitle,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+          scaffoldBackgroundColor: AppColor.whiteMassive,
+          appBarTheme: const AppBarTheme().copyWith(
+            color: AppColor.whiteMassive,
+          ),
+          useMaterial3: false,
         ),
         routerConfig: appRouter,
       ),

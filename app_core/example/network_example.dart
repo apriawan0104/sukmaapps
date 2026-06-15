@@ -2,7 +2,7 @@
 
 import 'package:app_core/app_core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Example of using the Network Service
 ///
@@ -29,8 +29,6 @@ void main() async {
 
 /// Setup dependency injection
 Future<void> setupDI() async {
-  final getIt = GetIt.instance;
-
   // Register HttpClient with Dio implementation
   getIt.registerLazySingleton<HttpClient>(
     () => DioHttpClient(
@@ -53,7 +51,7 @@ Future<void> setupDI() async {
 Future<void> basicRequestExample() async {
   print('--- Example 1: Basic HTTP Requests ---');
 
-  final httpClient = GetIt.instance<HttpClient>();
+  final httpClient = getIt<HttpClient>();
 
   // GET request
   print('Making GET request to /posts/1...');
@@ -127,7 +125,7 @@ Future<void> basicRequestExample() async {
 Future<void> errorHandlingExample() async {
   print('--- Example 2: Error Handling ---');
 
-  final httpClient = GetIt.instance<HttpClient>();
+  final httpClient = getIt<HttpClient>();
 
   // Test 404 error
   print('Testing 404 error...');
@@ -163,7 +161,7 @@ Future<void> errorHandlingExample() async {
 Future<void> interceptorExample() async {
   print('--- Example 3: Using Interceptors ---');
 
-  final httpClient = GetIt.instance<HttpClient>();
+  final httpClient = getIt<HttpClient>();
 
   // Add request interceptor (add custom header)
   print('Adding request interceptor...');

@@ -12,9 +12,17 @@ abstract class SukmaModule {
   NetworkConfig get networkConfig => NetworkConfig(
         baseUrl: EnvConstant.baseUrl.env,
         enableLogging: _isNonProd,
-        dioInterceptors:
-            _isNonProd ? [ChuckerDioInterceptor()] : const [],
+        dioInterceptors: _isNonProd ? [ChuckerDioInterceptor()] : const [],
       );
+
+  @lazySingleton
+  @Named('googleAuth')
+  AuthenticationService googleAuthService() =>
+      GoogleAuthenticationServiceImpl();
+
+  @lazySingleton
+  @Named('appleAuth')
+  AuthenticationService appleAuthService() => AppleAuthenticationServiceImpl();
 
   @preResolve
   @Named(TableConstant.tbMUser)

@@ -1,18 +1,22 @@
-import 'package:app_core/app_core.dart' hide getIt;
+import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sukmaapps/core/core.dart';
 
 import '../../../../../app/app.dart';
 import '../../../../../common/common.dart';
-import '../../../../../config/config.dart';
+import '../../../../auth/domain/entity/local_user.entity.dart';
+import '../../adapter/landing.adapter.dart';
 
-class MainProfileWidget extends StatelessWidget {
-  const MainProfileWidget(
-      {super.key,
-      required this.onPressLogout,
-      required this.onPressDeleteAccount});
+class MainProfileWidget extends ConsumerWidget {
+  const MainProfileWidget({
+    super.key,
+    required this.onPressLogout,
+    required this.onPressDeleteAccount,
+  });
+
   final VoidCallback onPressLogout;
   final VoidCallback onPressDeleteAccount;
 
@@ -97,71 +101,63 @@ class MainProfileWidget extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final storage = getIt<StorageService>(instanceName: TableConstant.tbMUser);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localUser = ref.watch(landingRiverpodAdapterProvider).localUser;
+    final ctrl = ref.read(landingRiverpodAdapterProvider.notifier);
 
-    return FutureBuilder<List<String?>>(
-      future: Future.wait([
-        storage
-            .get<String>(UserKeyConstant.keyName)
-            .then((result) => result.fold((_) => null, (value) => value)),
-        storage
-            .get<String>(UserKeyConstant.keyUserID)
-            .then((result) => result.fold((_) => null, (value) => value)),
-        storage
-            .get<String>(UserKeyConstant.keyFoto)
-            .then((result) => result.fold((_) => null, (value) => value)),
-      ]),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Padding(
-            padding: const REdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 96.h,
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 64.h,
-                    width: 64.w,
-                    child: CircleAvatar(
-                      backgroundColor: AppColor.brPrimaryStrong,
-                      backgroundImage: NetworkImage(
-                        snapshot.data?[2] ?? 'https://via.placeholder.com/150',
+    return AsyncValueWidget<LocalUserEntity>(
+      value: localUser,
+      onRetry: ctrl.getLocalUser,
+      errorWidget: (_, __) => const SizedBox.shrink(),
+      onSuccess: (user) {
+        final fotoUrl = user.foto.isNotEmpty
+            ? user.foto
+            : 'https://via.placeholder.com/150';
+
+        return Padding(
+          padding: const REdgeInsets.fromLTRB(16, 16, 16, 0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 96.h,
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 64.h,
+                  width: 64.w,
+                  child: CircleAvatar(
+                    backgroundColor: AppColor.brPrimaryStrong,
+                    backgroundImage: NetworkImage(fotoUrl),
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      UITextPrimaryWidget(
+                        title: user.fullname,
+                        fontSize: 14.sp,
+                        color: const Color(0xFF19202D),
+                        fontWeight: FontWeight.w700,
                       ),
-                    ),
+                    ],
                   ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UITextPrimaryWidget(
-                          title: snapshot.data?[0] ?? '',
-                          fontSize: 14.sp,
-                          color: const Color(0xFF19202D),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ],
-                    ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    dialogMessage(context: context, typeDialog: 'logout');
+                  },
+                  child: SvgPicture.asset(
+                    IconSharedConstant.logout,
+                    height: 24.h,
+                    width: 24.w,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      dialogMessage(context: context, typeDialog: 'logout');
-                    },
-                    child: SvgPicture.asset(
-                      IconSharedConstant.logout,
-                      height: 24.h,
-                      width: 24.w,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          );
-        }
-        return const CircularProgressIndicator();
+          ),
+        );
       },
     );
   }

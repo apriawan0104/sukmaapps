@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:app_core/app_core.dart';
 import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Example app demonstrating the Path Provider Service
 ///
@@ -26,8 +26,6 @@ void main() {
 
 /// Setup dependency injection
 void _setupDI() {
-  final getIt = GetIt.instance;
-
   // Register path provider service
   getIt.registerLazySingleton<PathProviderService>(
     () => PathProviderServiceImpl(),
@@ -58,7 +56,7 @@ class PathProviderHomePage extends StatefulWidget {
 }
 
 class _PathProviderHomePageState extends State<PathProviderHomePage> {
-  final pathProvider = GetIt.instance<PathProviderService>();
+  final pathProvider = getIt<PathProviderService>();
 
   String _status = 'Ready';
   String _currentPath = '';

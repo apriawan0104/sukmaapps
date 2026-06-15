@@ -35,7 +35,6 @@
       "class ${1:Feature}RemoteImplDataSource implements ${1:Feature}RemoteDataSource {",
       "  ${1:Feature}RemoteImplDataSource(this._remoteClient);",
       "",
-      "  // ignore: unused_field",
       "  final HttpClient _remoteClient;",
       "",
       "  @override",

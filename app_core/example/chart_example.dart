@@ -2,7 +2,7 @@
 
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Chart Service Example
 ///
@@ -13,8 +13,6 @@ import 'package:get_it/get_it.dart';
 /// 1. Add syncfusion_flutter_charts to your pubspec.yaml
 /// 2. Register ChartService in DI (see setupChartService below)
 /// 3. Use the service to build charts
-
-final getIt = GetIt.instance;
 
 void main() {
   setupChartService();

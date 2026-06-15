@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sukmaapps/core/core.dart';
 
 import '../../domain/param/param.dart';
 import '../model/model.dart';
@@ -9,49 +10,51 @@ import 'common_remote.datasource.dart';
 class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   CommonRemoteImplDataSource(this._remoteClient);
 
-  // ignore: unused_field
   final HttpClient _remoteClient;
 
   @override
   Future<ValueGuard<TransferModel>> getListTransfer(NoParams params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => TransferModel.fromJson(
-        response.data ?? <String, dynamic>{},
-      ),
-    );
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+          WebServiceConstant.transGet,
+        )
+        .mapSuccess(
+          (response) => TransferModel.fromJson(
+            ApiResponse.unwrapMap(response.data),
+          ),
+        );
   }
 
   @override
   Future<ValueGuard<String>> getWaNumber(NoParams params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => response.data?['wa_number'] ?? '',
-    );
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+          WebServiceConstant.waNumber,
+        )
+        .mapSuccess(
+          (response) =>
+              ApiResponse.unwrapMap(response.data)['wa_number'] as String? ??
+              '',
+        );
   }
 
   @override
   Future<ValueGuard<void>> deletePhoneFav(DeletePhoneFavParam params) {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => response.data,
-    );
+    return _remoteClient
+        .delete<Map<String, dynamic>>(
+          '${WebServiceConstant.number}/${params.id}',
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<List<PhoneFavModel>>> getListPhoneFav(NoParams params) {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.number,
+    )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
           .map((e) => PhoneFavModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
@@ -61,24 +64,22 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   Future<ValueGuard<void>> deleteRekeningFav(
     DeleteRekeningFavParam params,
   ) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
+    return _remoteClient.delete<Map<String, dynamic>>(
+      '${WebServiceConstant.rekening}/${params.id}',
       queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => response.data,
-    );
+    ).mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<List<RekeningFavModel>>> getListRekeningFav(
     NoParams params,
   ) async {
-    return _remoteClient.get<List<dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.rekening,
+    )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
           .map((e) => RekeningFavModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });

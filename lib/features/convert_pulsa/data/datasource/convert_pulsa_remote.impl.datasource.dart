@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sukmaapps/core/core.dart';
 
 import '../../../../common/common.dart';
 import '../../domain/param/param.dart';
@@ -10,7 +11,6 @@ import 'convert_pulsa_remote.datasource.dart';
 class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
   ConvertPulsaRemoteImplDataSource(this._remoteClient);
 
-  // ignore: unused_field
   final HttpClient _remoteClient;
 
   @override
@@ -20,7 +20,7 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
       queryParameters: const {'ver': 'v1'},
     ).mapSuccess(
       (response) => PrefixModel.fromJson(
-        response.data ?? <String, dynamic>{},
+        ApiResponse.unwrapMap(response.data),
       ),
     );
   }
@@ -30,21 +30,16 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => PrefixModel.fromJson(
-        response.data ?? <String, dynamic>{},
-      ),
-    );
+    ).mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<List<BankModel>>> getListBank(NoParams params) async {
-    return _remoteClient.get<List<dynamic>>(
+    return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
     ).mapSuccess((response) {
-      final items = response.data ?? <dynamic>[];
-      return items
+      return ApiResponse.unwrapList(response.data)
           .map((e) => BankModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
@@ -55,22 +50,20 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => PrefixModel.fromJson(
-        response.data ?? <String, dynamic>{},
-      ),
-    );
+    ).mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<TransferModel>> saveTransKonfirm(
-      SaveTransKonfirmParam params) async {
+    SaveTransKonfirmParam params,
+  ) async {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
     ).mapSuccess(
-      (response) =>
-          TransferModel.fromJson(response.data ?? <String, dynamic>{}),
+      (response) => TransferModel.fromJson(
+        ApiResponse.unwrapMap(response.data),
+      ),
     );
   }
 
@@ -79,11 +72,7 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => PrefixModel.fromJson(
-        response.data ?? <String, dynamic>{},
-      ),
-    );
+    ).mapSuccess((_) {});
   }
 
   @override
@@ -91,11 +80,7 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => PrefixModel.fromJson(
-        response.data ?? <String, dynamic>{},
-      ),
-    );
+    ).mapSuccess((_) {});
   }
 
   @override
@@ -103,10 +88,6 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',
       queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => PrefixModel.fromJson(
-        response.data ?? <String, dynamic>{},
-      ),
-    );
+    ).mapSuccess((_) {});
   }
 }

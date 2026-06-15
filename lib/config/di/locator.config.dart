@@ -30,9 +30,16 @@ import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart'
     as _i584;
 import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart'
     as _i389;
+import 'package:sukmaapps/config/di/app_core_module.dart' as _i493;
+import 'package:sukmaapps/config/di/session_token_provider.service.dart'
+    as _i766;
 import 'package:sukmaapps/config/di/sukma_module.dart' as _i963;
 import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
     as _i787;
+import 'package:sukmaapps/features/auth/data/datasource/local/auth_local.datasource.dart'
+    as _i919;
+import 'package:sukmaapps/features/auth/data/datasource/local/auth_local.impl.datasource.dart'
+    as _i366;
 import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.datasource.dart'
     as _i977;
 import 'package:sukmaapps/features/auth/data/datasource/remote/auth_remote.impl.datasource.dart'
@@ -44,6 +51,8 @@ import 'package:sukmaapps/features/auth/domain/repository/auth_repository.dart'
     as _i800;
 import 'package:sukmaapps/features/auth/domain/usecase/delete_account.usecase.dart'
     as _i76;
+import 'package:sukmaapps/features/auth/domain/usecase/get_local_user.usecase.dart'
+    as _i879;
 import 'package:sukmaapps/features/auth/domain/usecase/login_apple.usecase.dart'
     as _i761;
 import 'package:sukmaapps/features/auth/domain/usecase/login_google.usecase.dart'
@@ -52,6 +61,8 @@ import 'package:sukmaapps/features/auth/domain/usecase/logout.usecase.dart'
     as _i939;
 import 'package:sukmaapps/features/auth/domain/usecase/read_term.usecase.dart'
     as _i655;
+import 'package:sukmaapps/features/auth/domain/usecase/refresh_token.usecase.dart'
+    as _i488;
 import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_remote.datasource.dart'
     as _i355;
 import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_remote.impl.datasource.dart'
@@ -98,9 +109,25 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    await _i130.AppCorePackageModule().init(gh);
     final sukmaModule = _$SukmaModule();
+    final appCoreModule = _$AppCoreModule();
     gh.lazySingleton<_i130.NetworkConfig>(() => sukmaModule.networkConfig);
+    gh.lazySingleton<_i130.BackgroundService>(
+        () => appCoreModule.backgroundService);
+    gh.lazySingleton<_i130.SecureStorageService>(
+        () => appCoreModule.secureStorageService);
+    gh.lazySingleton<_i130.StorageService>(() => appCoreModule.storageService);
+    gh.lazySingleton<_i130.LogService>(() => appCoreModule.logService);
+    gh.lazySingleton<_i130.UrlLauncherService>(
+        () => appCoreModule.urlLauncherService);
+    gh.lazySingleton<_i130.ResponsiveService>(
+        () => appCoreModule.responsiveService);
+    gh.lazySingleton<_i130.RepositoryErrorHandler>(
+        () => appCoreModule.repositoryErrorHandler);
+    gh.lazySingleton<_i130.LocalNotificationService>(
+        () => appCoreModule.localNotificationService);
+    gh.lazySingleton<_i130.FirebaseMessagingService>(
+        () => appCoreModule.firebaseMessagingService);
     await gh.lazySingletonAsync<_i130.StorageService>(
       () => sukmaModule.tbMUserStorage(),
       instanceName: 'tb_m_user',
@@ -114,16 +141,57 @@ extension GetItInjectableX on _i174.GetIt {
         _i497.SaveTransKonfirmUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i139.CancelTransUseCase>(
         () => _i139.CancelTransUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i130.AuthenticationService>(
+      () => sukmaModule.appleAuthService(),
+      instanceName: 'appleAuth',
+    );
+    gh.lazySingleton<_i919.AuthLocalDataSource>(() =>
+        _i366.AuthLocalImplDataSource(
+            gh<_i130.StorageService>(instanceName: 'tb_m_user')));
+    gh.lazySingleton<_i130.AuthenticationService>(
+      () => sukmaModule.googleAuthService(),
+      instanceName: 'googleAuth',
+    );
+    gh.lazySingleton<_i130.TokenProviderService>(() =>
+        _i766.SessionTokenProviderService(gh<_i919.AuthLocalDataSource>()));
+    gh.lazySingleton<_i130.HttpClient>(() => appCoreModule.httpClient(
+          gh<_i130.NetworkConfig>(),
+          gh<_i130.TokenProviderService>(),
+        ));
+    gh.lazySingleton<_i977.AuthRemoteDataSource>(
+        () => _i15.AuthRemoteImplDataSource(
+              gh<_i130.HttpClient>(),
+              gh<_i130.AuthenticationService>(instanceName: 'googleAuth'),
+              gh<_i130.AuthenticationService>(instanceName: 'appleAuth'),
+            ));
+    gh.lazySingleton<_i647.AuthRepository>(() => _i84.AuthImplRepository(
+          gh<_i787.AuthRemoteDataSource>(),
+          gh<_i787.AuthLocalDataSource>(),
+        ));
     gh.lazySingleton<_i355.ConvertPulsaRemoteDataSource>(
         () => _i587.ConvertPulsaRemoteImplDataSource(gh<_i130.HttpClient>()));
+    gh.lazySingleton<_i76.DeleteAccountUseCase>(
+        () => _i76.DeleteAccountUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i761.LoginAppleUseCase>(
+        () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i488.RefreshTokenUseCase>(
+        () => _i488.RefreshTokenUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i655.ReadTermUseCase>(
+        () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i939.LogoutUseCase>(
+        () => _i939.LogoutUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i476.LoginGoogleUseCase>(
+        () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i879.GetLocalUserUseCase>(
+        () => _i879.GetLocalUserUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i493.CommonRemoteDataSource>(
         () => _i871.CommonRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i312.LandingRemoteDataSource>(
         () => _i1015.LandingRemoteImplDataSource(gh<_i130.HttpClient>()));
-    gh.lazySingleton<_i977.AuthRemoteDataSource>(
-        () => _i15.AuthRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i305.LandingRepository>(
         () => _i541.LandingImplRepository(gh<_i312.LandingRemoteDataSource>()));
+    gh.lazySingleton<_i852.CommonRepository>(
+        () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
     gh.lazySingleton<_i779.GetRateUseCase>(
         () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i226.GetOutstandingUseCase>(
@@ -136,20 +204,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i971.CheckStatusAppUseCase>(
         () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i647.AuthRepository>(
-        () => _i84.AuthImplRepository(gh<_i787.AuthRemoteDataSource>()));
-    gh.lazySingleton<_i852.CommonRepository>(
-        () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
-    gh.lazySingleton<_i76.DeleteAccountUseCase>(
-        () => _i76.DeleteAccountUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i761.LoginAppleUseCase>(
-        () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i655.ReadTermUseCase>(
-        () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i939.LogoutUseCase>(
-        () => _i939.LogoutUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i476.LoginGoogleUseCase>(
-        () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i178.DeletePhoneFavUseCase>(
         () => _i178.DeletePhoneFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i584.GetRekeningFavUseCase>(
@@ -165,3 +219,5 @@ extension GetItInjectableX on _i174.GetIt {
 }
 
 class _$SukmaModule extends _i963.SukmaModule {}
+
+class _$AppCoreModule extends _i493.AppCoreModule {}

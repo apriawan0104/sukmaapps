@@ -1,50 +1,74 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sukmaapps/core/core.dart';
+
 import '../../../domain/domain.dart';
+import '../../model/model.dart';
 import 'auth_remote.datasource.dart';
 
 @LazySingleton(as: AuthRemoteDataSource)
 class AuthRemoteImplDataSource implements AuthRemoteDataSource {
-  AuthRemoteImplDataSource(this._remoteClient);
+  AuthRemoteImplDataSource(
+    this._remoteClient,
+    @Named('googleAuth') this._googleAuth,
+    @Named('appleAuth') this._appleAuth,
+  );
 
-  // ignore: unused_field
   final HttpClient _remoteClient;
-  final AuthenticationService _googleAuthenticationService =
-      GoogleAuthenticationServiceImpl();
-  final AuthenticationService _appleAuthenticationService =
-      AppleAuthenticationServiceImpl();
+  final AuthenticationService _googleAuth;
+  final AuthenticationService _appleAuth;
 
   @override
-  Future<ValueGuard<void>> loginGoogle(NoParams params) async {
-    return _googleAuthenticationService.signInWithGoogle().mapSuccess((_) {});
+  Future<ValueGuard<AuthCredentials>> signInWithGoogle(NoParams params) {
+    return _googleAuth.signInWithGoogle();
   }
 
   @override
-  Future<ValueGuard<void>> loginApple(NoParams params) async {
-    return _appleAuthenticationService.signInWithApple().mapSuccess((_) {});
+  Future<ValueGuard<AuthCredentials>> signInWithApple(NoParams params) {
+    return _appleAuth.signInWithApple();
   }
 
   @override
-  Future<ValueGuard<void>> readTerm(NoParams params) async {
-    return _remoteClient.get<void>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+  Future<ValueGuard<UserModel>> register(RegisterParam params) {
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.authRegister,
+          data: params.toJson(),
+        )
+        .mapSuccess(
+          (response) => UserModel.fromJson(
+            ApiResponse.unwrapMap(response.data),
+          ),
+        );
+  }
+
+  @override
+  Future<ValueGuard<void>> readTerm(ReadTermParam params) async {
+    return _remoteClient
+        .post<void>(
+          WebServiceConstant.acceptTerm,
+          data: params.toJson(),
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<void>> deleteAccount(DeleteAccountParams params) async {
-    return _remoteClient.delete<void>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .delete<void>(
+          WebServiceConstant.accountDelete,
+          data: params.toJson(),
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<void>> logout(NoParams params) async {
-    return _remoteClient.post<void>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .post<void>(
+          '/endpointPath',
+          queryParameters: const {'ver': 'v1'},
+        )
+        .mapSuccess((_) {});
   }
 }

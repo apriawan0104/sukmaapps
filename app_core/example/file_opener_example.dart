@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Example app demonstrating the File Opener Service
 ///
@@ -26,8 +26,6 @@ void main() {
 
 /// Setup dependency injection
 void _setupDI() {
-  final getIt = GetIt.instance;
-
   // Register file opener service
   getIt.registerLazySingleton<FileOpenerService>(
     () => const OpenFileServiceImpl(),
@@ -63,8 +61,8 @@ class FileOpenerHomePage extends StatefulWidget {
 }
 
 class _FileOpenerHomePageState extends State<FileOpenerHomePage> {
-  final fileOpener = GetIt.instance<FileOpenerService>();
-  final pathProvider = GetIt.instance<PathProviderService>();
+  final fileOpener = getIt<FileOpenerService>();
+  final pathProvider = getIt<PathProviderService>();
 
   String _status = 'Ready';
   String _currentFilePath = '';

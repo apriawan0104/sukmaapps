@@ -4,6 +4,8 @@ import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'example_di.dart';
+
 /// Example demonstrating storage performance optimization.
 ///
 /// Shows:

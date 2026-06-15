@@ -12,6 +12,9 @@ class ButtonGoogleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
+      final isLoading =
+          ref.watch(authAdapterProvider).loginGoogle?.isLoading ?? false;
+
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
@@ -21,24 +24,38 @@ class ButtonGoogleWidget extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(6).w),
           minimumSize: Size.fromHeight(48.h),
         ),
-        onPressed: () async {
-          await ref.read(authAdapterProvider.notifier).loginWithGoogle();
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(IconSharedConstant.google, height: 24.h, width: 24.w),
-            SizedBox(width: 8.w),
-            Text(
-              'Masuk Dengan Google',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w700,
+        onPressed: isLoading
+            ? null
+            : () async {
+                await ref
+                    .read(authAdapterProvider.notifier)
+                    .loginWithGoogle();
+              },
+        child: isLoading
+            ? SizedBox(
+                height: 24.h,
+                width: 24.w,
+                child: const CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    IconSharedConstant.google,
+                    height: 24.h,
+                    width: 24.w,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Masuk Dengan Google',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       );
     });
   }

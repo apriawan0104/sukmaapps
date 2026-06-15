@@ -2,7 +2,7 @@
 
 import 'package:app_core/app_core.dart';
 import 'package:dartz/dartz.dart';
-import 'package:get_it/get_it.dart';
+import 'example_di.dart';
 
 /// Example demonstrating URL Launcher service usage
 ///
@@ -13,8 +13,6 @@ import 'package:get_it/get_it.dart';
 /// 4. Make phone calls
 /// 5. Send SMS
 /// 6. Handle errors properly
-
-final getIt = GetIt.instance;
 
 void main() async {
   // Setup

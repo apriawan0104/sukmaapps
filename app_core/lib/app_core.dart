@@ -35,6 +35,9 @@ export 'src/infrastructure/chart/chart.dart';
 // Infrastructure - Connectivity
 export 'src/infrastructure/connectivity/connectivity.dart';
 
+// Infrastructure - Firebase
+export 'src/infrastructure/firebase/firebase.dart';
+
 // Infrastructure - File Opener
 export 'src/infrastructure/file_opener/file_opener.dart';
 
@@ -68,14 +71,8 @@ export 'src/infrastructure/url_launcher/url_launcher.dart';
 // Infrastructure - WebView
 export 'src/infrastructure/webview/webview.dart';
 
-// Configuration - DI
-export 'src/configuration/di/locator.dart';
-
 // Helpers - Utility classes
 export 'src/helpers/helpers.dart';
-
-// Configuration - DI
-export 'src/configuration/di/di.dart';
 
 /// A Calculator.
 class Calculator {
