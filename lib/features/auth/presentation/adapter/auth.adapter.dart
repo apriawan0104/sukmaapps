@@ -5,8 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
-import '../../../../config/navigation/app_router.dart';
-import '../../../../config/navigation/route_names.dart';
 import '../../domain/usecase/usecase.dart';
 import '../controller/auth.controller.dart';
 import '../state/auth.state.dart';

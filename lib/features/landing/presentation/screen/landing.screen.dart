@@ -18,7 +18,13 @@ class LandingScreen extends ConsumerWidget {
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: ctrl.loadInitial,
+        onRefresh: () async {
+          if (state.indexNav == 1) {
+            await ctrl.getHistoryConvert();
+            return;
+          }
+          await ctrl.loadInitial();
+        },
         child: IndexedStack(
           index: state.indexNav.clamp(0, _tabCount - 1),
           sizing: StackFit.expand,
