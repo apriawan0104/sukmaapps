@@ -9,4 +9,6 @@ abstract class ConvertPulsaController {
       {required String phone, required ProviderEntity provider});
   Future<void> isSavePhone(bool isSave);
   void resetProviderUnknown();
+  Future<void> calcNominal(String nominal);
+  void saveNominal(String nominalPulsa);
 }

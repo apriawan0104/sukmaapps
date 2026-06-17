@@ -10,6 +10,8 @@ class ConvertPulsaState extends Equatable {
     this.isSavePhone = false,
     this.savePhoneValue = const AsyncValue.data(null),
     this.isProviderUnknown = false,
+    this.nominalPulsa,
+    this.calcNominalValue = const AsyncValue.data(0),
   });
 
   final AsyncValue<List<PhoneFavEntity>>? phoneFavValue;
@@ -18,6 +20,8 @@ class ConvertPulsaState extends Equatable {
   final bool? isSavePhone;
   final AsyncValue<void>? savePhoneValue;
   final bool? isProviderUnknown;
+  final String? nominalPulsa;
+  final AsyncValue<double>? calcNominalValue;
 
   @override
   List<Object?> get props => [
@@ -27,6 +31,8 @@ class ConvertPulsaState extends Equatable {
         isSavePhone,
         savePhoneValue,
         isProviderUnknown,
+        nominalPulsa,
+        calcNominalValue,
       ];
 
   ConvertPulsaState copyWith({
@@ -36,6 +42,8 @@ class ConvertPulsaState extends Equatable {
     bool? isSavePhone,
     AsyncValue<void>? savePhoneValue,
     bool? isProviderUnknown,
+    String? nominalPulsa,
+    AsyncValue<double>? calcNominalValue,
   }) {
     return ConvertPulsaState(
       phoneFavValue: phoneFavValue ?? this.phoneFavValue,
@@ -44,6 +52,8 @@ class ConvertPulsaState extends Equatable {
       isSavePhone: isSavePhone ?? this.isSavePhone,
       savePhoneValue: savePhoneValue ?? this.savePhoneValue,
       isProviderUnknown: isProviderUnknown ?? this.isProviderUnknown,
+      nominalPulsa: nominalPulsa ?? this.nominalPulsa,
+      calcNominalValue: calcNominalValue ?? this.calcNominalValue,
     );
   }
 }

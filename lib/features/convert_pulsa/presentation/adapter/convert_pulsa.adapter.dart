@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
+import '../../../../core/core.dart';
 import '../controller/convert_pulsa.controller.dart';
 import '../state/convert_pulsa.state.dart';
 part 'convert_pulsa.adapter.g.dart';
@@ -132,5 +133,41 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   @override
   void resetProviderUnknown() {
     state = state.copyWith(isProviderUnknown: false);
+  }
+
+  @override
+  Future<void> calcNominal(String nominal) async {
+    final rate = state.chooseProviderName?.rate ?? '';
+    final parsedNominal = CalcNominalHelper.parseNominal(nominal);
+    final currentValue = state.calcNominalValue;
+
+    state = state.copyWith(
+      calcNominalValue: currentValue?.hasValue == true
+          ? currentValue!.copyWithLoading()
+          : const AsyncValue.loading(),
+    );
+
+    await Future<void>.delayed(Duration.zero);
+
+    if (parsedNominal <= 0) {
+      state = state.copyWith(
+        calcNominalValue: const AsyncValue.data(0),
+      );
+      return;
+    }
+
+    final credit = CalcNominalHelper.fromRate(
+      rate: rate,
+      nominal: parsedNominal,
+    );
+
+    state = state.copyWith(
+      calcNominalValue: AsyncValue.data(credit),
+    );
+  }
+
+  @override
+  void saveNominal(String nominalPulsa) {
+    state = state.copyWith(nominalPulsa: nominalPulsa);
   }
 }
