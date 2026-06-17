@@ -1,15 +1,15 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../../common/common.dart';
-import '../repository/landing.repository.dart';
+import '../entity/entity.dart';
+import '../repository/common.repository.dart';
 
 @lazySingleton
 class GetOutstandingUseCase
     extends UseCaseAsync<List<TransferEntity>, NoParams> {
   GetOutstandingUseCase(this._repository);
 
-  final LandingRepository _repository;
+  final CommonRepository _repository;
 
   @override
   Future<ValueGuard<List<TransferEntity>>> call(NoParams params) async {

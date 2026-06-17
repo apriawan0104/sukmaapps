@@ -6,10 +6,6 @@ import '../param/param.dart';
 
 /// Template: VS Code snippet `reabs` (prefix `reabs`).
 abstract class ConvertPulsaRepository {
-  Future<ValueGuard<PrefixEntity>> getPrefix(
-    GetPrefixParam params,
-  );
-
   Future<ValueGuard<void>> savePhoneFav(
     SavePhoneFavParam params,
   );

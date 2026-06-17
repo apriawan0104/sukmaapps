@@ -13,16 +13,18 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   final HttpClient _remoteClient;
 
   @override
-  Future<ValueGuard<TransferModel>> getListTransfer(NoParams params) async {
+  Future<ValueGuard<List<TransferModel>>> getOutstanding(
+    NoParams params,
+  ) async {
     return _remoteClient
         .get<Map<String, dynamic>>(
           WebServiceConstant.transGet,
         )
-        .mapSuccess(
-          (response) => TransferModel.fromJson(
-            ApiResponse.unwrapMap(response.data),
-          ),
-        );
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
+          .map((e) => TransferModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   @override
@@ -83,5 +85,39 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
           .map((e) => RekeningFavModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
+  }
+
+  @override
+  Future<ValueGuard<void>> savePhoneFav(SavePhoneFavParam params) {
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.number,
+          data: params.toJson(),
+        )
+        .mapSuccess((_) {});
+  }
+
+  @override
+  Future<ValueGuard<void>> saveRekeningFav(SaveRekeningFavParam params) {
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.rekening,
+          data: params.toJson(),
+        )
+        .mapSuccess((_) {});
+  }
+
+  @override
+  Future<ValueGuard<PrefixModel>> getPrefix(GetPrefixParam params) {
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.prefix,
+          data: params.toJson(),
+        )
+        .mapSuccess(
+          (response) => PrefixModel.fromJson(
+            ApiResponse.unwrapMap(response.data),
+          ),
+        );
   }
 }

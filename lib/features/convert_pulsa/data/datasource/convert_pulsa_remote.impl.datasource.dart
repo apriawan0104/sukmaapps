@@ -14,18 +14,6 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
   final HttpClient _remoteClient;
 
   @override
-  Future<ValueGuard<PrefixModel>> getPrefix(GetPrefixParam params) {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => PrefixModel.fromJson(
-        ApiResponse.unwrapMap(response.data),
-      ),
-    );
-  }
-
-  @override
   Future<ValueGuard<void>> saveNumberFav(SavePhoneFavParam params) {
     return _remoteClient.get<Map<String, dynamic>>(
       '/endpointPath',

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:sukmaapps/common/domain/entity/phone_fav.entity.dart';
 import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart';
 import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart';
+import 'package:sukmaapps/common/domain/usecase/get_outstanding.usecase.dart';
 import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart';
 import 'package:sukmaapps/config/config.dart';
 import 'package:sukmaapps/core/core.dart';

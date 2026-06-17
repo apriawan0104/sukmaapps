@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../common/common.dart';
+import 'provider.entity.dart';
 
 class PrefixEntity extends Equatable {
   const PrefixEntity({

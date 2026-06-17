@@ -1,5 +1,5 @@
-import '../../../../common/common.dart';
 import '../../domain/entity/entity.dart';
+import 'provider.model.dart';
 
 class PrefixModel {
   const PrefixModel({
@@ -16,7 +16,11 @@ class PrefixModel {
     return PrefixModel(
       id: json['id'] as int?,
       prefix: json['prefix'] as String?,
-      provider: json['provider'] as ProviderModel?,
+      provider: json['provider'] == null
+          ? null
+          : ProviderModel.fromJson(
+              json['provider'] as Map<String, dynamic>,
+            ),
     );
   }
 

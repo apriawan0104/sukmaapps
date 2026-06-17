@@ -1,50 +1,57 @@
-// import 'package:flutter/material.dart';
+import 'package:app_core/app_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
+import 'package:go_router/go_router.dart';
 
-// import '../../../../common/common.dart';
+import '../../../../common/common.dart';
+import '../../../../config/config.dart';
+import '../adapter/convert_pulsa.adapter.dart';
+import '../widget/widget.dart';
 
-// class PhoneSenderPage extends StatelessWidget {
-//   const PhoneSenderPage({super.key});
+class PhoneSenderPage extends ConsumerWidget {
+  const PhoneSenderPage({super.key});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     Scaffold(
-//         appBar: UIAppBar.appBar(context, title: 'Isi Nomor Pengirim'),
-//         body: FutureBuilder(
-//           future: Future.wait([ref.watch(getOutstandingProvider.future)]),
-//           builder: (context, snapshot) {
-//             return Column(
-//               children: [
-//                 AsyncValueSharedWidget(
-//                   value: ref.watch(phoneControllerProvider),
-//                   data: (p0) => section(),
-//                   onPressed: () {
-//                     ref.invalidate(phoneControllerProvider);
-//                   },
-//                   skipError: true,
-//                 ),
-//                 const UIKeyPairWidget(),
-//                 Expanded(
-//                   child: ListView(
-//                     children: [
-//                       sectionFavorite(),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             );
-//           },
-//         ),
-//         bottomNavigationBar: SafeArea(
-//           child: UIButtonBottomWidget(
-//             titleButton: 'Lanjutkan',
-//             onPressed: () {
-//               if (ctrl.phone.isEmpty) {
-//                 StaticWidget.msgToast('Pilih No Pengirim terlebih dahulu');
-//               } else {
-//                 ref.read(goRouterProvider).goNamed(Routes.nominal);
-//               }
-//             },
-//           ),
-//         ));
-//   }
-// }
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(convertPulsaRiverpodAdapterProvider);
+    final ctrl = ref.read(convertPulsaRiverpodAdapterProvider.notifier);
+
+    return Scaffold(
+      appBar: UIAppBar.appBar(context, title: 'Isi Nomor Pengirim'),
+      body: Column(
+        children: [
+          AddPhoneSenderWidget(
+            ctrl: ctrl,
+            choosePhone: state.choosePhone,
+            chooseProviderName: state.chooseProviderName?.name,
+          ),
+          const UIKeyPairWidget(),
+          Expanded(
+            child: ListView(
+              children: [
+                PhoneFavoriteWidget(
+                  ctrl: ctrl,
+                  phoneFavValue:
+                      state.phoneFavValue ?? const AsyncValue.loading(),
+                  choosePhone: state.choosePhone,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        child: UIButtonBottomWidget(
+          titleButton: 'Lanjutkan',
+          onPressed: () {
+            if (state.choosePhone == null) {
+              StaticWidget.msgToast('Pilih No Pengirim terlebih dahulu');
+            } else {
+              context.go(RouteNames.nominal);
+            }
+          },
+        ),
+      ),
+    );
+  }
+}

@@ -24,12 +24,20 @@ import 'package:sukmaapps/common/domain/usecase/delete_phone_fav.usecase.dart'
     as _i178;
 import 'package:sukmaapps/common/domain/usecase/delete_rekening_fav.usecase.dart'
     as _i780;
+import 'package:sukmaapps/common/domain/usecase/get_outstanding.usecase.dart'
+    as _i509;
 import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart'
     as _i945;
+import 'package:sukmaapps/common/domain/usecase/get_prefix.usecase.dart'
+    as _i429;
 import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart'
     as _i584;
 import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart'
     as _i389;
+import 'package:sukmaapps/common/domain/usecase/save_phone_fav.usecase.dart'
+    as _i278;
+import 'package:sukmaapps/common/domain/usecase/save_rekening_fav.usecase.dart'
+    as _i516;
 import 'package:sukmaapps/config/di/app_core_module.dart' as _i493;
 import 'package:sukmaapps/config/di/session_token_provider.service.dart'
     as _i766;
@@ -93,8 +101,6 @@ import 'package:sukmaapps/features/landing/domain/usecase/get_history_convert.us
     as _i829;
 import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner.usecase.dart'
     as _i448;
-import 'package:sukmaapps/features/landing/domain/usecase/get_outstanding.usecase.dart'
-    as _i226;
 import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
     as _i779;
 
@@ -176,14 +182,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i488.RefreshTokenUseCase>(
         () => _i488.RefreshTokenUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i879.GetLocalUserUseCase>(
+        () => _i879.GetLocalUserUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i655.ReadTermUseCase>(
         () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i939.LogoutUseCase>(
         () => _i939.LogoutUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i476.LoginGoogleUseCase>(
         () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i879.GetLocalUserUseCase>(
-        () => _i879.GetLocalUserUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i493.CommonRemoteDataSource>(
         () => _i871.CommonRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i312.LandingRemoteDataSource>(
@@ -194,8 +200,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
     gh.lazySingleton<_i779.GetRateUseCase>(
         () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
-    gh.lazySingleton<_i226.GetOutstandingUseCase>(
-        () => _i226.GetOutstandingUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i829.GetHistoryConvertUseCase>(
         () => _i829.GetHistoryConvertUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i448.GetInformationBannerUseCase>(
@@ -206,14 +210,22 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i178.DeletePhoneFavUseCase>(
         () => _i178.DeletePhoneFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i516.SaveRekeningFavUseCase>(
+        () => _i516.SaveRekeningFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i584.GetRekeningFavUseCase>(
         () => _i584.GetRekeningFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i945.GetPhoneFavUseCase>(
         () => _i945.GetPhoneFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i278.SavePhoneFavUseCase>(
+        () => _i278.SavePhoneFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i389.GetWaNumberUseCase>(
         () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i429.GetPrefixUseCase>(
+        () => _i429.GetPrefixUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i509.GetOutstandingUseCase>(
+        () => _i509.GetOutstandingUseCase(gh<_i852.CommonRepository>()));
     return this;
   }
 }

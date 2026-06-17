@@ -1,6 +1,5 @@
 import 'package:app_core/app_core.dart';
 
-import '../../../../common/common.dart';
 import '../entity/entity.dart';
 
 /// Template: VS Code snippet `reabs` (prefix `reabs`).
@@ -22,10 +21,6 @@ abstract class LandingRepository {
   );
 
   Future<ValueGuard<List<HistoryConvertEntity>>> getHistoryConvert(
-    NoParams params,
-  );
-
-  Future<ValueGuard<List<TransferEntity>>> getOutstanding(
     NoParams params,
   );
 }

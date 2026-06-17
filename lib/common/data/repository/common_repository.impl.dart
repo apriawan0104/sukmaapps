@@ -54,4 +54,40 @@ class CommonImplRepository implements CommonRepository {
     await _remoteDataSource.deleteRekeningFav(params);
     return ValueGuards.success(null);
   }
+
+  @override
+  Future<ValueGuard<void>> savePhoneFav(
+    SavePhoneFavParam params,
+  ) async {
+    await _remoteDataSource.savePhoneFav(params);
+    return ValueGuards.success(null);
+  }
+
+  @override
+  Future<ValueGuard<void>> saveRekeningFav(
+    SaveRekeningFavParam params,
+  ) async {
+    await _remoteDataSource.saveRekeningFav(params);
+    return ValueGuards.success(null);
+  }
+
+  @override
+  Future<ValueGuard<PrefixEntity>> getPrefix(
+    GetPrefixParam params,
+  ) async {
+    final result = await _remoteDataSource.getPrefix(params);
+    return result.mapValue(
+      (PrefixModel item) => item.toEntity(),
+    );
+  }
+
+  @override
+  Future<ValueGuard<List<TransferEntity>>> getOutstanding(
+    NoParams params,
+  ) async {
+    final result = await _remoteDataSource.getOutstanding(params);
+    return result.mapListValue(
+      (TransferModel item) => item.toEntity(),
+    );
+  }
 }

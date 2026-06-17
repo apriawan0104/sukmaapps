@@ -6,10 +6,6 @@ import '../model/model.dart';
 
 /// Template: VS Code snippet `dsabs` (prefix `dsabs`).
 abstract class ConvertPulsaRemoteDataSource {
-  Future<ValueGuard<PrefixModel>> getPrefix(
-    GetPrefixParam params,
-  );
-
   Future<ValueGuard<void>> saveNumberFav(
     SavePhoneFavParam params,
   );

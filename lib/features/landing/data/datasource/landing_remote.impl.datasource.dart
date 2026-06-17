@@ -2,7 +2,6 @@ import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sukmaapps/core/core.dart';
 
-import '../../../../common/common.dart';
 import '../model/model.dart';
 import 'landing_remote.datasource.dart';
 
@@ -80,21 +79,6 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
     ).mapSuccess((response) {
       return ApiResponse.unwrapList(response.data)
           .map((e) => HistoryConvertModel.fromJson(e as Map<String, dynamic>))
-          .toList();
-    });
-  }
-
-  @override
-  Future<ValueGuard<List<TransferModel>>> getOutstanding(
-    NoParams params,
-  ) async {
-    return _remoteClient
-        .get<Map<String, dynamic>>(
-      WebServiceConstant.transGet,
-    )
-        .mapSuccess((response) {
-      return ApiResponse.unwrapList(response.data)
-          .map((e) => TransferModel.fromJson(e as Map<String, dynamic>))
           .toList();
     });
   }

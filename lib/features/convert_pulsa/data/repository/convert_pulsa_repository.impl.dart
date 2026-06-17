@@ -14,16 +14,6 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
   final ConvertPulsaRemoteDataSource _remoteDataSource;
 
   @override
-  Future<ValueGuard<PrefixEntity>> getPrefix(
-    GetPrefixParam params,
-  ) async {
-    final result = await _remoteDataSource.getPrefix(params);
-    return result.mapValue(
-      (PrefixModel item) => item.toEntity(),
-    );
-  }
-
-  @override
   Future<ValueGuard<void>> savePhoneFav(
     SavePhoneFavParam params,
   ) async {
