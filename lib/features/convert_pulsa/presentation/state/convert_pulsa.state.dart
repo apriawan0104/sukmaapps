@@ -23,6 +23,8 @@ class ConvertPulsaState extends Equatable {
     this.chooseAccountName,
     this.isSaveRekening = false,
     this.saveRekeningValue = const AsyncValue.data(null),
+    this.saveTransKonfirmValue = const AsyncValue.data(null),
+    this.transferData,
   });
 
   final AsyncValue<List<PhoneFavEntity>>? phoneFavValue;
@@ -43,7 +45,8 @@ class ConvertPulsaState extends Equatable {
   final String? chooseAccountName;
   final bool? isSaveRekening;
   final AsyncValue<void>? saveRekeningValue;
-
+  final AsyncValue<void>? saveTransKonfirmValue;
+  final TransferEntity? transferData;
   @override
   List<Object?> get props => [
         phoneFavValue,
@@ -64,6 +67,8 @@ class ConvertPulsaState extends Equatable {
         chooseAccountName,
         isSaveRekening,
         saveRekeningValue,
+        saveTransKonfirmValue,
+        transferData,
       ];
 
   ConvertPulsaState copyWith({
@@ -85,6 +90,8 @@ class ConvertPulsaState extends Equatable {
     String? chooseAccountName,
     bool? isSaveRekening,
     AsyncValue<void>? saveRekeningValue,
+    AsyncValue<void>? saveTransKonfirmValue,
+    TransferEntity? transferData,
   }) {
     return ConvertPulsaState(
       phoneFavValue: phoneFavValue ?? this.phoneFavValue,
@@ -105,6 +112,9 @@ class ConvertPulsaState extends Equatable {
       chooseAccountName: chooseAccountName ?? this.chooseAccountName,
       isSaveRekening: isSaveRekening ?? this.isSaveRekening,
       saveRekeningValue: saveRekeningValue ?? this.saveRekeningValue,
+      saveTransKonfirmValue:
+          saveTransKonfirmValue ?? this.saveTransKonfirmValue,
+      transferData: transferData ?? this.transferData,
     );
   }
 }

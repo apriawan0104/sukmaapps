@@ -3,7 +3,10 @@ import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
 import '../../../../core/core.dart';
+import '../../domain/param/param.dart';
 import '../../domain/usecase/get_bank.usecase.dart';
+import '../../domain/usecase/save_trans_konfirm.usecase.dart';
+import '../../../landing/domain/usecase/check_status_app.usecase.dart';
 import '../controller/convert_pulsa.controller.dart';
 import '../state/convert_pulsa.state.dart';
 part 'convert_pulsa.adapter.g.dart';
@@ -19,6 +22,8 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   late GetRekeningFavUseCase _getRekeningFavUseCase;
   late DeleteRekeningFavUseCase _deleteRekeningFavUseCase;
   late SaveRekeningFavUseCase _saveRekeningFavUseCase;
+  late SaveTransKonfirmUseCase _saveTransKonfirmUseCase;
+  late CheckStatusAppUseCase _checkStatusAppUseCase;
 
   void _initDependencies() {
     _savePhoneFavUseCase = getIt<SavePhoneFavUseCase>();
@@ -29,6 +34,8 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
     _getRekeningFavUseCase = getIt<GetRekeningFavUseCase>();
     _deleteRekeningFavUseCase = getIt<DeleteRekeningFavUseCase>();
     _saveRekeningFavUseCase = getIt<SaveRekeningFavUseCase>();
+    _saveTransKonfirmUseCase = getIt<SaveTransKonfirmUseCase>();
+    _checkStatusAppUseCase = getIt<CheckStatusAppUseCase>();
   }
 
   @override
@@ -295,5 +302,57 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   @override
   void saveNominalRekening(String nominalRekening) {
     state = state.copyWith(nominalPulsa: nominalRekening);
+  }
+
+  @override
+  Future<void> saveTransKonfirm() async {
+    state = state.copyWith(
+      saveTransKonfirmValue: const AsyncValue.loading(),
+    );
+
+    final statusResult = await _checkStatusAppUseCase(NoParams());
+    final isAppReady = statusResult.fold(
+      (_) => false,
+      (status) =>
+          status.serviceStatus == true && status.userStatus == true,
+    );
+
+    if (!isAppReady) {
+      state = state.copyWith(
+        saveTransKonfirmValue: const AsyncValue.data(null),
+      );
+      return;
+    }
+
+    final nominal = CalcNominalHelper.parseNominal(state.nominalPulsa ?? '');
+    final providerId = state.chooseProviderName?.id ?? 0;
+    final otherBank = state.chooseOtherBankName ?? '';
+    final bankOptional = otherBank.isEmpty ? null : otherBank;
+
+    final result = await _saveTransKonfirmUseCase(
+      SaveTransKonfirmParam(
+        phoneNum: state.choosePhone ?? '',
+        bankId: state.chooseBankId ?? 0,
+        noRek: state.chooseAccountNumber ?? '',
+        nominal: nominal,
+        nameRek: state.chooseAccountName ?? '',
+        idProvider: providerId,
+        bankoptional: bankOptional,
+      ),
+    );
+
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          saveTransKonfirmValue: AsyncValue.error(failure.message),
+        );
+      },
+      (transfer) {
+        state = state.copyWith(
+          saveTransKonfirmValue: const AsyncValue.data(null),
+          transferData: transfer,
+        );
+      },
+    );
   }
 }

@@ -32,4 +32,6 @@ abstract class ConvertPulsaController {
   });
 
   void saveNominalRekening(String nominalRekening);
+
+  Future<void> saveTransKonfirm();
 }
