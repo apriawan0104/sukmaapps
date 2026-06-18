@@ -120,4 +120,21 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
           ),
         );
   }
+
+  @override
+  Future<ValueGuard<List<StatusTransaksiModel>>> getStatusTransaksiFailed(
+    NoParams params,
+  ) {
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+          WebServiceConstant.statusTransaksiFailed,
+        )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
+          .map(
+            (e) => StatusTransaksiModel.fromJson(e as Map<String, dynamic>),
+          )
+          .toList();
+    });
+  }
 }

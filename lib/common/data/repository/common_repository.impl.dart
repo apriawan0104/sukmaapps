@@ -90,4 +90,14 @@ class CommonImplRepository implements CommonRepository {
       (TransferModel item) => item.toEntity(),
     );
   }
+
+  @override
+  Future<ValueGuard<List<StatusTransaksiEntity>>> getStatusTransaksiFailed(
+    NoParams params,
+  ) async {
+    final result = await _remoteDataSource.getStatusTransaksiFailed(params);
+    return result.mapListValue(
+      (StatusTransaksiModel item) => item.toEntity(),
+    );
+  }
 }

@@ -4,3 +4,4 @@ export 'evidence.entity.dart';
 export 'phone_fav.entity.dart';
 export 'rekening_fav.entity.dart';
 export 'prefix.entity.dart';
+export 'status_transaksi.entity.dart';

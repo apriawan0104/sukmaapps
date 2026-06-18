@@ -35,4 +35,8 @@ abstract class CommonRemoteDataSource {
   Future<ValueGuard<PrefixModel>> getPrefix(
     GetPrefixParam params,
   );
+
+  Future<ValueGuard<List<StatusTransaksiModel>>> getStatusTransaksiFailed(
+    NoParams params,
+  );
 }

@@ -7,3 +7,4 @@ export 'save_phone_fav.usecase.dart';
 export 'save_rekening_fav.usecase.dart';
 export 'get_prefix.usecase.dart';
 export 'get_outstanding.usecase.dart';
+export 'get_status_transaksi_failed.usecase.dart';
