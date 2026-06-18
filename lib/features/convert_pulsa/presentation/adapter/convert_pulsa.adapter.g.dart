@@ -7,7 +7,7 @@ part of 'convert_pulsa.adapter.dart';
 // **************************************************************************
 
 String _$convertPulsaRiverpodAdapterHash() =>
-    r'fa7f125c24cc4b98c07352ff28869ad3ed06a13b';
+    r'6ae0c2f027e3de37fe80a23f29f746c6313e7577';
 
 /// See also [ConvertPulsaRiverpodAdapter].
 @ProviderFor(ConvertPulsaRiverpodAdapter)

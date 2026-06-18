@@ -3,6 +3,7 @@ import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
 import '../../../../core/core.dart';
+import '../../domain/usecase/get_bank.usecase.dart';
 import '../controller/convert_pulsa.controller.dart';
 import '../state/convert_pulsa.state.dart';
 part 'convert_pulsa.adapter.g.dart';
@@ -14,12 +15,20 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   late GetPhoneFavUseCase _getPhoneFavUseCase;
   late DeletePhoneFavUseCase _deletePhoneFavUseCase;
   late GetPrefixUseCase _getPrefixUseCase;
+  late GetBankUseCase _getBankUseCase;
+  late GetRekeningFavUseCase _getRekeningFavUseCase;
+  late DeleteRekeningFavUseCase _deleteRekeningFavUseCase;
+  late SaveRekeningFavUseCase _saveRekeningFavUseCase;
 
   void _initDependencies() {
     _savePhoneFavUseCase = getIt<SavePhoneFavUseCase>();
     _getPhoneFavUseCase = getIt<GetPhoneFavUseCase>();
     _deletePhoneFavUseCase = getIt<DeletePhoneFavUseCase>();
     _getPrefixUseCase = getIt<GetPrefixUseCase>();
+    _getBankUseCase = getIt<GetBankUseCase>();
+    _getRekeningFavUseCase = getIt<GetRekeningFavUseCase>();
+    _deleteRekeningFavUseCase = getIt<DeleteRekeningFavUseCase>();
+    _saveRekeningFavUseCase = getIt<SaveRekeningFavUseCase>();
   }
 
   @override
@@ -169,5 +178,122 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   @override
   void saveNominal(String nominalPulsa) {
     state = state.copyWith(nominalPulsa: nominalPulsa);
+  }
+
+  @override
+  Future<void> getListBank() async {
+    final result = await _getBankUseCase(NoParams());
+    state = state.copyWith(
+      bankListValue: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
+  }
+
+  @override
+  Future<void> getRekeningFav() async {
+    final result = await _getRekeningFavUseCase(NoParams());
+    state = state.copyWith(
+      rekeningFavValue: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
+  }
+
+  @override
+  Future<void> deleteRekeningFav(String id) async {
+    final result =
+        await _deleteRekeningFavUseCase(DeleteRekeningFavParam(id: id));
+    result.fold(
+      (failure) {
+        state =
+            state.copyWith(rekeningFavValue: AsyncValue.error(failure.message));
+      },
+      (_) async {
+        await getRekeningFav();
+      },
+    );
+  }
+
+  @override
+  Future<void> chooseRekening(
+      {required int bankId,
+      required String bankName,
+      required int bankCharge,
+      String? otherBankName,
+      required String accountNumber,
+      required String accountName}) async {
+    state = state.copyWith(
+      chooseBankId: bankId,
+      chooseBankName: bankName,
+      chooseBankCharge: bankCharge,
+      chooseOtherBankName: otherBankName,
+      chooseAccountNumber: accountNumber,
+      chooseAccountName: accountName,
+    );
+  }
+
+  @override
+  Future<void> isSaveRekening(bool isSave) async {
+    state = state.copyWith(isSaveRekening: isSave);
+  }
+
+  @override
+  Future<void> saveRekening({
+    required int bankId,
+    required String bankName,
+    required int bankCharge,
+    String? otherBankName,
+    required String accountNumber,
+    required String accountName,
+  }) async {
+    state = state.copyWith(
+      saveRekeningValue: const AsyncValue.loading(),
+    );
+
+    state = state.copyWith(
+      chooseBankId: bankId,
+      chooseBankName: bankName,
+      chooseBankCharge: bankCharge,
+      chooseOtherBankName: otherBankName,
+      chooseAccountNumber: accountNumber,
+      chooseAccountName: accountName,
+    );
+
+    if (state.isSaveRekening != true) {
+      state = state.copyWith(
+        saveRekeningValue: const AsyncValue.data(null),
+      );
+      return;
+    }
+
+    final saveResult = await _saveRekeningFavUseCase(
+      SaveRekeningFavParam(
+        name: accountName,
+        noRek: accountNumber,
+        idBank: bankId.toString(),
+      ),
+    );
+
+    saveResult.fold(
+      (failure) {
+        state = state.copyWith(
+          saveRekeningValue: AsyncValue.error(failure.message),
+        );
+      },
+      (_) async {
+        await getRekeningFav();
+        state = state.copyWith(
+          saveRekeningValue: const AsyncValue.data(null),
+        );
+      },
+    );
+  }
+
+  @override
+  void saveNominalRekening(String nominalRekening) {
+    state = state.copyWith(nominalPulsa: nominalRekening);
   }
 }

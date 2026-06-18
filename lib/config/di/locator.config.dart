@@ -81,6 +81,8 @@ import 'package:sukmaapps/features/convert_pulsa/domain/usecase/cancel_trans.use
     as _i139;
 import 'package:sukmaapps/features/convert_pulsa/domain/usecase/delete_image.usecase.dart'
     as _i1006;
+import 'package:sukmaapps/features/convert_pulsa/domain/usecase/get_bank.usecase.dart'
+    as _i161;
 import 'package:sukmaapps/features/convert_pulsa/domain/usecase/save_trans_konfirm.usecase.dart'
     as _i497;
 import 'package:sukmaapps/features/convert_pulsa/domain/usecase/upload_image.usecase.dart'
@@ -145,6 +147,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i279.UploadImageUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i497.SaveTransKonfirmUseCase>(() =>
         _i497.SaveTransKonfirmUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i161.GetBankUseCase>(
+        () => _i161.GetBankUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i139.CancelTransUseCase>(
         () => _i139.CancelTransUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i130.AuthenticationService>(

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
+import '../../domain/entity/entity.dart';
 
 class ConvertPulsaState extends Equatable {
   const ConvertPulsaState({
@@ -12,6 +13,16 @@ class ConvertPulsaState extends Equatable {
     this.isProviderUnknown = false,
     this.nominalPulsa,
     this.calcNominalValue = const AsyncValue.data(0),
+    this.bankListValue = const AsyncValue<List<BankEntity>>.loading(),
+    this.rekeningFavValue = const AsyncValue<List<RekeningFavEntity>>.loading(),
+    this.chooseBankId,
+    this.chooseBankName,
+    this.chooseBankCharge,
+    this.chooseOtherBankName,
+    this.chooseAccountNumber,
+    this.chooseAccountName,
+    this.isSaveRekening = false,
+    this.saveRekeningValue = const AsyncValue.data(null),
   });
 
   final AsyncValue<List<PhoneFavEntity>>? phoneFavValue;
@@ -22,6 +33,16 @@ class ConvertPulsaState extends Equatable {
   final bool? isProviderUnknown;
   final String? nominalPulsa;
   final AsyncValue<double>? calcNominalValue;
+  final AsyncValue<List<BankEntity>>? bankListValue;
+  final AsyncValue<List<RekeningFavEntity>>? rekeningFavValue;
+  final int? chooseBankId;
+  final String? chooseBankName;
+  final int? chooseBankCharge;
+  final String? chooseOtherBankName;
+  final String? chooseAccountNumber;
+  final String? chooseAccountName;
+  final bool? isSaveRekening;
+  final AsyncValue<void>? saveRekeningValue;
 
   @override
   List<Object?> get props => [
@@ -33,6 +54,16 @@ class ConvertPulsaState extends Equatable {
         isProviderUnknown,
         nominalPulsa,
         calcNominalValue,
+        bankListValue,
+        rekeningFavValue,
+        chooseBankId,
+        chooseBankName,
+        chooseBankCharge,
+        chooseOtherBankName,
+        chooseAccountNumber,
+        chooseAccountName,
+        isSaveRekening,
+        saveRekeningValue,
       ];
 
   ConvertPulsaState copyWith({
@@ -44,6 +75,16 @@ class ConvertPulsaState extends Equatable {
     bool? isProviderUnknown,
     String? nominalPulsa,
     AsyncValue<double>? calcNominalValue,
+    AsyncValue<List<BankEntity>>? bankListValue,
+    AsyncValue<List<RekeningFavEntity>>? rekeningFavValue,
+    int? chooseBankId,
+    String? chooseBankName,
+    int? chooseBankCharge,
+    String? chooseOtherBankName,
+    String? chooseAccountNumber,
+    String? chooseAccountName,
+    bool? isSaveRekening,
+    AsyncValue<void>? saveRekeningValue,
   }) {
     return ConvertPulsaState(
       phoneFavValue: phoneFavValue ?? this.phoneFavValue,
@@ -54,6 +95,16 @@ class ConvertPulsaState extends Equatable {
       isProviderUnknown: isProviderUnknown ?? this.isProviderUnknown,
       nominalPulsa: nominalPulsa ?? this.nominalPulsa,
       calcNominalValue: calcNominalValue ?? this.calcNominalValue,
+      bankListValue: bankListValue ?? this.bankListValue,
+      rekeningFavValue: rekeningFavValue ?? this.rekeningFavValue,
+      chooseBankId: chooseBankId ?? this.chooseBankId,
+      chooseBankName: chooseBankName ?? this.chooseBankName,
+      chooseBankCharge: chooseBankCharge ?? this.chooseBankCharge,
+      chooseOtherBankName: chooseOtherBankName ?? this.chooseOtherBankName,
+      chooseAccountNumber: chooseAccountNumber ?? this.chooseAccountNumber,
+      chooseAccountName: chooseAccountName ?? this.chooseAccountName,
+      isSaveRekening: isSaveRekening ?? this.isSaveRekening,
+      saveRekeningValue: saveRekeningValue ?? this.saveRekeningValue,
     );
   }
 }

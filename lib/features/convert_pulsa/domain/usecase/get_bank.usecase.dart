@@ -1,8 +1,10 @@
 import 'package:app_core/app_core.dart';
+import 'package:injectable/injectable.dart';
 import '../entity/entity.dart';
 import '../repository/convert_pulsa.repository.dart';
 
 /// Template: VS Code snippet `uscs` (prefix `uscs`) — satu use case per file jika mau lebih rapi.
+@lazySingleton
 class GetBankUseCase extends UseCaseAsync<List<BankEntity>, NoParams> {
   GetBankUseCase(this._repository);
 
