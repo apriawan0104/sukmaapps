@@ -33,4 +33,8 @@ abstract class ConvertPulsaRemoteDataSource {
   Future<ValueGuard<void>> uploadImage(
     UploadImageParam params,
   );
+
+  Future<ValueGuard<void>> transEvidence(
+    TransEvidenceParam params,
+  );
 }

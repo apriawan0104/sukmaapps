@@ -7,4 +7,5 @@ export 'statics/static.dart';
 export 'text_form_field/text_form_field.dart';
 export '../../../features/convert_pulsa/presentation/widget/card_charge.widget.dart';
 export 'appbar/appbar.dart';
+export 'expired_countdown_ticker.widget.dart';
 export 'in_app_review/in_app_review.dart';

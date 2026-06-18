@@ -35,7 +35,7 @@ class KonfirmasiPage extends ConsumerWidget {
 
       final updated = ref.read(convertPulsaRiverpodAdapterProvider);
       if (updated.transferData != null) {
-        context.go(RouteNames.transfer);
+        context.goNamed(RouteNames.transfer);
       }
     }
 

@@ -68,7 +68,9 @@ class TransferModel {
       createdAt: json['created_at'] as DateTime?,
       expiredAt: json['expired_at'] as DateTime?,
       interval: json['interval'] as int?,
-      evidence: json['evidence'] as EvidenceModel?,
+      evidence: json['evidence'] != null
+          ? EvidenceModel.fromJson(json['evidence'] as Map<String, dynamic>)
+          : null,
       providerName: json['provider_name'] as String?,
       cancelByAdmin: json['cancel_by_admin'] as bool?,
     );

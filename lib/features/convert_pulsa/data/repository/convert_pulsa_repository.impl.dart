@@ -1,4 +1,5 @@
 import 'package:app_core/app_core.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../common/common.dart';
 import '../../domain/entity/entity.dart';
@@ -8,6 +9,7 @@ import '../datasource/convert_pulsa_remote.datasource.dart';
 import '../model/model.dart';
 
 /// Template: VS Code snippet `reimp` (prefix `reimp`).
+@LazySingleton(as: ConvertPulsaRepository)
 class ConvertPulsaImplRepository implements ConvertPulsaRepository {
   ConvertPulsaImplRepository(this._remoteDataSource);
 
@@ -64,6 +66,12 @@ class ConvertPulsaImplRepository implements ConvertPulsaRepository {
   @override
   Future<ValueGuard<void>> uploadImage(UploadImageParam params) async {
     await _remoteDataSource.uploadImage(params);
+    return ValueGuards.success(null);
+  }
+
+  @override
+  Future<ValueGuard<void>> transEvidence(TransEvidenceParam params) async {
+    await _remoteDataSource.transEvidence(params);
     return ValueGuards.success(null);
   }
 }

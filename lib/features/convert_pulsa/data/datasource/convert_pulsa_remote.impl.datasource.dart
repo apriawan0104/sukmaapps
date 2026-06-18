@@ -57,25 +57,44 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
 
   @override
   Future<ValueGuard<void>> cancelTrans(CancelParam params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .delete<Map<String, dynamic>>(
+          WebServiceConstant.cancelTrans,
+          data: params.toJson(),
+          queryParameters: params.toQuery(),
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<void>> deleteImage(DeleteImageParam params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .delete<Map<String, dynamic>>(
+          WebServiceConstant.deleteImage,
+          queryParameters: params.toQuery(),
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<void>> uploadImage(UploadImageParam params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .upload<Map<String, dynamic>>(
+          WebServiceConstant.uploadImage,
+          params.imagePath,
+          data: {'no_trans': params.noTrans},
+        )
+        .mapSuccess((_) {});
+  }
+
+  @override
+  Future<ValueGuard<void>> transEvidence(TransEvidenceParam params) async {
+    return _remoteClient
+        .upload<Map<String, dynamic>>(
+          WebServiceConstant.transEvidence,
+          params.imagePath,
+          data: {'no_trans': params.noTrans},
+        )
+        .mapSuccess((_) {});
   }
 }

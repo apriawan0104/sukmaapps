@@ -4,8 +4,12 @@ import '../../../../common/common.dart';
 import '../../../../config/config.dart';
 import '../../../../core/core.dart';
 import '../../domain/param/param.dart';
+import '../../domain/usecase/cancel_trans.usecase.dart';
+import '../../domain/usecase/delete_image.usecase.dart';
 import '../../domain/usecase/get_bank.usecase.dart';
 import '../../domain/usecase/save_trans_konfirm.usecase.dart';
+import '../../domain/usecase/trans_evidence.usecase.dart';
+import '../../domain/usecase/upload_image.usecase.dart';
 import '../../../landing/domain/usecase/check_status_app.usecase.dart';
 import '../controller/convert_pulsa.controller.dart';
 import '../state/convert_pulsa.state.dart';
@@ -24,6 +28,11 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   late SaveRekeningFavUseCase _saveRekeningFavUseCase;
   late SaveTransKonfirmUseCase _saveTransKonfirmUseCase;
   late CheckStatusAppUseCase _checkStatusAppUseCase;
+  late GetOutstandingUseCase _getOutstandingUseCase;
+  late UploadImageUseCase _uploadImageUseCase;
+  late DeleteImageUseCase _deleteImageUseCase;
+  late CancelTransUseCase _cancelTransUseCase;
+  late TransEvidenceUseCase _transEvidenceUseCase;
 
   void _initDependencies() {
     _savePhoneFavUseCase = getIt<SavePhoneFavUseCase>();
@@ -36,6 +45,11 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
     _saveRekeningFavUseCase = getIt<SaveRekeningFavUseCase>();
     _saveTransKonfirmUseCase = getIt<SaveTransKonfirmUseCase>();
     _checkStatusAppUseCase = getIt<CheckStatusAppUseCase>();
+    _getOutstandingUseCase = getIt<GetOutstandingUseCase>();
+    _uploadImageUseCase = getIt<UploadImageUseCase>();
+    _deleteImageUseCase = getIt<DeleteImageUseCase>();
+    _cancelTransUseCase = getIt<CancelTransUseCase>();
+    _transEvidenceUseCase = getIt<TransEvidenceUseCase>();
   }
 
   @override
@@ -351,7 +365,188 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         state = state.copyWith(
           saveTransKonfirmValue: const AsyncValue.data(null),
           transferData: transfer,
+          imagePath: '',
         );
+      },
+    );
+  }
+
+  @override
+  Future<void> loadTransferData() async {
+    if (state.transferData != null) {
+      state = state.copyWith(
+        transferLoadValue: AsyncValue.data(state.transferData!),
+      );
+      return;
+    }
+
+    state = state.copyWith(transferLoadValue: const AsyncValue.loading());
+
+    final result = await _getOutstandingUseCase(NoParams());
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          transferLoadValue: AsyncValue.error(failure.message),
+        );
+      },
+      (outstanding) {
+        final transfer = outstanding.isNotEmpty ? outstanding.first : null;
+        if (transfer == null) {
+          state = state.copyWith(
+            transferLoadValue: const AsyncValue.error('Transaksi tidak ditemukan'),
+          );
+          return;
+        }
+
+        state = state.copyWith(
+          transferData: transfer,
+          transferLoadValue: AsyncValue.data(transfer),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<void> refreshTransferData() async {
+    state = state.copyWith(transferLoadValue: const AsyncValue.loading());
+
+    final result = await _getOutstandingUseCase(NoParams());
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          transferLoadValue: AsyncValue.error(failure.message),
+        );
+      },
+      (outstanding) {
+        final transfer = outstanding.isNotEmpty ? outstanding.first : null;
+        if (transfer == null) {
+          state = state.copyWith(
+            transferLoadValue: const AsyncValue.error('Transaksi tidak ditemukan'),
+          );
+          return;
+        }
+
+        state = state.copyWith(
+          transferData: transfer,
+          transferLoadValue: AsyncValue.data(transfer),
+        );
+      },
+    );
+  }
+
+  @override
+  Future<void> saveImagePath(String path) async {
+    final noTrans = state.transferData?.noTrans ?? '';
+    if (noTrans.isEmpty) return;
+
+    state = state.copyWith(uploadImageValue: const AsyncValue.loading());
+
+    final result = await _uploadImageUseCase(
+      UploadImageParam(noTrans: noTrans, imagePath: path),
+    );
+
+    await result.fold(
+      (failure) async {
+        state = state.copyWith(
+          uploadImageValue: AsyncValue.error(failure.message),
+        );
+      },
+      (_) async {
+        state = state.copyWith(
+          imagePath: path,
+          uploadImageValue: const AsyncValue.data(null),
+        );
+        await refreshTransferData();
+      },
+    );
+  }
+
+  @override
+  Future<void> deleteImagePath() async {
+    final noTrans = state.transferData?.noTrans ?? '';
+    if (noTrans.isEmpty) return;
+
+    state = state.copyWith(deleteImageValue: const AsyncValue.loading());
+
+    final result = await _deleteImageUseCase(
+      DeleteImageParam(noTrans: noTrans),
+    );
+
+    await result.fold(
+      (failure) async {
+        state = state.copyWith(
+          deleteImageValue: AsyncValue.error(failure.message),
+        );
+      },
+      (_) async {
+        state = state.copyWith(
+          imagePath: '',
+          deleteImageValue: const AsyncValue.data(null),
+        );
+        await refreshTransferData();
+      },
+    );
+  }
+
+  @override
+  Future<void> cancelTrans({bool? isCancel}) async {
+    final noTrans = state.transferData?.noTrans ?? '';
+    if (noTrans.isEmpty) return;
+
+    state = state.copyWith(cancelTransValue: const AsyncValue.loading());
+
+    final result = await _cancelTransUseCase(
+      CancelParam(noTrans: noTrans, isCancel: isCancel),
+    );
+
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          cancelTransValue: AsyncValue.error(failure.message),
+        );
+        StaticWidget.msgToast(failure.message);
+      },
+      (_) {
+        state = state.copyWith(
+          cancelTransValue: const AsyncValue.data(null),
+        );
+        appRouter.goNamed(RouteNames.detailTransaction);
+      },
+    );
+  }
+
+  @override
+  Future<void> submitTransEvidence() async {
+    final noTrans = state.transferData?.noTrans ?? '';
+    final imagePath = state.imagePath;
+
+    if (imagePath.isEmpty) {
+      StaticWidget.msgToast(
+        'Gambar belum dilampirkan, harap upload terlebih dahulu!',
+      );
+      return;
+    }
+
+    if (noTrans.isEmpty) return;
+
+    state = state.copyWith(transEvidenceValue: const AsyncValue.loading());
+
+    final result = await _transEvidenceUseCase(
+      TransEvidenceParam(noTrans: noTrans, imagePath: imagePath),
+    );
+
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          transEvidenceValue: AsyncValue.error(failure.message),
+        );
+        StaticWidget.msgToast(failure.message);
+      },
+      (_) {
+        state = state.copyWith(
+          transEvidenceValue: const AsyncValue.data(null),
+        );
+        appRouter.goNamed(RouteNames.detailTransaction);
       },
     );
   }

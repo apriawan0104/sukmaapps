@@ -34,4 +34,11 @@ abstract class ConvertPulsaController {
   void saveNominalRekening(String nominalRekening);
 
   Future<void> saveTransKonfirm();
+
+  Future<void> loadTransferData();
+  Future<void> refreshTransferData();
+  Future<void> saveImagePath(String path);
+  Future<void> deleteImagePath();
+  Future<void> cancelTrans({bool? isCancel});
+  Future<void> submitTransEvidence();
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -81,9 +79,17 @@ class TransactionOutstandingWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           Expanded(
-                            child: _TransactionExpiredCountdown(
+                            child: ExpiredCountdownTicker(
                               expiredAt: data.first.expiredAt,
                               onExpired: onExpired,
+                              builder: (context, remaining) {
+                                return UITextPrimaryWidget(
+                                  title: FormatHelper.formatCountdown(remaining),
+                                  fontSize: 12.sp,
+                                  color: AppColor.errorFair,
+                                  fontWeight: FontWeight.w700,
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -143,124 +149,6 @@ class TransactionOutstandingWidget extends StatelessWidget {
       loadingWidget: _transactionOutstandingLoading(),
       errorWidget: (p0, p1) => Container(padding: EdgeInsets.zero),
       onRetry: onRetry,
-    );
-  }
-}
-
-class _TransactionExpiredCountdown extends StatefulWidget {
-  const _TransactionExpiredCountdown({
-    required this.expiredAt,
-    required this.onExpired,
-  });
-
-  final DateTime? expiredAt;
-  final VoidCallback onExpired;
-
-  @override
-  State<_TransactionExpiredCountdown> createState() =>
-      _TransactionExpiredCountdownState();
-}
-
-class _TransactionExpiredCountdownState
-    extends State<_TransactionExpiredCountdown> {
-  Timer? _timer;
-  Duration _remaining = Duration.zero;
-  bool _hasShownExpiredDialog = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
-
-  @override
-  void didUpdateWidget(covariant _TransactionExpiredCountdown oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.expiredAt != widget.expiredAt) {
-      _timer?.cancel();
-      _hasShownExpiredDialog = false;
-      _startTimer();
-    }
-  }
-
-  void _startTimer() {
-    final expiredAt = widget.expiredAt?.toLocal();
-    if (expiredAt == null) {
-      setState(() => _remaining = Duration.zero);
-      return;
-    }
-
-    _updateRemaining(expiredAt);
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (!mounted) return;
-      _updateRemaining(expiredAt);
-    });
-  }
-
-  void _updateRemaining(DateTime expiredAt) {
-    final diff = expiredAt.difference(DateTime.now());
-
-    if (diff.inSeconds <= 0) {
-      setState(() => _remaining = Duration.zero);
-      _timer?.cancel();
-      _handleExpired();
-      return;
-    }
-
-    setState(() => _remaining = diff);
-  }
-
-  void _handleExpired() {
-    if (_hasShownExpiredDialog || !mounted) return;
-    _hasShownExpiredDialog = true;
-
-    StaticWidget.showDialogCustom(
-      context: context,
-      widget: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          UITextPrimaryWidget(
-            title: 'Transaksi Kadaluarsa',
-            fontSize: 16.sp,
-            color: AppColor.blackMassive,
-            fontWeight: FontWeight.w700,
-            align: TextAlign.center,
-          ),
-          SizedBox(height: 8.h),
-          UITextPrimaryWidget(
-            title:
-                'Waktu transaksi sudah habis. Jika kamu sudah melakukan transfer pulsa, silakan hubungi Customer Service',
-            fontSize: 14.sp,
-            color: AppColor.blackFair,
-            fontWeight: FontWeight.w400,
-            align: TextAlign.center,
-          ),
-          SizedBox(height: 16.h),
-          UIButtonPrimaryWidget(
-            titleButton: 'OK',
-            onPressed: () {
-              Navigator.of(context).pop();
-              widget.onExpired();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return UITextPrimaryWidget(
-      title: FormatHelper.formatCountdown(_remaining),
-      fontSize: 12.sp,
-      color: AppColor.errorFair,
-      fontWeight: FontWeight.w700,
     );
   }
 }

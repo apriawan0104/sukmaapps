@@ -25,6 +25,12 @@ class ConvertPulsaState extends Equatable {
     this.saveRekeningValue = const AsyncValue.data(null),
     this.saveTransKonfirmValue = const AsyncValue.data(null),
     this.transferData,
+    this.transferLoadValue,
+    this.imagePath = '',
+    this.uploadImageValue = const AsyncValue.data(null),
+    this.deleteImageValue = const AsyncValue.data(null),
+    this.transEvidenceValue = const AsyncValue.data(null),
+    this.cancelTransValue = const AsyncValue.data(null),
   });
 
   final AsyncValue<List<PhoneFavEntity>>? phoneFavValue;
@@ -47,6 +53,12 @@ class ConvertPulsaState extends Equatable {
   final AsyncValue<void>? saveRekeningValue;
   final AsyncValue<void>? saveTransKonfirmValue;
   final TransferEntity? transferData;
+  final AsyncValue<TransferEntity>? transferLoadValue;
+  final String imagePath;
+  final AsyncValue<void>? uploadImageValue;
+  final AsyncValue<void>? deleteImageValue;
+  final AsyncValue<void>? transEvidenceValue;
+  final AsyncValue<void>? cancelTransValue;
   @override
   List<Object?> get props => [
         phoneFavValue,
@@ -69,6 +81,12 @@ class ConvertPulsaState extends Equatable {
         saveRekeningValue,
         saveTransKonfirmValue,
         transferData,
+        transferLoadValue,
+        imagePath,
+        uploadImageValue,
+        deleteImageValue,
+        transEvidenceValue,
+        cancelTransValue,
       ];
 
   ConvertPulsaState copyWith({
@@ -92,6 +110,12 @@ class ConvertPulsaState extends Equatable {
     AsyncValue<void>? saveRekeningValue,
     AsyncValue<void>? saveTransKonfirmValue,
     TransferEntity? transferData,
+    AsyncValue<TransferEntity>? transferLoadValue,
+    String? imagePath,
+    AsyncValue<void>? uploadImageValue,
+    AsyncValue<void>? deleteImageValue,
+    AsyncValue<void>? transEvidenceValue,
+    AsyncValue<void>? cancelTransValue,
   }) {
     return ConvertPulsaState(
       phoneFavValue: phoneFavValue ?? this.phoneFavValue,
@@ -115,6 +139,12 @@ class ConvertPulsaState extends Equatable {
       saveTransKonfirmValue:
           saveTransKonfirmValue ?? this.saveTransKonfirmValue,
       transferData: transferData ?? this.transferData,
+      transferLoadValue: transferLoadValue ?? this.transferLoadValue,
+      imagePath: imagePath ?? this.imagePath,
+      uploadImageValue: uploadImageValue ?? this.uploadImageValue,
+      deleteImageValue: deleteImageValue ?? this.deleteImageValue,
+      transEvidenceValue: transEvidenceValue ?? this.transEvidenceValue,
+      cancelTransValue: cancelTransValue ?? this.cancelTransValue,
     );
   }
 }

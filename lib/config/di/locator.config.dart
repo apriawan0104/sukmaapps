@@ -75,6 +75,8 @@ import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_r
     as _i355;
 import 'package:sukmaapps/features/convert_pulsa/data/datasource/convert_pulsa_remote.impl.datasource.dart'
     as _i587;
+import 'package:sukmaapps/features/convert_pulsa/data/repository/convert_pulsa_repository.impl.dart'
+    as _i827;
 import 'package:sukmaapps/features/convert_pulsa/domain/repository/convert_pulsa.repository.dart'
     as _i342;
 import 'package:sukmaapps/features/convert_pulsa/domain/usecase/cancel_trans.usecase.dart'
@@ -85,6 +87,8 @@ import 'package:sukmaapps/features/convert_pulsa/domain/usecase/get_bank.usecase
     as _i161;
 import 'package:sukmaapps/features/convert_pulsa/domain/usecase/save_trans_konfirm.usecase.dart'
     as _i497;
+import 'package:sukmaapps/features/convert_pulsa/domain/usecase/trans_evidence.usecase.dart'
+    as _i1018;
 import 'package:sukmaapps/features/convert_pulsa/domain/usecase/upload_image.usecase.dart'
     as _i279;
 import 'package:sukmaapps/features/landing/data/datasource/landing_remote.datasource.dart'
@@ -141,16 +145,6 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'tb_m_user',
       preResolve: true,
     );
-    gh.lazySingleton<_i1006.DeleteImageUseCase>(
-        () => _i1006.DeleteImageUseCase(gh<_i342.ConvertPulsaRepository>()));
-    gh.lazySingleton<_i279.UploadImageUseCase>(
-        () => _i279.UploadImageUseCase(gh<_i342.ConvertPulsaRepository>()));
-    gh.lazySingleton<_i497.SaveTransKonfirmUseCase>(() =>
-        _i497.SaveTransKonfirmUseCase(gh<_i342.ConvertPulsaRepository>()));
-    gh.lazySingleton<_i161.GetBankUseCase>(
-        () => _i161.GetBankUseCase(gh<_i342.ConvertPulsaRepository>()));
-    gh.lazySingleton<_i139.CancelTransUseCase>(
-        () => _i139.CancelTransUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i130.AuthenticationService>(
       () => sukmaModule.appleAuthService(),
       instanceName: 'appleAuth',
@@ -200,6 +194,9 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1015.LandingRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i305.LandingRepository>(
         () => _i541.LandingImplRepository(gh<_i312.LandingRemoteDataSource>()));
+    gh.lazySingleton<_i342.ConvertPulsaRepository>(() =>
+        _i827.ConvertPulsaImplRepository(
+            gh<_i355.ConvertPulsaRemoteDataSource>()));
     gh.lazySingleton<_i852.CommonRepository>(
         () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
     gh.lazySingleton<_i779.GetRateUseCase>(
@@ -212,12 +209,28 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i971.CheckStatusAppUseCase>(
         () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i1006.DeleteImageUseCase>(
+        () => _i1006.DeleteImageUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i279.UploadImageUseCase>(
+        () => _i279.UploadImageUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i1018.TransEvidenceUseCase>(
+        () => _i1018.TransEvidenceUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i497.SaveTransKonfirmUseCase>(() =>
+        _i497.SaveTransKonfirmUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i161.GetBankUseCase>(
+        () => _i161.GetBankUseCase(gh<_i342.ConvertPulsaRepository>()));
+    gh.lazySingleton<_i139.CancelTransUseCase>(
+        () => _i139.CancelTransUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i178.DeletePhoneFavUseCase>(
         () => _i178.DeletePhoneFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i509.GetOutstandingUseCase>(
+        () => _i509.GetOutstandingUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i516.SaveRekeningFavUseCase>(
         () => _i516.SaveRekeningFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i584.GetRekeningFavUseCase>(
         () => _i584.GetRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i429.GetPrefixUseCase>(
+        () => _i429.GetPrefixUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i945.GetPhoneFavUseCase>(
         () => _i945.GetPhoneFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i278.SavePhoneFavUseCase>(
@@ -226,10 +239,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
-    gh.lazySingleton<_i429.GetPrefixUseCase>(
-        () => _i429.GetPrefixUseCase(gh<_i852.CommonRepository>()));
-    gh.lazySingleton<_i509.GetOutstandingUseCase>(
-        () => _i509.GetOutstandingUseCase(gh<_i852.CommonRepository>()));
     return this;
   }
 }
