@@ -100,4 +100,14 @@ class CommonImplRepository implements CommonRepository {
       (StatusTransaksiModel item) => item.toEntity(),
     );
   }
+
+  @override
+  Future<ValueGuard<TransferEntity?>> getDetailTransaction(
+    GetDetailTransactionParam params,
+  ) async {
+    final result = await _remoteDataSource.getDetailTransaction(params);
+    return result.mapValue(
+      (TransferModel? item) => item?.toEntity(),
+    );
+  }
 }

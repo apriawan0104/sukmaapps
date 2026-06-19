@@ -16,6 +16,7 @@ class LandingState extends Equatable {
     this.rekeningFav = const AsyncValue.loading(),
     this.localUser = const AsyncValue.loading(),
     this.outstanding = const AsyncValue.loading(),
+    this.statusTransaksiFailed = const AsyncValue.loading(),
   });
 
   final int indexNav;
@@ -28,6 +29,7 @@ class LandingState extends Equatable {
   final AsyncValue<List<PhoneFavEntity>> phoneFav;
   final AsyncValue<List<RekeningFavEntity>> rekeningFav;
   final AsyncValue<LocalUserEntity> localUser;
+  final AsyncValue<List<StatusTransaksiEntity>> statusTransaksiFailed;
 
   @override
   List<Object?> get props => [
@@ -41,6 +43,7 @@ class LandingState extends Equatable {
         rekeningFav,
         localUser,
         outstanding,
+        statusTransaksiFailed,
       ];
 
   LandingState copyWith({
@@ -54,6 +57,7 @@ class LandingState extends Equatable {
     AsyncValue<List<RekeningFavEntity>>? rekeningFav,
     AsyncValue<LocalUserEntity>? localUser,
     AsyncValue<List<TransferEntity>>? outstanding,
+    AsyncValue<List<StatusTransaksiEntity>>? statusTransaksiFailed,
   }) {
     return LandingState(
       indexNav: indexNav ?? this.indexNav,
@@ -66,6 +70,8 @@ class LandingState extends Equatable {
       rekeningFav: rekeningFav ?? this.rekeningFav,
       localUser: localUser ?? this.localUser,
       outstanding: outstanding ?? this.outstanding,
+      statusTransaksiFailed:
+          statusTransaksiFailed ?? this.statusTransaksiFailed,
     );
   }
 }

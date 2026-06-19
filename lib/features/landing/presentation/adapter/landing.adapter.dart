@@ -1,15 +1,9 @@
 import 'package:app_core/app_core.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
-import 'package:sukmaapps/common/domain/entity/phone_fav.entity.dart';
-import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart';
-import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart';
-import 'package:sukmaapps/common/domain/usecase/get_outstanding.usecase.dart';
-import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart';
 import 'package:sukmaapps/common/common.dart';
 import 'package:sukmaapps/config/config.dart';
 import 'package:sukmaapps/core/core.dart';
-import 'package:sukmaapps/common/domain/entity/rekening_fav.entity.dart';
 import '../../../auth/domain/domain.dart';
 import '../../domain/domain.dart';
 import '../controller/landing.controller.dart';
@@ -28,10 +22,13 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   late CheckStatusAppUseCase _checkStatusAppUseCase;
   late GetHistoryConvertUseCase _getHistoryConvertUseCase;
   late GetPhoneFavUseCase _getPhoneFavUseCase;
+  late DeletePhoneFavUseCase _deletePhoneFavUseCase;
   late GetRekeningFavUseCase _getRekeningFavUseCase;
+  late DeleteRekeningFavUseCase _deleteRekeningFavUseCase;
   late LogoutUseCase _logoutUseCase;
   late DeleteAccountUseCase _deleteAccountUseCase;
   late GetLocalUserUseCase _getLocalUserUseCase;
+  late GetStatusTransaksiFailedUseCase _getStatusTransaksiFailedUseCase;
 
   void _initDependencies() {
     _urlLauncherService = getIt<UrlLauncherService>();
@@ -43,10 +40,13 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     _checkStatusAppUseCase = getIt<CheckStatusAppUseCase>();
     _getHistoryConvertUseCase = getIt<GetHistoryConvertUseCase>();
     _getPhoneFavUseCase = getIt<GetPhoneFavUseCase>();
+    _deletePhoneFavUseCase = getIt<DeletePhoneFavUseCase>();
     _getRekeningFavUseCase = getIt<GetRekeningFavUseCase>();
+    _deleteRekeningFavUseCase = getIt<DeleteRekeningFavUseCase>();
     _logoutUseCase = getIt<LogoutUseCase>();
     _deleteAccountUseCase = getIt<DeleteAccountUseCase>();
     _getLocalUserUseCase = getIt<GetLocalUserUseCase>();
+    _getStatusTransaksiFailedUseCase = getIt<GetStatusTransaksiFailedUseCase>();
   }
 
   @override
@@ -173,15 +173,34 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   }
 
   @override
-  Future<void> removePhoneFav({required String phoneNumber}) {
-    // TODO: implement removePhoneFav
-    throw UnimplementedError();
+  Future<void> deletePhoneFav(String id) async {
+    final result = await _deletePhoneFavUseCase(DeletePhoneFavParam(id: id));
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          phoneFav: AsyncValue.error(failure.message),
+        );
+      },
+      (_) async {
+        await getPhoneFav();
+      },
+    );
   }
 
   @override
-  Future<void> removeRekeningFav() {
-    // TODO: implement removeRekeningFav
-    throw UnimplementedError();
+  Future<void> deleteRekeningFav(String id) async {
+    final result =
+        await _deleteRekeningFavUseCase(DeleteRekeningFavParam(id: id));
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          rekeningFav: AsyncValue.error(failure.message),
+        );
+      },
+      (_) async {
+        await getRekeningFav();
+      },
+    );
   }
 
   @override
@@ -224,6 +243,18 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   Future<String> getVersion() async {
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo.version;
+  }
+
+  @override
+  Future<List<StatusTransaksiEntity>> getStatusTransaksiFailed() async {
+    state = state.copyWith(statusTransaksiFailed: const AsyncValue.loading());
+    final result = await _getStatusTransaksiFailedUseCase(NoParams());
+    final AsyncValue<List<StatusTransaksiEntity>> asyncValue = result.fold(
+      (failure) => AsyncValue.error(failure.message),
+      AsyncValue.data,
+    );
+    state = state.copyWith(statusTransaksiFailed: asyncValue);
+    return asyncValue.value ?? [];
   }
 
   @override

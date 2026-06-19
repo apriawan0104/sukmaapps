@@ -39,4 +39,8 @@ abstract class CommonRemoteDataSource {
   Future<ValueGuard<List<StatusTransaksiModel>>> getStatusTransaksiFailed(
     NoParams params,
   );
+
+  Future<ValueGuard<TransferModel?>> getDetailTransaction(
+    GetDetailTransactionParam params,
+  );
 }

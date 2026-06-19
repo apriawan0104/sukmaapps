@@ -41,4 +41,8 @@ abstract class CommonRepository {
   Future<ValueGuard<List<StatusTransaksiEntity>>> getStatusTransaksiFailed(
     NoParams params,
   );
+
+  Future<ValueGuard<TransferEntity?>> getDetailTransaction(
+    GetDetailTransactionParam params,
+  );
 }

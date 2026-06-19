@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'landing.adapter.dart';
+part of 'in_app_review.service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$landingRiverpodAdapterHash() =>
-    r'e938c6f3b53989fed87cb37cdac114bf7ad8b3aa';
+String _$inAppReviewServiceHash() =>
+    r'7f9061d0429b2f989ee6d9c54c0d75389be64787';
 
-/// See also [LandingRiverpodAdapter].
-@ProviderFor(LandingRiverpodAdapter)
-final landingRiverpodAdapterProvider =
-    AutoDisposeNotifierProvider<LandingRiverpodAdapter, LandingState>.internal(
-  LandingRiverpodAdapter.new,
-  name: r'landingRiverpodAdapterProvider',
+/// See also [InAppReviewService].
+@ProviderFor(InAppReviewService)
+final inAppReviewServiceProvider =
+    AutoDisposeAsyncNotifierProvider<InAppReviewService, void>.internal(
+  InAppReviewService.new,
+  name: r'inAppReviewServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$landingRiverpodAdapterHash,
+      : _$inAppReviewServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$LandingRiverpodAdapter = AutoDisposeNotifier<LandingState>;
+typedef _$InAppReviewService = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

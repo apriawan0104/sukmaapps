@@ -7,7 +7,6 @@ import '../../../../app/app.dart';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
 import '../adapter/landing.adapter.dart';
-import '../navigation/detail_history.arg.dart';
 import '../widget/history/history_list.widget.dart';
 
 class HistoryPage extends ConsumerWidget {
@@ -38,7 +37,7 @@ class HistoryPage extends ConsumerWidget {
           onDetailTap: (transNo) {
             context.goNamed(
               RouteNames.detailHistory,
-              extra: DetailHistoryArg(
+              extra: DetailTransaksiArg(
                 transNo: transNo,
                 isFromHistory: true,
               ),

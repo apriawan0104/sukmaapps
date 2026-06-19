@@ -47,7 +47,7 @@ class PhoneSenderPage extends ConsumerWidget {
             if (state.choosePhone == null) {
               StaticWidget.msgToast('Pilih No Pengirim terlebih dahulu');
             } else {
-              context.go(RouteNames.nominal);
+              context.goNamed(RouteNames.nominal);
             }
           },
         ),

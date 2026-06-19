@@ -69,7 +69,7 @@ class _RekeningPageState extends ConsumerState<RekeningPage> {
             if (state.chooseBankId == null) {
               StaticWidget.msgToast('Pilih rekening terlebih dahulu');
             } else {
-              context.go(RouteNames.konfirmasi);
+              context.goNamed(RouteNames.konfirmasi);
             }
           },
         ),

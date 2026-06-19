@@ -8,3 +8,4 @@ export 'save_rekening_fav.usecase.dart';
 export 'get_prefix.usecase.dart';
 export 'get_outstanding.usecase.dart';
 export 'get_status_transaksi_failed.usecase.dart';
+export 'get_detail_transaction.usecase.dart';

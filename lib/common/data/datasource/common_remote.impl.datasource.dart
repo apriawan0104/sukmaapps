@@ -138,4 +138,32 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
           .toList();
     });
   }
+
+  @override
+  Future<ValueGuard<TransferModel?>> getDetailTransaction(
+    GetDetailTransactionParam params,
+  ) {
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.transGet,
+      queryParameters: {'no_trans': params.transNo},
+    )
+        .mapSuccess((response) {
+      final data = response.data;
+      if (data == null) {
+        return null;
+      }
+
+      final list = ApiResponse.unwrapList(data);
+      if (list.isEmpty) {
+        final map = ApiResponse.unwrapMap(data);
+        if (map.isEmpty) {
+          return null;
+        }
+        return TransferModel.fromJson(map);
+      }
+
+      return TransferModel.fromJson(list.first as Map<String, dynamic>);
+    });
+  }
 }

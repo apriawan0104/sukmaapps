@@ -66,7 +66,7 @@ class _TopUpCreditPageState extends ConsumerState<TopUpCreditPage> {
             if (_formKey.currentState!.validate()) {
               if (_txtNominal.text != '0' && _txtNominal.text.isNotEmpty) {
                 ctrl.saveNominal(_txtNominal.text);
-                context.go(RouteNames.rekening);
+                context.goNamed(RouteNames.rekening);
               } else {
                 StaticWidget.msgToast('Pilih Nominal terlebih dahulu');
               }

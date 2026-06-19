@@ -9,3 +9,4 @@ export '../../../features/convert_pulsa/presentation/widget/card_charge.widget.d
 export 'appbar/appbar.dart';
 export 'expired_countdown_ticker.widget.dart';
 export 'in_app_review/in_app_review.dart';
+export 'detail_transaksi/widget.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'route_redirect.dart';
 import 'routes.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -15,5 +16,6 @@ GoRouter createAppRouter({
     initialLocation: '/',
     routes: routes,
     observers: observers,
+    redirect: (context, state) => resolveAuthRedirect(state),
   );
 }

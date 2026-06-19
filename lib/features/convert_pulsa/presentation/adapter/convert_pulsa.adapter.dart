@@ -510,7 +510,12 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         state = state.copyWith(
           cancelTransValue: const AsyncValue.data(null),
         );
-        appRouter.goNamed(RouteNames.detailTransaction);
+        appRouter.goNamed(
+          RouteNames.detailTransaction,
+          extra: DetailTransaksiArg(
+            transNo: noTrans,
+          ),
+        );
       },
     );
   }
@@ -542,11 +547,19 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         );
         StaticWidget.msgToast(failure.message);
       },
-      (_) {
+      (_) async {
         state = state.copyWith(
           transEvidenceValue: const AsyncValue.data(null),
         );
-        appRouter.goNamed(RouteNames.detailTransaction);
+        await ref
+            .read(inAppReviewServiceProvider.notifier)
+            .incrementSuccessfulTransactions();
+        appRouter.goNamed(
+          RouteNames.detailTransaction,
+          extra: DetailTransaksiArg(
+            transNo: noTrans,
+          ),
+        );
       },
     );
   }

@@ -22,9 +22,9 @@ abstract class LandingController {
 
   Future<List<RekeningFavEntity>> getRekeningFav();
 
-  Future<void> removePhoneFav({required String phoneNumber});
+  Future<void> deletePhoneFav(String id);
 
-  Future<void> removeRekeningFav();
+  Future<void> deleteRekeningFav(String id);
 
   void changeIndexNav(int index);
 
@@ -41,4 +41,6 @@ abstract class LandingController {
   Future<void> deleteAccount();
 
   Future<void> getLocalUser();
+
+  Future<List<StatusTransaksiEntity>> getStatusTransaksiFailed();
 }

@@ -1,5 +1,5 @@
-class DetailHistoryArg {
-  const DetailHistoryArg({
+class DetailTransaksiArg {
+  const DetailTransaksiArg({
     required this.transNo,
     this.isFromHistory = false,
   });

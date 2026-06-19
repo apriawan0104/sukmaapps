@@ -24,6 +24,8 @@ import 'package:sukmaapps/common/domain/usecase/delete_phone_fav.usecase.dart'
     as _i178;
 import 'package:sukmaapps/common/domain/usecase/delete_rekening_fav.usecase.dart'
     as _i780;
+import 'package:sukmaapps/common/domain/usecase/get_detail_transaction.usecase.dart'
+    as _i815;
 import 'package:sukmaapps/common/domain/usecase/get_outstanding.usecase.dart'
     as _i509;
 import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart'
@@ -234,6 +236,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i516.SaveRekeningFavUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i584.GetRekeningFavUseCase>(
         () => _i584.GetRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i815.GetDetailTransactionUseCase>(
+        () => _i815.GetDetailTransactionUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i575.GetStatusTransaksiFailedUseCase>(() =>
+        _i575.GetStatusTransaksiFailedUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i429.GetPrefixUseCase>(
         () => _i429.GetPrefixUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i945.GetPhoneFavUseCase>(
@@ -244,8 +250,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
-    gh.lazySingleton<_i575.GetStatusTransaksiFailedUseCase>(() =>
-        _i575.GetStatusTransaksiFailedUseCase(gh<_i852.CommonRepository>()));
     return this;
   }
 }
