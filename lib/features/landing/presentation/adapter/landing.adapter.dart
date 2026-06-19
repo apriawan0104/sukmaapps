@@ -6,6 +6,7 @@ import 'package:sukmaapps/common/domain/usecase/get_phone_fav.usecase.dart';
 import 'package:sukmaapps/common/domain/usecase/get_rekening_fav.usecase.dart';
 import 'package:sukmaapps/common/domain/usecase/get_outstanding.usecase.dart';
 import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart';
+import 'package:sukmaapps/common/common.dart';
 import 'package:sukmaapps/config/config.dart';
 import 'package:sukmaapps/core/core.dart';
 import 'package:sukmaapps/common/domain/entity/rekening_fav.entity.dart';
@@ -241,8 +242,8 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   Future<void> logout() async {
     final result = await _logoutUseCase(NoParams());
     result.fold(
-      (failure) => AsyncValue.error(failure.message),
-      AsyncValue.data,
+      FailurePresenter.show,
+      (_) => appRouter.goNamed(RouteNames.login),
     );
   }
 

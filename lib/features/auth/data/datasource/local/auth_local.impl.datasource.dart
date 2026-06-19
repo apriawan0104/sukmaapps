@@ -59,12 +59,7 @@ class AuthLocalImplDataSource implements AuthLocalDataSource {
 
   @override
   Future<ValueGuard<void>> clearSession() async {
-    final result = await _storage.deleteAll([
-      UserKeyConstant.keyUserID,
-      UserKeyConstant.keyName,
-      UserKeyConstant.keyFoto,
-      UserKeyConstant.keyToken,
-    ]);
+    final result = await _storage.clear();
 
     return result.fold(
       ValueGuards.failure,

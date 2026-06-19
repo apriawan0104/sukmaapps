@@ -61,14 +61,4 @@ class AuthRemoteImplDataSource implements AuthRemoteDataSource {
         )
         .mapSuccess((_) {});
   }
-
-  @override
-  Future<ValueGuard<void>> logout(NoParams params) async {
-    return _remoteClient
-        .post<void>(
-          '/endpointPath',
-          queryParameters: const {'ver': 'v1'},
-        )
-        .mapSuccess((_) {});
-  }
 }

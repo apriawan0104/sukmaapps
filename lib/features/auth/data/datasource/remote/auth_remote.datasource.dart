@@ -9,5 +9,4 @@ abstract class AuthRemoteDataSource {
   Future<ValueGuard<UserModel>> register(RegisterParam params);
   Future<ValueGuard<void>> readTerm(ReadTermParam params);
   Future<ValueGuard<void>> deleteAccount(DeleteAccountParams params);
-  Future<ValueGuard<void>> logout(NoParams params);
 }

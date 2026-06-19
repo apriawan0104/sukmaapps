@@ -9,10 +9,16 @@ class AuthImplRepository implements AuthRepository {
   AuthImplRepository(
     this._remoteDataSource,
     this._localDataSource,
+    this._firebaseMessagingService,
+    @Named('googleAuth') this._googleAuth,
+    @Named('appleAuth') this._appleAuth,
   );
 
   final AuthRemoteDataSource _remoteDataSource;
   final AuthLocalDataSource _localDataSource;
+  final FirebaseMessagingService _firebaseMessagingService;
+  final AuthenticationService _googleAuth;
+  final AuthenticationService _appleAuth;
 
   @override
   Future<ValueGuard<UserEntity>> loginGoogle(NoParams params) {
@@ -126,7 +132,21 @@ class AuthImplRepository implements AuthRepository {
 
   @override
   Future<ValueGuard<void>> logout(NoParams params) async {
-    return _remoteDataSource.logout(params);
+    final fcmResult = await _firebaseMessagingService.deleteToken();
+    fcmResult.fold((_) {}, (_) {});
+
+    final clearResult = await _localDataSource.clearSession();
+    if (clearResult.isLeft()) {
+      return clearResult;
+    }
+
+    final googleSignOutResult = await _googleAuth.signOut();
+    googleSignOutResult.fold((_) {}, (_) {});
+
+    final appleSignOutResult = await _appleAuth.signOut();
+    appleSignOutResult.fold((_) {}, (_) {});
+
+    return ValueGuards.success(null);
   }
 
   @override

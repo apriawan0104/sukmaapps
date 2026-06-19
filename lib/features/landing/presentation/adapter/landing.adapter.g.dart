@@ -7,7 +7,7 @@ part of 'landing.adapter.dart';
 // **************************************************************************
 
 String _$landingRiverpodAdapterHash() =>
-    r'a16c22e4faeacfad148752e6420c964b8d983d25';
+    r'985efe8bedd0c81dc21ac974f31f74a02ed5d5f6';
 
 /// See also [LandingRiverpodAdapter].
 @ProviderFor(LandingRiverpodAdapter)

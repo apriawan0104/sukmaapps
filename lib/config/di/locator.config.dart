@@ -170,30 +170,19 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i130.AuthenticationService>(instanceName: 'googleAuth'),
               gh<_i130.AuthenticationService>(instanceName: 'appleAuth'),
             ));
-    gh.lazySingleton<_i647.AuthRepository>(() => _i84.AuthImplRepository(
-          gh<_i787.AuthRemoteDataSource>(),
-          gh<_i787.AuthLocalDataSource>(),
-        ));
     gh.lazySingleton<_i355.ConvertPulsaRemoteDataSource>(
         () => _i587.ConvertPulsaRemoteImplDataSource(gh<_i130.HttpClient>()));
-    gh.lazySingleton<_i76.DeleteAccountUseCase>(
-        () => _i76.DeleteAccountUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i761.LoginAppleUseCase>(
-        () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i488.RefreshTokenUseCase>(
-        () => _i488.RefreshTokenUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i879.GetLocalUserUseCase>(
-        () => _i879.GetLocalUserUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i655.ReadTermUseCase>(
-        () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i939.LogoutUseCase>(
-        () => _i939.LogoutUseCase(gh<_i800.AuthRepository>()));
-    gh.lazySingleton<_i476.LoginGoogleUseCase>(
-        () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i493.CommonRemoteDataSource>(
         () => _i871.CommonRemoteImplDataSource(gh<_i130.HttpClient>()));
     gh.lazySingleton<_i312.LandingRemoteDataSource>(
         () => _i1015.LandingRemoteImplDataSource(gh<_i130.HttpClient>()));
+    gh.lazySingleton<_i647.AuthRepository>(() => _i84.AuthImplRepository(
+          gh<_i787.AuthRemoteDataSource>(),
+          gh<_i787.AuthLocalDataSource>(),
+          gh<_i130.FirebaseMessagingService>(),
+          gh<_i130.AuthenticationService>(instanceName: 'googleAuth'),
+          gh<_i130.AuthenticationService>(instanceName: 'appleAuth'),
+        ));
     gh.lazySingleton<_i305.LandingRepository>(
         () => _i541.LandingImplRepository(gh<_i312.LandingRemoteDataSource>()));
     gh.lazySingleton<_i342.ConvertPulsaRepository>(() =>
@@ -211,6 +200,20 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i545.GetBannerUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i971.CheckStatusAppUseCase>(
         () => _i971.CheckStatusAppUseCase(gh<_i305.LandingRepository>()));
+    gh.lazySingleton<_i76.DeleteAccountUseCase>(
+        () => _i76.DeleteAccountUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i761.LoginAppleUseCase>(
+        () => _i761.LoginAppleUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i488.RefreshTokenUseCase>(
+        () => _i488.RefreshTokenUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i879.GetLocalUserUseCase>(
+        () => _i879.GetLocalUserUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i655.ReadTermUseCase>(
+        () => _i655.ReadTermUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i939.LogoutUseCase>(
+        () => _i939.LogoutUseCase(gh<_i800.AuthRepository>()));
+    gh.lazySingleton<_i476.LoginGoogleUseCase>(
+        () => _i476.LoginGoogleUseCase(gh<_i800.AuthRepository>()));
     gh.lazySingleton<_i1006.DeleteImageUseCase>(
         () => _i1006.DeleteImageUseCase(gh<_i342.ConvertPulsaRepository>()));
     gh.lazySingleton<_i279.UploadImageUseCase>(

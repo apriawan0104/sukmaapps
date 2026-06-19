@@ -15,11 +15,13 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
   late LoginGoogleUseCase _loginGoogleUseCase;
   late LoginAppleUseCase _loginAppleUseCase;
   late ReadTermUseCase _readTermUseCase;
+  late LogoutUseCase _logoutUseCase;
 
   void _initDependencies() {
     _loginGoogleUseCase = getIt<LoginGoogleUseCase>();
     _loginAppleUseCase = getIt<LoginAppleUseCase>();
     _readTermUseCase = getIt<ReadTermUseCase>();
+    _logoutUseCase = getIt<LogoutUseCase>();
   }
 
   @override
@@ -80,9 +82,12 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<void> logout() async {
+    final result = await _logoutUseCase(NoParams());
+    result.fold(
+      FailurePresenter.show,
+      (_) => appRouter.goNamed(RouteNames.login),
+    );
   }
 
   @override
