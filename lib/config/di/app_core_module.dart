@@ -2,6 +2,7 @@ import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
+import 'unauthorized_logout.handler.dart';
 
 /// Registers shared infrastructure from [app_core].
 ///
@@ -45,6 +46,7 @@ abstract class AppCoreModule {
   HttpClient httpClient(
     NetworkConfig config,
     TokenProviderService tokenProvider,
+    UnauthorizedLogoutHandler unauthorizedLogoutHandler,
   ) {
     final client = DioHttpClient(
       baseUrl: config.baseUrl,
@@ -63,6 +65,7 @@ abstract class AppCoreModule {
       ],
     );
     client.addRequestInterceptor(authInterceptor.onRequest);
+    client.addErrorInterceptor(unauthorizedLogoutHandler.onError);
 
     return client;
   }

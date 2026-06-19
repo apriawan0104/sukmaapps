@@ -46,6 +46,7 @@ import 'package:sukmaapps/config/di/app_core_module.dart' as _i493;
 import 'package:sukmaapps/config/di/session_token_provider.service.dart'
     as _i766;
 import 'package:sukmaapps/config/di/sukma_module.dart' as _i963;
+import 'package:sukmaapps/config/di/unauthorized_logout.handler.dart' as _i878;
 import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
     as _i787;
 import 'package:sukmaapps/features/auth/data/datasource/local/auth_local.datasource.dart'
@@ -162,9 +163,17 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i130.TokenProviderService>(() =>
         _i766.SessionTokenProviderService(gh<_i919.AuthLocalDataSource>()));
+    gh.lazySingleton<_i878.UnauthorizedLogoutHandler>(
+        () => _i878.UnauthorizedLogoutHandler(
+              gh<_i130.TokenProviderService>(),
+              gh<_i130.FirebaseMessagingService>(),
+              gh<_i130.AuthenticationService>(instanceName: 'googleAuth'),
+              gh<_i130.AuthenticationService>(instanceName: 'appleAuth'),
+            ));
     gh.lazySingleton<_i130.HttpClient>(() => appCoreModule.httpClient(
           gh<_i130.NetworkConfig>(),
           gh<_i130.TokenProviderService>(),
+          gh<_i878.UnauthorizedLogoutHandler>(),
         ));
     gh.lazySingleton<_i977.AuthRemoteDataSource>(
         () => _i15.AuthRemoteImplDataSource(
