@@ -15,18 +15,21 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
 
   @override
   Future<ValueGuard<void>> saveNumberFav(SavePhoneFavParam params) {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.number,
+          data: params.toJson(),
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<List<BankModel>>> getListBank(NoParams params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.bank,
+    )
+        .mapSuccess((response) {
       return ApiResponse.unwrapList(response.data)
           .map((e) => BankModel.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -35,24 +38,28 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
 
   @override
   Future<ValueGuard<void>> saveRekeningFav(SaveRekeningFavParam params) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.rekening,
+          data: params.toJson(),
+        )
+        .mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<TransferModel>> saveTransKonfirm(
     SaveTransKonfirmParam params,
   ) async {
-    return _remoteClient.get<Map<String, dynamic>>(
-      '/endpointPath',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess(
-      (response) => TransferModel.fromJson(
-        ApiResponse.unwrapMap(response.data),
-      ),
-    );
+    return _remoteClient
+        .post<Map<String, dynamic>>(
+          WebServiceConstant.transOpen,
+          data: params.toJson(),
+        )
+        .mapSuccess(
+          (response) => TransferModel.fromJson(
+            ApiResponse.unwrapMap(response.data),
+          ),
+        );
   }
 
   @override
@@ -78,23 +85,19 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
 
   @override
   Future<ValueGuard<void>> uploadImage(UploadImageParam params) async {
-    return _remoteClient
-        .upload<Map<String, dynamic>>(
-          WebServiceConstant.uploadImage,
-          params.imagePath,
-          data: {'no_trans': params.noTrans},
-        )
-        .mapSuccess((_) {});
+    return _remoteClient.upload<Map<String, dynamic>>(
+      WebServiceConstant.uploadImage,
+      params.imagePath,
+      data: {'no_trans': params.noTrans},
+    ).mapSuccess((_) {});
   }
 
   @override
   Future<ValueGuard<void>> transEvidence(TransEvidenceParam params) async {
-    return _remoteClient
-        .upload<Map<String, dynamic>>(
-          WebServiceConstant.transEvidence,
-          params.imagePath,
-          data: {'no_trans': params.noTrans},
-        )
-        .mapSuccess((_) {});
+    return _remoteClient.upload<Map<String, dynamic>>(
+      WebServiceConstant.transEvidence,
+      params.imagePath,
+      data: {'no_trans': params.noTrans},
+    ).mapSuccess((_) {});
   }
 }

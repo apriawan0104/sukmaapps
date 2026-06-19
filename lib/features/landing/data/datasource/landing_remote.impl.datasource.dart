@@ -73,10 +73,11 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
   Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
     NoParams params,
   ) async {
-    return _remoteClient.get<Map<String, dynamic>>(
+    return _remoteClient
+        .get<Map<String, dynamic>>(
       WebServiceConstant.transHistory,
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((response) {
+    )
+        .mapSuccess((response) {
       return ApiResponse.unwrapList(response.data)
           .map((e) => HistoryConvertModel.fromJson(e as Map<String, dynamic>))
           .toList();

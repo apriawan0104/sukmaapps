@@ -18,8 +18,8 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   ) async {
     return _remoteClient
         .get<Map<String, dynamic>>(
-          WebServiceConstant.transGet,
-        )
+      WebServiceConstant.transGet,
+    )
         .mapSuccess((response) {
       return ApiResponse.unwrapList(response.data)
           .map((e) => TransferModel.fromJson(e as Map<String, dynamic>))
@@ -66,10 +66,11 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   Future<ValueGuard<void>> deleteRekeningFav(
     DeleteRekeningFavParam params,
   ) async {
-    return _remoteClient.delete<Map<String, dynamic>>(
-      '${WebServiceConstant.rekening}/${params.id}',
-      queryParameters: const {'ver': 'v1'},
-    ).mapSuccess((_) {});
+    return _remoteClient
+        .delete<Map<String, dynamic>>(
+          '${WebServiceConstant.rekening}/${params.id}',
+        )
+        .mapSuccess((_) {});
   }
 
   @override
@@ -127,8 +128,8 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   ) {
     return _remoteClient
         .get<Map<String, dynamic>>(
-          WebServiceConstant.statusTransaksiFailed,
-        )
+      WebServiceConstant.statusTransaksiFailed,
+    )
         .mapSuccess((response) {
       return ApiResponse.unwrapList(response.data)
           .map(
