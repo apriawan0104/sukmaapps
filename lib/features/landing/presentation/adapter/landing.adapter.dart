@@ -249,16 +249,20 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
 
   @override
   Future<void> deleteAccount() async {
-    // final userId =
-    //     await getIt<StorageService>().get<String>(StorageConstants.userId);
-    // if (userId == null) {
-    //   return;
-    // }
-    // final result =
-    //     await _deleteAccountUseCase(DeleteAccountParams(userId: userId));
-    // result.fold(
-    //   (failure) => AsyncValue.error(failure.message),
-    //   AsyncValue.data,
-    // );
+    var userId = state.localUser.value?.userId ?? '';
+    if (userId.isEmpty) {
+      final localUserResult = await _getLocalUserUseCase(NoParams());
+      userId = localUserResult.fold((_) => '', (user) => user.userId);
+    }
+    if (userId.isEmpty) {
+      return;
+    }
+
+    await _deleteAccountUseCase(DeleteAccountParams(userId: userId));
+
+    StaticWidget.msgToast(
+      'Akun berhasil dihapus. Silakan gunakan email lain untuk melanjutkan',
+    );
+    appRouter.goNamed(RouteNames.login);
   }
 }

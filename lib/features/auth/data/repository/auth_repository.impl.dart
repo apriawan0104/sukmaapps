@@ -127,11 +127,18 @@ class AuthImplRepository implements AuthRepository {
 
   @override
   Future<ValueGuard<void>> deleteAccount(DeleteAccountParams params) async {
-    return _remoteDataSource.deleteAccount(params);
+    final deleteResult = await _remoteDataSource.deleteAccount(params);
+    deleteResult.fold((_) {}, (_) {});
+
+    return _clearSessionAndSignOut();
   }
 
   @override
   Future<ValueGuard<void>> logout(NoParams params) async {
+    return _clearSessionAndSignOut();
+  }
+
+  Future<ValueGuard<void>> _clearSessionAndSignOut() async {
     final fcmResult = await _firebaseMessagingService.deleteToken();
     fcmResult.fold((_) {}, (_) {});
 

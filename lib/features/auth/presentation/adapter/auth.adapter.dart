@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
+import '../../domain/param/param.dart';
 import '../../domain/usecase/usecase.dart';
 import '../controller/auth.controller.dart';
 import '../state/auth.state.dart';
@@ -16,12 +17,16 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
   late LoginAppleUseCase _loginAppleUseCase;
   late ReadTermUseCase _readTermUseCase;
   late LogoutUseCase _logoutUseCase;
+  late DeleteAccountUseCase _deleteAccountUseCase;
+  late GetLocalUserUseCase _getLocalUserUseCase;
 
   void _initDependencies() {
     _loginGoogleUseCase = getIt<LoginGoogleUseCase>();
     _loginAppleUseCase = getIt<LoginAppleUseCase>();
     _readTermUseCase = getIt<ReadTermUseCase>();
     _logoutUseCase = getIt<LogoutUseCase>();
+    _deleteAccountUseCase = getIt<DeleteAccountUseCase>();
+    _getLocalUserUseCase = getIt<GetLocalUserUseCase>();
   }
 
   @override
@@ -91,8 +96,18 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
   }
 
   @override
-  Future<void> deleteAccount() {
-    // TODO: implement deleteAccount
-    throw UnimplementedError();
+  Future<void> deleteAccount() async {
+    final localUserResult = await _getLocalUserUseCase(NoParams());
+    final userId = localUserResult.fold((_) => '', (user) => user.userId);
+    if (userId.isEmpty) {
+      return;
+    }
+
+    await _deleteAccountUseCase(DeleteAccountParams(userId: userId));
+
+    StaticWidget.msgToast(
+      'Akun berhasil dihapus. Silakan gunakan email lain untuk melanjutkan',
+    );
+    appRouter.goNamed(RouteNames.login);
   }
 }
