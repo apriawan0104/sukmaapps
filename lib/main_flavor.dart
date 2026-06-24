@@ -54,13 +54,7 @@ class SukmaApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) => MaterialApp.router(
         title: _appTitle,
-        theme: ThemeData(
-          scaffoldBackgroundColor: AppColor.whiteMassive,
-          appBarTheme: const AppBarTheme().copyWith(
-            color: AppColor.whiteMassive,
-          ),
-          useMaterial3: false,
-        ),
+        theme: AppTheme.light,
         routerConfig: appRouter,
       ),
     );
