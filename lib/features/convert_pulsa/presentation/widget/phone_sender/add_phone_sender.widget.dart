@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../app/app.dart';
@@ -165,31 +164,20 @@ class PhoneDialogWidget {
               ref.read(convertPulsaRiverpodAdapterProvider.notifier);
 
           ref.listen(
-            convertPulsaRiverpodAdapterProvider.select((s) => s.isProviderUnknown),
+            convertPulsaRiverpodAdapterProvider,
             (previous, next) {
-              if (next == true && context.mounted) {
-                adapter.resetProviderUnknown();
-                context.pop();
-                numberUnknown(context: context);
-              }
-            },
-          );
-
-          ref.listen(
-            convertPulsaRiverpodAdapterProvider.select((s) => s.savePhoneValue),
-            (previous, next) {
-              final wasLoading = previous?.isLoading ?? false;
-              if (!wasLoading || next?.isLoading == true) {
+              final wasSaving = previous?.savePhoneValue?.isLoading ?? false;
+              final isSaving = next.savePhoneValue?.isLoading ?? false;
+              if (!wasSaving || isSaving) {
                 return;
               }
 
-              final currentState = ref.read(convertPulsaRiverpodAdapterProvider);
-              if (currentState.isProviderUnknown == true) {
+              if (next.isProviderUnknown == true) {
                 return;
               }
 
-              if (next?.hasValue == true && context.mounted) {
-                context.pop();
+              if (next.savePhoneValue?.hasValue == true && context.mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
               }
             },
           );
@@ -197,62 +185,11 @@ class PhoneDialogWidget {
           return _PhoneInputDialogContent(
             ctrl: adapter,
             isSavePhone: state.isSavePhone ?? false,
-            savePhoneValue:
-                state.savePhoneValue ?? const AsyncValue.data(null),
+            isProviderUnknown: state.isProviderUnknown ?? false,
+            savePhoneValue: state.savePhoneValue ?? const AsyncValue.data(null),
           );
         },
       ),
-    );
-  }
-
-  static Future<dynamic> numberUnknown({
-    required BuildContext context,
-  }) async {
-    final Widget item = Container(
-      color: Colors.white,
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  IconSharedConstant.validatePhone,
-                  width: 160.w,
-                  height: 160.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.w),
-                  child: UITextPrimaryWidget(
-                    title: 'Provider tidak dikenali',
-                    fontSize: 14.sp,
-                    color: AppColor.blackMassive,
-                    fontWeight: FontWeight.w700,
-                    align: TextAlign.start,
-                  ),
-                ),
-                UITextPrimaryWidget(
-                  title: 'Silakan periksa kembali provider yang kamu masukkan',
-                  fontSize: 12.sp,
-                  color: AppColor.blackFair,
-                  fontWeight: FontWeight.w400,
-                ),
-              ],
-            ),
-          ),
-          UIButtonBottomWidget(
-            onPressed: () {
-              context.pop();
-            },
-            titleButton: 'Oke, mengerti',
-          ),
-        ],
-      ),
-    );
-    StaticWidget.modalBottomWidget(
-      context: context,
-      widget: item,
     );
   }
 }
@@ -261,11 +198,13 @@ class _PhoneInputDialogContent extends StatefulWidget {
   const _PhoneInputDialogContent({
     required this.ctrl,
     required this.isSavePhone,
+    required this.isProviderUnknown,
     required this.savePhoneValue,
   });
 
   final ConvertPulsaController ctrl;
   final bool isSavePhone;
+  final bool isProviderUnknown;
   final AsyncValue<void> savePhoneValue;
 
   @override
@@ -288,6 +227,49 @@ class _PhoneInputDialogContentState extends State<_PhoneInputDialogContent> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isProviderUnknown) {
+      return Wrap(
+        children: [
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                children: [
+                  SvgPicture.asset(
+                    IconSharedConstant.validatePhone,
+                    width: 160.w,
+                    height: 160.h,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.w),
+                    child: UITextPrimaryWidget(
+                      title: 'Provider tidak dikenali',
+                      fontSize: 14.sp,
+                      color: AppColor.blackMassive,
+                      fontWeight: FontWeight.w700,
+                      align: TextAlign.start,
+                    ),
+                  ),
+                  UITextPrimaryWidget(
+                    title:
+                        'Silakan periksa kembali provider yang kamu masukkan',
+                    fontSize: 12.sp,
+                    color: AppColor.blackFair,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          UIButtonBottomWidget(
+            onPressed: widget.ctrl.resetProviderUnknown,
+            titleButton: 'Oke, mengerti',
+          ),
+        ],
+      );
+    }
+
     return Wrap(
       children: [
         Form(
