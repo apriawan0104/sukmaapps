@@ -31,11 +31,12 @@ class AsyncValue<T> extends Equatable {
   final StackTrace? stackTrace;
   final T? previousData;
 
-  /// Check if the value is loading
-  bool get hasData => !isLoading && error == null && data != null;
+  /// Whether the async operation resolved to data (including nullable/void).
+  bool get hasData => !isLoading && error == null;
 
-  /// Whether a value is available, including previous data during loading/error.
-  bool get hasValue => cachedData != null;
+  /// Whether a value is available, including previous data during loading/error
+  /// and resolved nullable/void data states.
+  bool get hasValue => previousData != null || hasData;
 
   /// Check if the value has error
   bool get hasError => error != null;
@@ -50,8 +51,8 @@ class AsyncValue<T> extends Equatable {
   ///
   /// Throws if no value is available.
   T get requireValue {
-    final cached = cachedData;
-    if (cached != null) return cached;
+    if (previousData != null) return previousData as T;
+    if (hasData) return data as T;
     if (hasError) throw error!;
     throw StateError(
       'Tried to call requireValue on an AsyncValue that has no value: $this',
