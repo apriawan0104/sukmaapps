@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../app/app.dart';
@@ -164,20 +165,25 @@ class PhoneDialogWidget {
               ref.read(convertPulsaRiverpodAdapterProvider.notifier);
 
           ref.listen(
-            convertPulsaRiverpodAdapterProvider,
+            convertPulsaRiverpodAdapterProvider.select(
+              (s) => (s.savePhoneValue, s.isProviderUnknown),
+            ),
             (previous, next) {
-              final wasSaving = previous?.savePhoneValue?.isLoading ?? false;
-              final isSaving = next.savePhoneValue?.isLoading ?? false;
+              final (prevSave, _) = previous ?? (null, null);
+              final (nextSave, nextUnknown) = next;
+
+              final wasSaving = prevSave?.isLoading ?? false;
+              final isSaving = nextSave?.isLoading ?? false;
               if (!wasSaving || isSaving) {
                 return;
               }
 
-              if (next.isProviderUnknown == true) {
+              if (nextUnknown == true) {
                 return;
               }
 
-              if (next.savePhoneValue?.hasValue == true && context.mounted) {
-                Navigator.of(context, rootNavigator: true).pop();
+              if (nextSave?.hasValue == true && context.mounted) {
+                context.pop();
               }
             },
           );

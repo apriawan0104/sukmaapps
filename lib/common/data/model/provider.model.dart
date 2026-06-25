@@ -35,9 +35,22 @@ class ProviderModel {
       rate: json['rate'] as String?,
       formatTransfer: json['format_transfer'] as String?,
       status: json['status'] as bool?,
-      createdAt: json['created_at'] as DateTime?,
-      updatedAt: json['updated_at'] as DateTime?,
+      createdAt: _parseDateTime(json['created_at']),
+      updatedAt: _parseDateTime(json['updated_at']),
     );
+  }
+
+  static DateTime? _parseDateTime(Object? value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is DateTime) {
+      return value;
+    }
+    if (value is String) {
+      return DateTime.tryParse(value);
+    }
+    return null;
   }
 
   ProviderEntity toEntity() {

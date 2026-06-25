@@ -86,23 +86,27 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
           return;
         }
 
+        if (state.isSavePhone != true) {
+          state = state.copyWith(
+            choosePhone: phone,
+            chooseProviderName: provider,
+            isProviderUnknown: false,
+            savePhoneValue: const AsyncValue.data(null),
+          );
+          return;
+        }
+
         state = state.copyWith(
           choosePhone: phone,
           chooseProviderName: provider,
           isProviderUnknown: false,
         );
 
-        if (state.isSavePhone != true) {
-          state = state.copyWith(
-            savePhoneValue: const AsyncValue.data(null),
-          );
-          return;
-        }
-
         final saveResult =
             await _savePhoneFavUseCase(SavePhoneFavParam(number: phone));
-        saveResult.fold(
-          (failure) {
+
+        await saveResult.fold(
+          (failure) async {
             state = state.copyWith(
               savePhoneValue: AsyncValue.error(failure.message),
             );
