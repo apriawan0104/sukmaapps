@@ -36,7 +36,11 @@ class _ExpiredCountdownTickerState extends State<ExpiredCountdownTicker> {
   @override
   void initState() {
     super.initState();
-    _startTimer();
+    _remaining = CountdownHelper.remainingUntil(widget.expiredAt);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _startTimer();
+    });
   }
 
   @override
@@ -50,11 +54,11 @@ class _ExpiredCountdownTickerState extends State<ExpiredCountdownTicker> {
   }
 
   void _startTimer() {
-    _tick();
-
     if (CountdownHelper.toLocalExpiredAt(widget.expiredAt) == null) {
       return;
     }
+
+    _tick();
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;

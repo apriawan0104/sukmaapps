@@ -63,15 +63,30 @@ class HistoryConvertModel {
       noTrans: json['no_trans'] as String?,
       status: json['status'] as int?,
       bucket: json['bucket'] as String?,
-      provider: json['provider'] as ProviderModel?,
+      provider: json['provider'] != null
+          ? ProviderModel.fromJson(json['provider'] as Map<String, dynamic>)
+          : null,
       charge: json['charge'] as int?,
       credit: json['credit'] as int?,
       costPayment: json['cost_payment'] as int?,
-      createdAt: json['created_at'] as DateTime?,
+      createdAt: _parseDateTime(json['created_at']),
       interval: json['interval'] as dynamic,
       isHold: json['is_hold'] as bool?,
       cancelByAdmin: json['cancel_by_admin'] as bool?,
     );
+  }
+
+  static DateTime? _parseDateTime(Object? value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is DateTime) {
+      return value;
+    }
+    if (value is String) {
+      return DateTime.tryParse(value);
+    }
+    return null;
   }
 
   HistoryConvertEntity toEntity() {

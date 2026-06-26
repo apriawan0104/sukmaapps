@@ -11,6 +11,7 @@ import '../../domain/usecase/save_trans_konfirm.usecase.dart';
 import '../../domain/usecase/trans_evidence.usecase.dart';
 import '../../domain/usecase/upload_image.usecase.dart';
 import '../../../landing/domain/usecase/check_status_app.usecase.dart';
+import '../../../landing/presentation/util/landing_outstanding_sync.dart';
 import '../controller/convert_pulsa.controller.dart';
 import '../state/convert_pulsa.state.dart';
 part 'convert_pulsa.adapter.g.dart';
@@ -379,10 +380,19 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   }
 
   @override
+  void seedTransferData(TransferEntity transfer) {
+    state = state.copyWith(
+      transferData: transfer,
+      transferLoadValue: AsyncValue.data(transfer),
+    );
+  }
+
+  @override
   Future<void> loadTransferData() async {
-    if (state.transferData != null) {
+    final cached = state.transferData;
+    if (cached != null && cached.expiredAt != null) {
       state = state.copyWith(
-        transferLoadValue: AsyncValue.data(state.transferData!),
+        transferLoadValue: AsyncValue.data(cached),
       );
       return;
     }
@@ -397,7 +407,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         );
       },
       (outstanding) {
-        final transfer = outstanding.isNotEmpty ? outstanding.first : null;
+        final transfer = outstanding;
         if (transfer == null) {
           state = state.copyWith(
             transferLoadValue:
@@ -426,7 +436,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         );
       },
       (outstanding) {
-        final transfer = outstanding.isNotEmpty ? outstanding.first : null;
+        final transfer = outstanding;
         if (transfer == null) {
           state = state.copyWith(
             transferLoadValue:
@@ -508,24 +518,24 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
       CancelParam(noTrans: noTrans, isCancel: isCancel),
     );
 
-    result.fold(
-      (failure) {
-        state = state.copyWith(
-          cancelTransValue: AsyncValue.error(failure.message),
-        );
-        StaticWidget.msgToast(failure.message);
-      },
-      (_) {
-        state = state.copyWith(
-          cancelTransValue: const AsyncValue.data(null),
-        );
-        appRouter.goNamed(
-          RouteNames.detailTransaction,
-          extra: DetailTransaksiArg(
-            transNo: noTrans,
-          ),
-        );
-      },
+    if (result.isFailure) {
+      final failure = result.failureOrNull!;
+      state = state.copyWith(
+        cancelTransValue: AsyncValue.error(failure.message),
+      );
+      StaticWidget.msgToast(failure.message);
+      return;
+    }
+
+    state = state.copyWith(
+      cancelTransValue: const AsyncValue.data(null),
+    );
+    clearLandingOutstandingIfActive(ref);
+    appRouter.goNamed(
+      RouteNames.detailTransaction,
+      extra: DetailTransaksiArg(
+        transNo: noTrans,
+      ),
     );
   }
 
@@ -560,6 +570,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         state = state.copyWith(
           transEvidenceValue: const AsyncValue.data(null),
         );
+        clearLandingOutstandingIfActive(ref);
         await ref
             .read(inAppReviewServiceProvider.notifier)
             .incrementSuccessfulTransactions();

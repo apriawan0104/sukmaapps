@@ -34,7 +34,7 @@ abstract class CommonRepository {
     GetPrefixParam params,
   );
 
-  Future<ValueGuard<List<TransferEntity>>> getOutstanding(
+  Future<ValueGuard<TransferEntity?>> getOutstanding(
     NoParams params,
   );
 

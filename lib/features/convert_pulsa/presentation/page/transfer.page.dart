@@ -26,6 +26,14 @@ class _TransferPageState extends ConsumerState<TransferPage> {
     });
   }
 
+  Future<void> _onLeaveTransfer() async {
+    await ref
+        .read(landingRiverpodAdapterProvider.notifier)
+        .refreshOutstanding();
+    if (!mounted) return;
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(convertPulsaRiverpodAdapterProvider);
@@ -73,15 +81,21 @@ class _TransferPageState extends ConsumerState<TransferPage> {
       await ctrl.submitTransEvidence();
     }
 
-    return Scaffold(
-      appBar: UIAppBar.appBar(
-        context,
-        title: 'Transfer Pulsa ke Sukma',
-        customBackButton: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
-          onPressed: () => context.pop(),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _onLeaveTransfer();
+      },
+      child: Scaffold(
+        appBar: UIAppBar.appBar(
+          context,
+          title: 'Transfer Pulsa ke Sukma',
+          customBackButton: IconButton(
+            icon: const Icon(Icons.close, color: Colors.black),
+            onPressed: _onLeaveTransfer,
+          ),
         ),
-      ),
       body: AsyncValueWidget<TransferEntity>(
         value: transferLoadValue,
         onSuccess: (transfer) {
@@ -107,9 +121,6 @@ class _TransferPageState extends ConsumerState<TransferPage> {
                   expiredAt: transfer.expiredAt,
                   onExpired: () {
                     if (!context.mounted) return;
-                    ref
-                        .read(landingRiverpodAdapterProvider.notifier)
-                        .getOutstanding();
                     context.goNamed(RouteNames.landing);
                   },
                 ),
@@ -139,6 +150,7 @@ class _TransferPageState extends ConsumerState<TransferPage> {
           },
           onRetry: onSubmitEvidence,
         ),
+      ),
       ),
     );
   }

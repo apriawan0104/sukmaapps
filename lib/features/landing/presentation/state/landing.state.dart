@@ -23,7 +23,7 @@ class LandingState extends Equatable {
   final AsyncValue<List<BannerEntity>> banner;
   final AsyncValue<List<InformationBannerEntity>> informationBanner;
   final AsyncValue<List<RateEntity>> rate;
-  final AsyncValue<List<TransferEntity>> outstanding;
+  final AsyncValue<TransferEntity?> outstanding;
   final AsyncValue<StatusAppEntity> statusApp;
   final AsyncValue<List<HistoryConvertEntity>> historyConvert;
   final AsyncValue<List<PhoneFavEntity>> phoneFav;
@@ -56,7 +56,7 @@ class LandingState extends Equatable {
     AsyncValue<List<PhoneFavEntity>>? phoneFav,
     AsyncValue<List<RekeningFavEntity>>? rekeningFav,
     AsyncValue<LocalUserEntity>? localUser,
-    AsyncValue<List<TransferEntity>>? outstanding,
+    AsyncValue<TransferEntity?>? outstanding,
     AsyncValue<List<StatusTransaksiEntity>>? statusTransaksiFailed,
   }) {
     return LandingState(

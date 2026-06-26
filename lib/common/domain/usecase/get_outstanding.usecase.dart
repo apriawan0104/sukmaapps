@@ -5,14 +5,13 @@ import '../entity/entity.dart';
 import '../repository/common.repository.dart';
 
 @lazySingleton
-class GetOutstandingUseCase
-    extends UseCaseAsync<List<TransferEntity>, NoParams> {
+class GetOutstandingUseCase extends UseCaseAsync<TransferEntity?, NoParams> {
   GetOutstandingUseCase(this._repository);
 
   final CommonRepository _repository;
 
   @override
-  Future<ValueGuard<List<TransferEntity>>> call(NoParams params) async {
+  Future<ValueGuard<TransferEntity?>> call(NoParams params) async {
     return _repository.getOutstanding(params);
   }
 }

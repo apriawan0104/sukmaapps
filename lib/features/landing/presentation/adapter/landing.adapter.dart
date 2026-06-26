@@ -30,6 +30,8 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   late GetLocalUserUseCase _getLocalUserUseCase;
   late GetStatusTransaksiFailedUseCase _getStatusTransaksiFailedUseCase;
 
+  Future<void>? _outstandingRequest;
+
   void _initDependencies() {
     _urlLauncherService = getIt<UrlLauncherService>();
     _getWaNumberUseCase = getIt<GetWaNumberUseCase>();
@@ -149,8 +151,42 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   }
 
   @override
-  Future<void> getOutstanding() async {
-    state = state.copyWith(outstanding: const AsyncValue.loading());
+  Future<void> refreshOutstanding() => getOutstanding(showLoading: false);
+
+  @override
+  void clearOutstanding() {
+    state = state.copyWith(outstanding: const AsyncValue.data(null));
+  }
+
+  /// Fetches outstanding transaction for home card.
+  ///
+  /// Refresh triggers (one API call each, deduped when concurrent):
+  /// - [loadInitial] — landing mount / pull-to-refresh
+  /// - [syncLandingOutstandingIfActive] — transfer pop while home still mounted
+  /// - [clearLandingOutstandingIfActive] — cancel/submit success (no API)
+  /// - [TransferPage] pop — pushNamed back to home
+  /// - [HomePage] tab switch / countdown expired / retry button
+  @override
+  Future<void> getOutstanding({bool showLoading = true}) async {
+    if (_outstandingRequest != null) {
+      return _outstandingRequest;
+    }
+
+    _outstandingRequest = _fetchOutstanding(showLoading: showLoading);
+    try {
+      await _outstandingRequest;
+    } finally {
+      _outstandingRequest = null;
+    }
+  }
+
+  Future<void> _fetchOutstanding({required bool showLoading}) async {
+    final hasCachedData = state.outstanding.hasValue;
+
+    if (showLoading || !hasCachedData) {
+      state = state.copyWith(outstanding: const AsyncValue.loading());
+    }
+
     final result = await _getOutstandingUseCase(NoParams());
     state = state.copyWith(
       outstanding: result.fold(

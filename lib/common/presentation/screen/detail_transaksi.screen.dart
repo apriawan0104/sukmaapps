@@ -232,6 +232,10 @@ class _DetailTransaksiScreenState extends ConsumerState<DetailTransaksiScreen> {
   Future<void> _handleBack() async {
     await InAppReviewWidget.show(context, ref);
     if (!mounted) return;
+    if (!widget.argument.isFromHistory) {
+      context.goNamed(RouteNames.landing);
+      return;
+    }
     context.pop();
   }
 

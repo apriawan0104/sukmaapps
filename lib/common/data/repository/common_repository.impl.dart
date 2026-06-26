@@ -82,12 +82,12 @@ class CommonImplRepository implements CommonRepository {
   }
 
   @override
-  Future<ValueGuard<List<TransferEntity>>> getOutstanding(
+  Future<ValueGuard<TransferEntity?>> getOutstanding(
     NoParams params,
   ) async {
     final result = await _remoteDataSource.getOutstanding(params);
-    return result.mapListValue(
-      (TransferModel item) => item.toEntity(),
+    return result.mapValue(
+      (TransferModel? item) => item?.toEntity(),
     );
   }
 

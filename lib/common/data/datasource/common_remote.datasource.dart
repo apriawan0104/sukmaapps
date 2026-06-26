@@ -4,7 +4,7 @@ import '../../domain/param/param.dart';
 import '../model/model.dart';
 
 abstract class CommonRemoteDataSource {
-  Future<ValueGuard<List<TransferModel>>> getOutstanding(NoParams params);
+  Future<ValueGuard<TransferModel?>> getOutstanding(NoParams params);
 
   Future<ValueGuard<String>> getWaNumber(NoParams params);
 

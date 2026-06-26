@@ -15,16 +15,18 @@ class TransactionOutstandingWidget extends StatelessWidget {
     required this.transactionOutstandingAsync,
     required this.onRetry,
     required this.onExpired,
+    this.onOpenTransfer,
   });
 
-  final AsyncValue<List<TransferEntity>> transactionOutstandingAsync;
+  final AsyncValue<TransferEntity?> transactionOutstandingAsync;
   final VoidCallback onRetry;
   final VoidCallback onExpired;
+  final void Function(TransferEntity transfer)? onOpenTransfer;
 
   Widget _transactionOutstandingList(
-      BuildContext context, List<TransferEntity> data) {
+      BuildContext context, TransferEntity? data) {
     return Padding(
-      padding: const REdgeInsets.all(16),
+      padding: const REdgeInsets.symmetric(vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,8 +58,7 @@ class TransactionOutstandingWidget extends StatelessWidget {
                         SizedBox(height: 4.h),
                         UITextPrimaryWidget(
                           title: FormatHelper.formatDate(
-                              data.first.expiredAt?.toLocal() ??
-                                  DateTime.now()),
+                              data?.expiredAt?.toLocal() ?? DateTime.now()),
                           fontSize: 14.sp,
                           color: AppColor.whiteMassive,
                           fontWeight: FontWeight.w400,
@@ -80,11 +81,12 @@ class TransactionOutstandingWidget extends StatelessWidget {
                           SizedBox(width: 6.w),
                           Expanded(
                             child: ExpiredCountdownTicker(
-                              expiredAt: data.first.expiredAt,
+                              expiredAt: data?.expiredAt,
                               onExpired: onExpired,
                               builder: (context, remaining) {
                                 return UITextPrimaryWidget(
-                                  title: FormatHelper.formatCountdown(remaining),
+                                  title:
+                                      FormatHelper.formatCountdown(remaining),
                                   fontSize: 12.sp,
                                   color: AppColor.errorFair,
                                   fontWeight: FontWeight.w700,
@@ -99,7 +101,12 @@ class TransactionOutstandingWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 ElevatedButton(
-                  onPressed: () => context.pushNamed(RouteNames.transfer),
+                  onPressed: () {
+                    if (data != null) {
+                      onOpenTransfer?.call(data);
+                    }
+                    context.pushNamed(RouteNames.transfer);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.whiteMassive,
                     foregroundColor: AppColor.brPrimaryStrong,
@@ -140,10 +147,10 @@ class TransactionOutstandingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncValueWidget<List<TransferEntity>>(
+    return AsyncValueWidget<TransferEntity?>(
       value: transactionOutstandingAsync,
       onSuccess: (data) {
-        if (data.isEmpty) return const SizedBox.shrink();
+        if (data == null) return const SizedBox.shrink();
         return _transactionOutstandingList(context, data);
       },
       loadingWidget: _transactionOutstandingLoading(),

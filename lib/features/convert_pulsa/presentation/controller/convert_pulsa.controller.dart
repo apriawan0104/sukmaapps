@@ -36,6 +36,7 @@ abstract class ConvertPulsaController {
   Future<void> saveTransKonfirm();
 
   Future<void> loadTransferData();
+  void seedTransferData(TransferEntity transfer);
   Future<void> refreshTransferData();
   Future<void> saveImagePath(String path);
   Future<void> deleteImagePath();

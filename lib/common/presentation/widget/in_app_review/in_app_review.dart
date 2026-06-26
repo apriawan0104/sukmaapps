@@ -74,9 +74,7 @@ class InAppReviewWidget {
           isShowDragHandling: false,
           context: context,
           widget: item,
-        ).whenComplete(() {
-          ref.read(inAppReviewServiceProvider.notifier).skipReview();
-        });
+        );
       }
     }
   }

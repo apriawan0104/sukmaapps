@@ -12,8 +12,25 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
 
   final HttpClient _remoteClient;
 
+  TransferModel? _parseTransferResponse(dynamic data) {
+    if (data == null) {
+      return null;
+    }
+
+    final list = ApiResponse.unwrapList(data);
+    if (list.isEmpty) {
+      final map = ApiResponse.unwrapMap(data);
+      if (map.isEmpty) {
+        return null;
+      }
+      return TransferModel.fromJson(map);
+    }
+
+    return TransferModel.fromJson(list.first as Map<String, dynamic>);
+  }
+
   @override
-  Future<ValueGuard<List<TransferModel>>> getOutstanding(
+  Future<ValueGuard<TransferModel?>> getOutstanding(
     NoParams params,
   ) async {
     return _remoteClient
@@ -21,9 +38,7 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
       WebServiceConstant.transGet,
     )
         .mapSuccess((response) {
-      return ApiResponse.unwrapList(response.data)
-          .map((e) => TransferModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+      return _parseTransferResponse(response.data);
     });
   }
 
@@ -143,27 +158,11 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   Future<ValueGuard<TransferModel?>> getDetailTransaction(
     GetDetailTransactionParam params,
   ) {
-    return _remoteClient
-        .get<Map<String, dynamic>>(
+    return _remoteClient.get<Map<String, dynamic>>(
       WebServiceConstant.transGet,
       queryParameters: {'no_trans': params.transNo},
-    )
-        .mapSuccess((response) {
-      final data = response.data;
-      if (data == null) {
-        return null;
-      }
-
-      final list = ApiResponse.unwrapList(data);
-      if (list.isEmpty) {
-        final map = ApiResponse.unwrapMap(data);
-        if (map.isEmpty) {
-          return null;
-        }
-        return TransferModel.fromJson(map);
-      }
-
-      return TransferModel.fromJson(list.first as Map<String, dynamic>);
+    ).mapSuccess((response) {
+      return _parseTransferResponse(response.data);
     });
   }
 }

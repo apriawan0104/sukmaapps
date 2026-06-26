@@ -12,7 +12,13 @@ abstract class LandingController {
 
   Future<List<RateEntity>> getRate();
 
-  Future<void> getOutstanding();
+  Future<void> getOutstanding({bool showLoading = true});
+
+  /// Silent refresh — no loading shimmer when data already exists.
+  Future<void> refreshOutstanding();
+
+  /// Clears home outstanding card without API (after cancel/submit success).
+  void clearOutstanding();
 
   Future<void> checkStatusApp();
 

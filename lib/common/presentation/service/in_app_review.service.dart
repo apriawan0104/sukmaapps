@@ -48,9 +48,7 @@ class InAppReviewService extends _$InAppReviewService {
 
   Future<void> incrementSuccessfulTransactions() async {
     try {
-      final currentCount =
-          await _readInt(_successfulTransactionsKey) ??
-              _minTransactionsForReview;
+      final currentCount = await _readInt(_successfulTransactionsKey) ?? 0;
       await _writeInt(_successfulTransactionsKey, currentCount + 1);
     } catch (_) {}
   }
@@ -67,31 +65,28 @@ class InAppReviewService extends _$InAppReviewService {
 
   Future<bool> hasMetMinimumTransactions() async {
     try {
-      final currentCount =
-          await _readInt(_successfulTransactionsKey) ??
-              _minTransactionsForReview;
+      final now = DateTime.now();
+      final currentCount = await _readInt(_successfulTransactionsKey) ?? 0;
 
-      final lastReviewTimeStamp = await _readInt(_lastReviewRequestKey);
       final lastSkipReviewTimeStamp = await _readInt(_lastSkipReviewRequestKey);
-
       if (lastSkipReviewTimeStamp != null) {
         final lastSkipReviewTime =
             DateTime.fromMillisecondsSinceEpoch(lastSkipReviewTimeStamp);
-        if (DateTime.now().difference(lastSkipReviewTime) >= _skipDaysReview) {
-          return true;
+        if (now.difference(lastSkipReviewTime) < _skipDaysReview) {
+          return false;
         }
-        return false;
       }
 
-      if (lastReviewTimeStamp == null) {
-        return true;
+      final lastReviewTimeStamp = await _readInt(_lastReviewRequestKey);
+      if (lastReviewTimeStamp != null) {
+        final lastReviewTime =
+            DateTime.fromMillisecondsSinceEpoch(lastReviewTimeStamp);
+        if (now.difference(lastReviewTime) < _minDaysBetweenReviews) {
+          return false;
+        }
       }
 
-      final lastReviewTime =
-          DateTime.fromMillisecondsSinceEpoch(lastReviewTimeStamp);
-
-      return currentCount >= _minTransactionsForReview ||
-          DateTime.now().difference(lastReviewTime) >= _minDaysBetweenReviews;
+      return currentCount >= _minTransactionsForReview;
     } catch (_) {
       return false;
     }
@@ -110,12 +105,10 @@ class InAppReviewService extends _$InAppReviewService {
 
   Future<void> skipReview() async {
     try {
-      if (await hasMetMinimumTransactions()) {
-        await _writeInt(
-          _lastSkipReviewRequestKey,
-          DateTime.now().millisecondsSinceEpoch,
-        );
-      }
+      await _writeInt(
+        _lastSkipReviewRequestKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
     } catch (_) {}
   }
 

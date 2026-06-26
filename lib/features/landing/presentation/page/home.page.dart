@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../common/common.dart';
 import '../../../../core/core.dart';
 import '../adapter/landing.adapter.dart';
+import '../../../convert_pulsa/presentation/adapter/convert_pulsa.adapter.dart';
 import '../widget/widget.dart';
 
 class HomePage extends ConsumerWidget {
@@ -15,6 +16,15 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(landingRiverpodAdapterProvider);
     final ctrl = ref.read(landingRiverpodAdapterProvider.notifier);
+
+    ref.listen(
+      landingRiverpodAdapterProvider.select((value) => value.indexNav),
+      (previous, next) {
+        if (next == 0 && previous != 0) {
+          ctrl.refreshOutstanding();
+        }
+      },
+    );
 
     final informationBanners = state.informationBanner.data
         ?.map((item) => item.description ?? '')
@@ -65,7 +75,12 @@ class HomePage extends ConsumerWidget {
                   TransactionOutstandingWidget(
                     transactionOutstandingAsync: state.outstanding,
                     onRetry: ctrl.getOutstanding,
-                    onExpired: ctrl.getOutstanding,
+                    onExpired: ctrl.refreshOutstanding,
+                    onOpenTransfer: (transfer) {
+                      ref
+                          .read(convertPulsaRiverpodAdapterProvider.notifier)
+                          .seedTransferData(transfer);
+                    },
                   ),
                   BannerInformationWidget(listInformation: informationBanners),
                   ProviderRateWidget(
