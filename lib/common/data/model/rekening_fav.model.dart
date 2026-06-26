@@ -23,7 +23,7 @@ class RekeningFavModel {
     return RekeningFavModel(
       id: json['id'] as int?,
       name: json['name'] as String?,
-      idbank: json['idbank'] as int?,
+      idbank: json['id_bank'] as int?,
       bank: json['bank'] as String?,
       charge: json['charge'] as int?,
       noRekening: json['no_rekening'] as String?,
