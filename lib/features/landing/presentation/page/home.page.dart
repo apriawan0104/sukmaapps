@@ -85,7 +85,7 @@ class HomePage extends ConsumerWidget {
                   BannerInformationWidget(listInformation: informationBanners),
                   ProviderRateWidget(
                     rateAsync: state.rate,
-                    onTapConvert: () {},
+                    onTapConvert: ctrl.convertPulsa,
                     onRetry: ctrl.getRate,
                   ),
                 ],

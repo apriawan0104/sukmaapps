@@ -10,7 +10,7 @@ import '../../domain/usecase/get_bank.usecase.dart';
 import '../../domain/usecase/save_trans_konfirm.usecase.dart';
 import '../../domain/usecase/trans_evidence.usecase.dart';
 import '../../domain/usecase/upload_image.usecase.dart';
-import '../../../landing/domain/usecase/check_status_app.usecase.dart';
+import '../../../landing/presentation/guard/convert_pulsa_access.guard.dart';
 import '../../../landing/presentation/util/landing_outstanding_sync.dart';
 import '../controller/convert_pulsa.controller.dart';
 import '../state/convert_pulsa.state.dart';
@@ -28,12 +28,12 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   late DeleteRekeningFavUseCase _deleteRekeningFavUseCase;
   late SaveRekeningFavUseCase _saveRekeningFavUseCase;
   late SaveTransKonfirmUseCase _saveTransKonfirmUseCase;
-  late CheckStatusAppUseCase _checkStatusAppUseCase;
   late GetOutstandingUseCase _getOutstandingUseCase;
   late UploadImageUseCase _uploadImageUseCase;
   late DeleteImageUseCase _deleteImageUseCase;
   late CancelTransUseCase _cancelTransUseCase;
   late TransEvidenceUseCase _transEvidenceUseCase;
+  late ConvertPulsaAccessGuard _convertPulsaAccessGuard;
 
   void _initDependencies() {
     _savePhoneFavUseCase = getIt<SavePhoneFavUseCase>();
@@ -45,12 +45,12 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
     _deleteRekeningFavUseCase = getIt<DeleteRekeningFavUseCase>();
     _saveRekeningFavUseCase = getIt<SaveRekeningFavUseCase>();
     _saveTransKonfirmUseCase = getIt<SaveTransKonfirmUseCase>();
-    _checkStatusAppUseCase = getIt<CheckStatusAppUseCase>();
     _getOutstandingUseCase = getIt<GetOutstandingUseCase>();
     _uploadImageUseCase = getIt<UploadImageUseCase>();
     _deleteImageUseCase = getIt<DeleteImageUseCase>();
     _cancelTransUseCase = getIt<CancelTransUseCase>();
     _transEvidenceUseCase = getIt<TransEvidenceUseCase>();
+    _convertPulsaAccessGuard = getIt<ConvertPulsaAccessGuard>();
   }
 
   @override
@@ -333,13 +333,8 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
       saveTransKonfirmValue: const AsyncValue.loading(),
     );
 
-    final statusResult = await _checkStatusAppUseCase(NoParams());
-    final isAppReady = statusResult.fold(
-      (_) => false,
-      (status) => status.serviceStatus == true && status.userStatus == true,
-    );
-
-    if (!isAppReady) {
+    final isAllowed = await _convertPulsaAccessGuard.ensureAccess();
+    if (!isAllowed) {
       state = state.copyWith(
         saveTransKonfirmValue: const AsyncValue.data(null),
       );

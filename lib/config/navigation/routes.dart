@@ -86,7 +86,9 @@ List<RouteBase> routes = [
       GoRoute(
         path: RouteNames.phone,
         name: RouteNames.phone,
-        builder: (context, state) => const PhoneSenderPage(),
+        builder: (context, state) => PhoneSenderPage(
+          accessPreValidated: state.extra == true,
+        ),
         routes: [
           GoRoute(
             path: RouteNames.nominal,

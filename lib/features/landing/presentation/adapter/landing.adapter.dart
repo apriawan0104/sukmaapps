@@ -7,6 +7,7 @@ import 'package:sukmaapps/core/core.dart';
 import '../../../auth/domain/domain.dart';
 import '../../domain/domain.dart';
 import '../controller/landing.controller.dart';
+import '../guard/convert_pulsa_navigation.dart';
 import '../state/landing.state.dart';
 part 'landing.adapter.g.dart';
 
@@ -332,4 +333,6 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     );
     appRouter.goNamed(RouteNames.login);
   }
+  @override
+  Future<void> convertPulsa() => ConvertPulsaNavigation.pushPhone();
 }

@@ -6,3 +6,4 @@ export 'provider_rate.widget.dart';
 export 'provider_offline.widget.dart';
 export 'service_offline.widget.dart';
 export 'transaction_failed.widget.dart';
+export 'user_blocked.widget.dart';

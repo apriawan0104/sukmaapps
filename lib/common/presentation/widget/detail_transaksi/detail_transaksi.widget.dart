@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/config.dart';
 import '../../../../core/core.dart';
+import '../../../../features/landing/presentation/guard/convert_pulsa_navigation.dart';
 import '../../../../features/landing/presentation/adapter/landing.adapter.dart';
 import '../../../domain/entity/transfer.entity.dart';
 import '../widget.dart';
@@ -25,9 +26,7 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () {
-              context.goNamed(RouteNames.phone);
-            },
+            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
           );
         case 0:
           widget = UIButtonBottomMultipleWidget(
@@ -36,9 +35,7 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () {
-              context.goNamed(RouteNames.phone);
-            },
+            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
           );
         case 2:
           widget = UIButtonBottomMultipleWidget(
@@ -47,9 +44,7 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () {
-              context.goNamed(RouteNames.phone);
-            },
+            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
           );
         default:
           widget = Container();
@@ -63,9 +58,7 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () {
-              context.goNamed(RouteNames.phone);
-            },
+            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
           );
         case 2:
           widget = UIButtonBottomMultipleWidget(

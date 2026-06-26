@@ -12,6 +12,7 @@
 import 'package:app_core/app_core.dart' as _i130;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
+import 'package:sukmaapps/common/common.dart' as _i675;
 import 'package:sukmaapps/common/data/datasource/common_remote.datasource.dart'
     as _i493;
 import 'package:sukmaapps/common/data/datasource/common_remote.impl.datasource.dart'
@@ -122,6 +123,8 @@ import 'package:sukmaapps/features/landing/data/repository/landing_repository.im
     as _i541;
 import 'package:sukmaapps/features/landing/domain/repository/landing.repository.dart'
     as _i305;
+import 'package:sukmaapps/features/landing/domain/usecase/check_convert_pulsa_access.usecase.dart'
+    as _i945;
 import 'package:sukmaapps/features/landing/domain/usecase/check_status_app.usecase.dart'
     as _i971;
 import 'package:sukmaapps/features/landing/domain/usecase/get_banner.usecase.dart'
@@ -132,6 +135,8 @@ import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner
     as _i448;
 import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
     as _i779;
+import 'package:sukmaapps/features/landing/presentation/guard/convert_pulsa_access.guard.dart'
+    as _i357;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -299,6 +304,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i945.CheckConvertPulsaAccessUseCase>(
+        () => _i945.CheckConvertPulsaAccessUseCase(
+              gh<_i971.CheckStatusAppUseCase>(),
+              gh<_i675.GetOutstandingUseCase>(),
+            ));
+    gh.lazySingleton<_i357.ConvertPulsaAccessGuard>(() =>
+        _i357.ConvertPulsaAccessGuard(
+            gh<_i945.CheckConvertPulsaAccessUseCase>()));
     return this;
   }
 }
