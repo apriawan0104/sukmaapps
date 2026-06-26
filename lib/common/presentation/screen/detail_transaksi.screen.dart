@@ -405,12 +405,15 @@ class _DetailTransaksiScreenState extends ConsumerState<DetailTransaksiScreen> {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Center(
-            child: UIButtonPrimaryWidget(
-              titleButton: '$error. Tap to retry',
-              onPressed: () {
-                ctrl.refreshDetailTrans(transNo: widget.argument.transNo);
-              },
+          error: (error, _) => Padding(
+            padding: REdgeInsets.all(16),
+            child: Center(
+              child: UIButtonPrimaryWidget(
+                titleButton: '$error. Tap to retry',
+                onPressed: () {
+                  ctrl.refreshDetailTrans(transNo: widget.argument.transNo);
+                },
+              ),
             ),
           ),
         ),

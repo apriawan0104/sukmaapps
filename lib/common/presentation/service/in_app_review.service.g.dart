@@ -7,7 +7,7 @@ part of 'in_app_review.service.dart';
 // **************************************************************************
 
 String _$inAppReviewServiceHash() =>
-    r'7f9061d0429b2f989ee6d9c54c0d75389be64787';
+    r'6083212cc9b8174d00691bca89a0ff26cea0e972';
 
 /// See also [InAppReviewService].
 @ProviderFor(InAppReviewService)

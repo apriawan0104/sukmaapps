@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app.dart';
+import 'common/common.dart';
 import 'config/config.dart';
 
 enum AppFlavor { dev, uat, prd }
@@ -25,11 +26,18 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
   configureEnvironmentFromDotenv();
+  registerPushNotificationBackgroundHandler();
   appRouter = createAppRouter(
     observers:
         flavor == AppFlavor.prd ? const [] : [ChuckerFlutter.navigatorObserver],
   );
-  runApp(ProviderScope(child: SukmaApp(flavor: flavor)));
+  runApp(
+    ProviderScope(
+      child: PushNotificationBootstrap(
+        child: SukmaApp(flavor: flavor),
+      ),
+    ),
+  );
 }
 
 void _configureChucker(AppFlavor flavor) {

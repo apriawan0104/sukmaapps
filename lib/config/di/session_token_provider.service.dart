@@ -1,10 +1,8 @@
 import 'package:app_core/app_core.dart';
-import 'package:injectable/injectable.dart';
 
 import '../../features/auth/data/datasource/local/auth_local.datasource.dart';
 
 /// Reads the backend session token saved from [UserModel.token].
-@LazySingleton(as: TokenProviderService)
 class SessionTokenProviderService implements TokenProviderService {
   SessionTokenProviderService(this._localDataSource);
 

@@ -1,5 +1,5 @@
-import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sukmaapps/core/core.dart';
 
 import '../widget/statics/static.widget.dart';
 import 'failure_display_mode.dart';
@@ -12,7 +12,7 @@ class FailurePresenter {
     FailureDisplayMode mode = FailureDisplayMode.toast,
     BuildContext? context,
   }) {
-    final message = FailureMessageResolver.userMessage(error);
+    final message = SukmaFailureMessageResolver.userMessage(error);
     if (message == null) return;
 
     switch (mode) {

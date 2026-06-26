@@ -67,6 +67,6 @@ abstract class AppCoreModule {
     client.addRequestInterceptor(authInterceptor.onRequest);
     client.addErrorInterceptor(unauthorizedLogoutHandler.onError);
 
-    return client;
+    return SukmaHttpClient(client);
   }
 }

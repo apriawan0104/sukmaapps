@@ -1,4 +1,5 @@
 export 'provider.entity.dart';
+export 'notification_route.entity.dart';
 export 'transfer.entity.dart';
 export 'evidence.entity.dart';
 export 'phone_fav.entity.dart';

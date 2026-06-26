@@ -3,6 +3,8 @@ import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
+import '../../features/auth/data/datasource/local/auth_local.datasource.dart';
+import 'session_token_provider.service.dart';
 
 @module
 abstract class SukmaModule {
@@ -23,6 +25,10 @@ abstract class SukmaModule {
   @lazySingleton
   @Named('appleAuth')
   AuthenticationService appleAuthService() => AppleAuthenticationServiceImpl();
+
+  @lazySingleton
+  TokenProviderService tokenProvider(AuthLocalDataSource localDataSource) =>
+      SessionTokenProviderService(localDataSource);
 
   @preResolve
   @Named(TableConstant.tbMUser)

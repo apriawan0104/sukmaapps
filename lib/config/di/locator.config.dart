@@ -16,10 +16,22 @@ import 'package:sukmaapps/common/data/datasource/common_remote.datasource.dart'
     as _i493;
 import 'package:sukmaapps/common/data/datasource/common_remote.impl.datasource.dart'
     as _i871;
+import 'package:sukmaapps/common/data/datasource/push_notification_local.datasource.dart'
+    as _i544;
+import 'package:sukmaapps/common/data/datasource/push_notification_local.impl.datasource.dart'
+    as _i362;
+import 'package:sukmaapps/common/data/datasource/push_notification_remote.datasource.dart'
+    as _i907;
+import 'package:sukmaapps/common/data/datasource/push_notification_remote.impl.datasource.dart'
+    as _i735;
 import 'package:sukmaapps/common/data/repository/common_repository.impl.dart'
     as _i564;
+import 'package:sukmaapps/common/data/repository/push_notification_repository.impl.dart'
+    as _i953;
 import 'package:sukmaapps/common/domain/repository/common.repository.dart'
     as _i852;
+import 'package:sukmaapps/common/domain/repository/push_notification.repository.dart'
+    as _i125;
 import 'package:sukmaapps/common/domain/usecase/delete_phone_fav.usecase.dart'
     as _i178;
 import 'package:sukmaapps/common/domain/usecase/delete_rekening_fav.usecase.dart'
@@ -38,13 +50,19 @@ import 'package:sukmaapps/common/domain/usecase/get_status_transaksi_failed.usec
     as _i575;
 import 'package:sukmaapps/common/domain/usecase/get_wa_number.usecase.dart'
     as _i389;
+import 'package:sukmaapps/common/domain/usecase/has_active_session.usecase.dart'
+    as _i1053;
+import 'package:sukmaapps/common/domain/usecase/init_push_notification.usecase.dart'
+    as _i1063;
+import 'package:sukmaapps/common/domain/usecase/remove_fcm_token.usecase.dart'
+    as _i695;
 import 'package:sukmaapps/common/domain/usecase/save_phone_fav.usecase.dart'
     as _i278;
 import 'package:sukmaapps/common/domain/usecase/save_rekening_fav.usecase.dart'
     as _i516;
+import 'package:sukmaapps/common/domain/usecase/sync_fcm_token.usecase.dart'
+    as _i170;
 import 'package:sukmaapps/config/di/app_core_module.dart' as _i493;
-import 'package:sukmaapps/config/di/session_token_provider.service.dart'
-    as _i766;
 import 'package:sukmaapps/config/di/sukma_module.dart' as _i963;
 import 'package:sukmaapps/config/di/unauthorized_logout.handler.dart' as _i878;
 import 'package:sukmaapps/features/auth/data/datasource/datasource.dart'
@@ -145,6 +163,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => appCoreModule.localNotificationService);
     gh.lazySingleton<_i130.FirebaseMessagingService>(
         () => appCoreModule.firebaseMessagingService);
+    gh.lazySingleton<_i907.PushNotificationRemoteDataSource>(
+        () => _i735.PushNotificationRemoteImplDataSource(
+              gh<_i130.FirebaseMessagingService>(),
+              gh<_i130.LocalNotificationService>(),
+            ));
     await gh.lazySingletonAsync<_i130.StorageService>(
       () => sukmaModule.tbMUserStorage(),
       instanceName: 'tb_m_user',
@@ -161,8 +184,16 @@ extension GetItInjectableX on _i174.GetIt {
       () => sukmaModule.googleAuthService(),
       instanceName: 'googleAuth',
     );
-    gh.lazySingleton<_i130.TokenProviderService>(() =>
-        _i766.SessionTokenProviderService(gh<_i919.AuthLocalDataSource>()));
+    gh.lazySingleton<_i130.TokenProviderService>(
+        () => sukmaModule.tokenProvider(gh<_i919.AuthLocalDataSource>()));
+    gh.lazySingleton<_i544.PushNotificationLocalDataSource>(() =>
+        _i362.PushNotificationLocalImplDataSource(
+            gh<_i130.StorageService>(instanceName: 'tb_m_user')));
+    gh.lazySingleton<_i125.PushNotificationRepository>(
+        () => _i953.PushNotificationImplRepository(
+              gh<_i907.PushNotificationRemoteDataSource>(),
+              gh<_i544.PushNotificationLocalDataSource>(),
+            ));
     gh.lazySingleton<_i878.UnauthorizedLogoutHandler>(
         () => _i878.UnauthorizedLogoutHandler(
               gh<_i130.TokenProviderService>(),
@@ -170,6 +201,15 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i130.AuthenticationService>(instanceName: 'googleAuth'),
               gh<_i130.AuthenticationService>(instanceName: 'appleAuth'),
             ));
+    gh.lazySingleton<_i1063.InitPushNotificationUseCase>(() =>
+        _i1063.InitPushNotificationUseCase(
+            gh<_i125.PushNotificationRepository>()));
+    gh.lazySingleton<_i695.RemoveFcmTokenUseCase>(() =>
+        _i695.RemoveFcmTokenUseCase(gh<_i125.PushNotificationRepository>()));
+    gh.lazySingleton<_i1053.HasActiveSessionUseCase>(() =>
+        _i1053.HasActiveSessionUseCase(gh<_i125.PushNotificationRepository>()));
+    gh.lazySingleton<_i170.SyncFcmTokenUseCase>(() =>
+        _i170.SyncFcmTokenUseCase(gh<_i125.PushNotificationRepository>()));
     gh.lazySingleton<_i130.HttpClient>(() => appCoreModule.httpClient(
           gh<_i130.NetworkConfig>(),
           gh<_i130.TokenProviderService>(),

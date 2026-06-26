@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app_core/app_core.dart';
+import 'package:flutter/material.dart';
+
 import '../buttons/button_primary.widget.dart';
 
 /// A widget that handles AsyncValue states with support for skipLoadingOnReload
@@ -64,9 +65,12 @@ class AsyncValueWidget<T> extends StatelessWidget {
         }
         return Center(
           child: SingleChildScrollView(
-            child: UIButtonPrimaryWidget(
-              titleButton: '$error. Tap to retry',
-              onPressed: onRetry,
+            child: Padding(
+              padding: REdgeInsets.all(16),
+              child: UIButtonPrimaryWidget(
+                titleButton: '$error. Tap to retry',
+                onPressed: onRetry,
+              ),
             ),
           ),
         );
