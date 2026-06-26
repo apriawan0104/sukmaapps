@@ -11,6 +11,13 @@ abstract class SukmaModule {
   bool get _isNonProd => EnvConstant.environment.env != FlavorType.prd.name;
 
   @lazySingleton
+  RemoteConfigConfig get remoteConfigConfig => RemoteConfigConfig(
+        defaults: {
+          VersionUpdateConstant.latestAppVersionsKey: '{}',
+        },
+      );
+
+  @lazySingleton
   NetworkConfig get networkConfig => NetworkConfig(
         baseUrl: EnvConstant.baseUrl.env,
         enableLogging: _isNonProd,

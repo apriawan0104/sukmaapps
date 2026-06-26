@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/app.dart';
-import '../../../config/config.dart';
 import '../../../core/core.dart';
 import '../widget/widget.dart';
 
@@ -19,19 +18,6 @@ class ForceUpdateScreen extends StatelessWidget {
     } else if (Platform.isIOS) {
       exit(0);
     }
-  }
-
-  Future<void> _goToStore() async {
-    final url = Platform.isIOS
-        ? EnvConstant.appStoreUrl.env
-        : EnvConstant.playStoreUrl.env;
-
-    if (url.isEmpty || url == '-') {
-      return;
-    }
-
-    final urlLauncher = getIt<UrlLauncherService>();
-    await urlLauncher.launchWebUrl(url);
   }
 
   @override
@@ -77,7 +63,7 @@ class ForceUpdateScreen extends StatelessWidget {
             children: [
               UIButtonPrimaryWidget(
                 titleButton: 'Update Sekarang',
-                onPressed: _goToStore,
+                onPressed: UriHelper.goToStore,
               ),
               SizedBox(height: 16.h),
               TextButton(

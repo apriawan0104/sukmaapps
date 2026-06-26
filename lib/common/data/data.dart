@@ -9,3 +9,4 @@ export 'datasource/push_notification_local.impl.datasource.dart';
 export 'model/model.dart';
 export 'repository/common_repository.impl.dart';
 export 'repository/push_notification_repository.impl.dart';
+export 'repository/version_update_repository.impl.dart';

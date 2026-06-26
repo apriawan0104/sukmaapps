@@ -1,3 +1,4 @@
+export 'app_version_check.entity.dart';
 export 'provider.entity.dart';
 export 'notification_route.entity.dart';
 export 'transfer.entity.dart';

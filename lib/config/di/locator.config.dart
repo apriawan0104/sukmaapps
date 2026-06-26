@@ -29,10 +29,16 @@ import 'package:sukmaapps/common/data/repository/common_repository.impl.dart'
     as _i564;
 import 'package:sukmaapps/common/data/repository/push_notification_repository.impl.dart'
     as _i953;
+import 'package:sukmaapps/common/data/repository/version_update_repository.impl.dart'
+    as _i417;
 import 'package:sukmaapps/common/domain/repository/common.repository.dart'
     as _i852;
 import 'package:sukmaapps/common/domain/repository/push_notification.repository.dart'
     as _i125;
+import 'package:sukmaapps/common/domain/repository/version_update.repository.dart'
+    as _i574;
+import 'package:sukmaapps/common/domain/usecase/check_app_version.usecase.dart'
+    as _i516;
 import 'package:sukmaapps/common/domain/usecase/delete_phone_fav.usecase.dart'
     as _i178;
 import 'package:sukmaapps/common/domain/usecase/delete_rekening_fav.usecase.dart'
@@ -55,6 +61,8 @@ import 'package:sukmaapps/common/domain/usecase/has_active_session.usecase.dart'
     as _i1053;
 import 'package:sukmaapps/common/domain/usecase/init_push_notification.usecase.dart'
     as _i1063;
+import 'package:sukmaapps/common/domain/usecase/init_remote_config.usecase.dart'
+    as _i528;
 import 'package:sukmaapps/common/domain/usecase/remove_fcm_token.usecase.dart'
     as _i695;
 import 'package:sukmaapps/common/domain/usecase/save_phone_fav.usecase.dart'
@@ -151,6 +159,8 @@ extension GetItInjectableX on _i174.GetIt {
     );
     final sukmaModule = _$SukmaModule();
     final appCoreModule = _$AppCoreModule();
+    gh.lazySingleton<_i130.RemoteConfigConfig>(
+        () => sukmaModule.remoteConfigConfig);
     gh.lazySingleton<_i130.NetworkConfig>(() => sukmaModule.networkConfig);
     gh.lazySingleton<_i130.BackgroundService>(
         () => appCoreModule.backgroundService);
@@ -189,6 +199,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => sukmaModule.googleAuthService(),
       instanceName: 'googleAuth',
     );
+    gh.lazySingleton<_i130.RemoteConfigService>(() =>
+        appCoreModule.remoteConfigService(gh<_i130.RemoteConfigConfig>()));
     gh.lazySingleton<_i130.TokenProviderService>(
         () => sukmaModule.tokenProvider(gh<_i919.AuthLocalDataSource>()));
     gh.lazySingleton<_i544.PushNotificationLocalDataSource>(() =>
@@ -199,6 +211,8 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i907.PushNotificationRemoteDataSource>(),
               gh<_i544.PushNotificationLocalDataSource>(),
             ));
+    gh.lazySingleton<_i574.VersionUpdateRepository>(() =>
+        _i417.VersionUpdateImplRepository(gh<_i130.RemoteConfigService>()));
     gh.lazySingleton<_i878.UnauthorizedLogoutHandler>(
         () => _i878.UnauthorizedLogoutHandler(
               gh<_i130.TokenProviderService>(),
@@ -206,6 +220,10 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i130.AuthenticationService>(instanceName: 'googleAuth'),
               gh<_i130.AuthenticationService>(instanceName: 'appleAuth'),
             ));
+    gh.lazySingleton<_i528.InitRemoteConfigUseCase>(() =>
+        _i528.InitRemoteConfigUseCase(gh<_i574.VersionUpdateRepository>()));
+    gh.lazySingleton<_i516.CheckAppVersionUseCase>(() =>
+        _i516.CheckAppVersionUseCase(gh<_i574.VersionUpdateRepository>()));
     gh.lazySingleton<_i1063.InitPushNotificationUseCase>(() =>
         _i1063.InitPushNotificationUseCase(
             gh<_i125.PushNotificationRepository>()));

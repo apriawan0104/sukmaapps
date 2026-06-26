@@ -14,6 +14,7 @@ export 'in_app_update_failure.dart';
 export 'network_failure.dart';
 export 'notification_failure.dart';
 export 'path_provider_failure.dart';
+export 'remote_config_failure.dart';
 export 'secure_storage_failure.dart';
 export 'storage_failure.dart';
 export 'url_launcher_failure.dart';

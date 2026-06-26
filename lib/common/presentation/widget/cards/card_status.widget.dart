@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../common/common.dart';
 import '../../../../core/core.dart';
+import '../text/text_primary.widget.dart';
+import 'card_primary.widget.dart';
 
 class UICardStatusWidget extends ConsumerWidget {
   const UICardStatusWidget({

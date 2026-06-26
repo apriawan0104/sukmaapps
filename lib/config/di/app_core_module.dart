@@ -43,6 +43,10 @@ abstract class AppCoreModule {
       FirebaseMessagingServiceImpl();
 
   @lazySingleton
+  RemoteConfigService remoteConfigService(RemoteConfigConfig config) =>
+      FirebaseRemoteConfigServiceImpl(config: config);
+
+  @lazySingleton
   HttpClient httpClient(
     NetworkConfig config,
     TokenProviderService tokenProvider,

@@ -1,8 +1,10 @@
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../app/app.dart';
-import '../../../../common/common.dart';
 import '../../../../core/core.dart';
+import '../text/text_primary.widget.dart';
+import 'card_primary.widget.dart';
 
 class UICardChargeWidget extends StatelessWidget {
   const UICardChargeWidget({super.key, required this.charge});

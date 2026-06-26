@@ -56,6 +56,9 @@ export 'src/infrastructure/notification/notification.dart';
 // Infrastructure - Path Provider
 export 'src/infrastructure/path_provider/path_provider.dart';
 
+// Infrastructure - Remote Config
+export 'src/infrastructure/remote_config/remote_config.dart';
+
 // Infrastructure - Responsive
 export 'src/infrastructure/responsive/responsive.dart';
 

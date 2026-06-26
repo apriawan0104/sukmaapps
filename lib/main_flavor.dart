@@ -34,7 +34,9 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
   runApp(
     ProviderScope(
       child: PushNotificationBootstrap(
-        child: SukmaApp(flavor: flavor),
+        child: VersionCheckBootstrap(
+          child: SukmaApp(flavor: flavor),
+        ),
       ),
     ),
   );

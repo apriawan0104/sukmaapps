@@ -1,3 +1,4 @@
+export 'app_version_config.model.dart';
 export 'provider.model.dart';
 export 'transfer.model.dart';
 export 'evidence.model.dart';

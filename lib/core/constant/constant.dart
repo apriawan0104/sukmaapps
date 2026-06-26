@@ -8,3 +8,4 @@ export 'web_service.constant.dart';
 export 'format_wa.constant.dart';
 export 'firebase.constant.dart';
 export 'notification.constant.dart';
+export 'version_update.constant.dart';
