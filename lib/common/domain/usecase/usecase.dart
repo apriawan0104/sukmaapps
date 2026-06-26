@@ -15,3 +15,4 @@ export 'check_app_version.usecase.dart';
 export 'sync_fcm_token.usecase.dart';
 export 'remove_fcm_token.usecase.dart';
 export 'has_active_session.usecase.dart';
+export 'launch_whatsapp.usecase.dart';

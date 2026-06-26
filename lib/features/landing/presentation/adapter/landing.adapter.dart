@@ -3,7 +3,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:sukmaapps/common/common.dart';
 import 'package:sukmaapps/config/config.dart';
-import 'package:sukmaapps/core/core.dart';
 import '../../../auth/domain/domain.dart';
 import '../../domain/domain.dart';
 import '../controller/landing.controller.dart';
@@ -15,7 +14,6 @@ part 'landing.adapter.g.dart';
 class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     implements LandingController {
   late UrlLauncherService _urlLauncherService;
-  late GetWaNumberUseCase _getWaNumberUseCase;
   late GetBannerUseCase _getBannerUseCase;
   late GetInformationBannerUseCase _getInformationBannerUseCase;
   late GetRateUseCase _getRateUseCase;
@@ -30,12 +28,12 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   late DeleteAccountUseCase _deleteAccountUseCase;
   late GetLocalUserUseCase _getLocalUserUseCase;
   late GetStatusTransaksiFailedUseCase _getStatusTransaksiFailedUseCase;
+  late LaunchWhatsappUseCase _launchWhatsappUseCase;
 
   Future<void>? _outstandingRequest;
 
   void _initDependencies() {
     _urlLauncherService = getIt<UrlLauncherService>();
-    _getWaNumberUseCase = getIt<GetWaNumberUseCase>();
     _getBannerUseCase = getIt<GetBannerUseCase>();
     _getInformationBannerUseCase = getIt<GetInformationBannerUseCase>();
     _getRateUseCase = getIt<GetRateUseCase>();
@@ -50,6 +48,7 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     _deleteAccountUseCase = getIt<DeleteAccountUseCase>();
     _getLocalUserUseCase = getIt<GetLocalUserUseCase>();
     _getStatusTransaksiFailedUseCase = getIt<GetStatusTransaksiFailedUseCase>();
+    _launchWhatsappUseCase = getIt<LaunchWhatsappUseCase>();
   }
 
   @override
@@ -247,27 +246,7 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
 
   @override
   Future<void> launchWhatsapp(String body) async {
-    var waNumber = EnvConstant.csPhone.env;
-    if (waNumber == '-') {
-      return;
-    }
-
-    final waResult = await _getWaNumberUseCase(NoParams());
-    waResult.fold(
-      (_) {},
-      (number) {
-        if (number.isNotEmpty) {
-          waNumber = number;
-        }
-      },
-    );
-
-    if (waNumber.startsWith('0')) {
-      waNumber = '62${waNumber.substring(1)}';
-    }
-
-    final url = 'https://wa.me/$waNumber?text=${Uri.encodeComponent(body)}';
-    await launchUrl(url);
+    await _launchWhatsappUseCase(LaunchWhatsappParam(body: body));
   }
 
   @override

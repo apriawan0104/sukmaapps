@@ -14,7 +14,8 @@ import '../../domain/entity/transfer.entity.dart';
 import '../adapter/detail_transaksi.adapter.dart';
 import '../navigation/detail_transaksi.arg.dart';
 import '../widget/widget.dart';
-import '../../../features/landing/presentation/adapter/landing.adapter.dart';
+import '../../domain/param/launch_whatsapp.param.dart';
+import '../../domain/usecase/launch_whatsapp.usecase.dart';
 
 class DetailTransaksiScreen extends ConsumerStatefulWidget {
   const DetailTransaksiScreen({
@@ -356,16 +357,13 @@ class _DetailTransaksiScreenState extends ConsumerState<DetailTransaksiScreen> {
                                 SizedBox(height: 16.h),
                                 InkWell(
                                   onTap: () {
-                                    ref
-                                        .read(
-                                          landingRiverpodAdapterProvider
-                                              .notifier,
-                                        )
-                                        .launchWhatsapp(
-                                          FormatWaConstant.byTransFailed(
-                                            idTrans: transfer.noTrans ?? '',
-                                          ),
-                                        );
+                                    getIt<LaunchWhatsappUseCase>()(
+                                      LaunchWhatsappParam(
+                                        body: FormatWaConstant.byTransFailed(
+                                          idTrans: transfer.noTrans ?? '',
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: UICardPrimaryWidget(
                                     child: Row(

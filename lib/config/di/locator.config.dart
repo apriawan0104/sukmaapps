@@ -63,6 +63,8 @@ import 'package:sukmaapps/common/domain/usecase/init_push_notification.usecase.d
     as _i1063;
 import 'package:sukmaapps/common/domain/usecase/init_remote_config.usecase.dart'
     as _i528;
+import 'package:sukmaapps/common/domain/usecase/launch_whatsapp.usecase.dart'
+    as _i210;
 import 'package:sukmaapps/common/domain/usecase/remove_fcm_token.usecase.dart'
     as _i695;
 import 'package:sukmaapps/common/domain/usecase/save_phone_fav.usecase.dart'
@@ -145,6 +147,10 @@ import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
     as _i779;
 import 'package:sukmaapps/features/landing/presentation/guard/convert_pulsa_access.guard.dart'
     as _i357;
+import 'package:sukmaapps/features/landing/presentation/handler/landing_notification_opened_refresher.dart'
+    as _i638;
+import 'package:sukmaapps/features/landing/presentation/navigation/convert_pulsa.navigator.impl.dart'
+    as _i940;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -188,6 +194,8 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'tb_m_user',
       preResolve: true,
     );
+    gh.lazySingleton<_i675.ConvertPulsaNavigator>(
+        () => _i940.ConvertPulsaNavigatorImpl());
     gh.lazySingleton<_i130.AuthenticationService>(
       () => sukmaModule.appleAuthService(),
       instanceName: 'appleAuth',
@@ -195,6 +203,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i919.AuthLocalDataSource>(() =>
         _i366.AuthLocalImplDataSource(
             gh<_i130.StorageService>(instanceName: 'tb_m_user')));
+    gh.lazySingleton<_i675.NotificationOpenedRefresher>(
+        () => _i638.LandingNotificationOpenedRefresher());
     gh.lazySingleton<_i130.AuthenticationService>(
       () => sukmaModule.googleAuthService(),
       instanceName: 'googleAuth',
@@ -322,6 +332,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i389.GetWaNumberUseCase(gh<_i852.CommonRepository>()));
     gh.lazySingleton<_i780.DeleteRekeningFavUseCase>(
         () => _i780.DeleteRekeningFavUseCase(gh<_i852.CommonRepository>()));
+    gh.lazySingleton<_i210.LaunchWhatsappUseCase>(
+        () => _i210.LaunchWhatsappUseCase(
+              gh<_i389.GetWaNumberUseCase>(),
+              gh<_i130.UrlLauncherService>(),
+            ));
     gh.lazySingleton<_i945.CheckConvertPulsaAccessUseCase>(
         () => _i945.CheckConvertPulsaAccessUseCase(
               gh<_i971.CheckStatusAppUseCase>(),

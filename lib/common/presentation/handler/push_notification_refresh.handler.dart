@@ -1,8 +1,8 @@
 import 'package:app_core/app_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../features/landing/presentation/adapter/landing.adapter.dart';
 import '../adapter/detail_transaksi.adapter.dart';
+import 'notification_opened_refresher.dart';
 import '../../domain/usecase/has_active_session.usecase.dart';
 import '../../../config/config.dart';
 
@@ -17,7 +17,5 @@ Future<void> refreshDataAfterNotificationOpened(Ref ref) async {
 
   ref.invalidate(getDetailTransactionProvider);
 
-  if (ref.exists(landingRiverpodAdapterProvider)) {
-    await ref.read(landingRiverpodAdapterProvider.notifier).getHistoryConvert();
-  }
+  await getIt<NotificationOpenedRefresher>().refresh(ref);
 }

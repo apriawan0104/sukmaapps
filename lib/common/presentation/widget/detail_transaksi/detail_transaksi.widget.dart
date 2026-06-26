@@ -4,9 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/config.dart';
 import '../../../../core/core.dart';
-import '../../../../features/landing/presentation/guard/convert_pulsa_navigation.dart';
-import '../../../../features/landing/presentation/adapter/landing.adapter.dart';
 import '../../../domain/entity/transfer.entity.dart';
+import '../../../domain/param/launch_whatsapp.param.dart';
+import '../../../domain/usecase/launch_whatsapp.usecase.dart';
+import '../../navigation/convert_pulsa.navigator.dart';
 import '../widget.dart';
 
 class DetailTransaksiWidget {
@@ -26,7 +27,8 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
+            rightOnPressed: () =>
+                getIt<ConvertPulsaNavigator>().goToPhone(context),
           );
         case 0:
           widget = UIButtonBottomMultipleWidget(
@@ -35,7 +37,8 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
+            rightOnPressed: () =>
+                getIt<ConvertPulsaNavigator>().goToPhone(context),
           );
         case 2:
           widget = UIButtonBottomMultipleWidget(
@@ -44,7 +47,8 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
+            rightOnPressed: () =>
+                getIt<ConvertPulsaNavigator>().goToPhone(context),
           );
         default:
           widget = Container();
@@ -58,7 +62,8 @@ class DetailTransaksiWidget {
               await onPressBack(context, ref);
             },
             rightTitleButton: 'Convert Lagi',
-            rightOnPressed: () => ConvertPulsaNavigation.goToPhone(context),
+            rightOnPressed: () =>
+                getIt<ConvertPulsaNavigator>().goToPhone(context),
           );
         case 2:
           widget = UIButtonBottomMultipleWidget(
@@ -68,9 +73,13 @@ class DetailTransaksiWidget {
             },
             rightTitleButton: 'Hubungi CS',
             rightOnPressed: () {
-              ref.read(landingRiverpodAdapterProvider.notifier).launchWhatsapp(
-                    FormatWaConstant.byTrans(idTrans: model.noTrans ?? ''),
-                  );
+              getIt<LaunchWhatsappUseCase>()(
+                LaunchWhatsappParam(
+                  body: FormatWaConstant.byTrans(
+                    idTrans: model.noTrans ?? '',
+                  ),
+                ),
+              );
             },
           );
         default:

@@ -2,7 +2,6 @@ import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../../../app/app.dart';
 import '../../../../../common/common.dart';
 import '../../../domain/entity/entity.dart';
 import 'history_card.widget.dart';
@@ -35,26 +34,11 @@ class HistoryListWidget extends StatelessWidget {
     );
   }
 
-  Widget _emptyWidget() {
-    return Center(
-      child: Padding(
-        padding: REdgeInsets.symmetric(vertical: 48),
-        child: UITextPrimaryWidget(
-          title: 'Belum ada riwayat transaksi',
-          fontSize: 14.sp,
-          color: AppColor.blackFair,
-          fontWeight: FontWeight.w400,
-          align: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
   Widget _historyList(BuildContext context, List<HistoryConvertEntity> data) {
     if (data.isEmpty) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        children: [_emptyWidget()],
+        children: const [EmptyScreen()],
       );
     }
 
