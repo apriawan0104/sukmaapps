@@ -39,6 +39,7 @@ class AppScreenUtilInit extends StatelessWidget {
     this.splitScreenMode = false,
     this.fontSizeResolver = FontSizeResolvers.width,
     this.child,
+    this.configureFromInheritedMediaQuery = false,
   });
 
   /// The design size of the UI design draft.
@@ -76,8 +77,24 @@ class AppScreenUtilInit extends StatelessWidget {
   /// Optional child widget to pass through the builder.
   final Widget? child;
 
+  /// When true, [ScreenUtil] is configured from inherited [MediaQuery] instead
+  /// of the platform [View]. Use with a fixed-size [MediaQuery] override on web.
+  final bool configureFromInheritedMediaQuery;
+
   @override
   Widget build(BuildContext context) {
+    if (configureFromInheritedMediaQuery) {
+      ScreenUtil.configure(
+        data: MediaQuery.of(context),
+        designSize: designSize,
+        minTextAdapt: minTextAdapt,
+        splitScreenMode: splitScreenMode,
+        fontSizeResolver: fontSizeResolver,
+      );
+
+      return builder?.call(context, child) ?? const SizedBox.shrink();
+    }
+
     // Use ScreenUtilInit from flutter_screenutil but wrapped with our abstraction
     return ScreenUtilInit(
       designSize: designSize,

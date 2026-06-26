@@ -1,6 +1,6 @@
-import 'dart:io';
-
 import 'package:app_core/app_core.dart';
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../common/common.dart';
@@ -68,7 +68,7 @@ class LoginScreen extends StatelessWidget {
             align: TextAlign.center,
           ),
           SizedBox(height: 16.h),
-          if (Platform.isIOS) ...{
+          if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) ...{
             Column(
               children: [
                 ButtonGoogleWidget(),

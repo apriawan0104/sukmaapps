@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:chucker_flutter/chucker_flutter.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,11 +23,15 @@ String _envFileName(AppFlavor flavor) {
 Future<void> runSukmaApp(AppFlavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   _configureChucker(flavor);
-  await initializeFirebaseApp();
+  if (!kIsWeb) {
+    await initializeFirebaseApp();
+  }
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
   configureEnvironmentFromDotenv();
-  registerPushNotificationBackgroundHandler();
+  if (!kIsWeb) {
+    registerPushNotificationBackgroundHandler();
+  }
   appRouter = createAppRouter(
     observers:
         flavor == AppFlavor.prd ? const [] : [ChuckerFlutter.navigatorObserver],
@@ -34,9 +39,11 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
   runApp(
     ProviderScope(
       child: PushNotificationBootstrap(
-        child: VersionCheckBootstrap(
-          child: SukmaApp(flavor: flavor),
-        ),
+        child: kIsWeb
+            ? SukmaApp(flavor: flavor)
+            : VersionCheckBootstrap(
+                child: SukmaApp(flavor: flavor),
+              ),
       ),
     ),
   );
@@ -54,15 +61,14 @@ void _configureChucker(AppFlavor flavor) {
 class SukmaApp extends StatelessWidget {
   const SukmaApp({required this.flavor, super.key});
 
+  static const _designSize = Size(375, 812);
+
   final AppFlavor flavor;
 
   @override
   Widget build(BuildContext context) {
-    return AppScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) => MaterialApp.router(
+    Widget buildMaterialApp(BuildContext context) {
+      return MaterialApp.router(
         title: _appTitle,
         theme: AppTheme.light,
         routerConfig: appRouter,
@@ -74,7 +80,25 @@ class SukmaApp extends StatelessWidget {
             child: child!,
           );
         },
-      ),
+      );
+    }
+
+    final screenUtilInit = AppScreenUtilInit(
+      designSize: _designSize,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      configureFromInheritedMediaQuery: kIsWeb,
+      builder: (context, child) => buildMaterialApp(context),
+    );
+
+    if (!kIsWeb) {
+      return screenUtilInit;
+    }
+
+    return WebMobileFrame(
+      frameSize: _designSize,
+      backgroundColor: AppColor.whiteHeavy,
+      child: screenUtilInit,
     );
   }
 

@@ -1,8 +1,10 @@
 import 'package:app_core/app_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
 import 'unauthorized_logout.handler.dart';
+import 'web/firebase_web_stubs.dart';
 
 /// Registers shared infrastructure from [app_core].
 ///
@@ -39,12 +41,14 @@ abstract class AppCoreModule {
       LocalNotificationServiceImpl();
 
   @lazySingleton
-  FirebaseMessagingService get firebaseMessagingService =>
-      FirebaseMessagingServiceImpl();
+  FirebaseMessagingService get firebaseMessagingService => kIsWeb
+      ? const FirebaseMessagingNoopService()
+      : FirebaseMessagingServiceImpl();
 
   @lazySingleton
-  RemoteConfigService remoteConfigService(RemoteConfigConfig config) =>
-      FirebaseRemoteConfigServiceImpl(config: config);
+  RemoteConfigService remoteConfigService(RemoteConfigConfig config) => kIsWeb
+      ? RemoteConfigNoopService(config: config)
+      : FirebaseRemoteConfigServiceImpl(config: config);
 
   @lazySingleton
   HttpClient httpClient(
