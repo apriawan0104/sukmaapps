@@ -59,6 +59,10 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
     return const ConvertPulsaState();
   }
 
+  String _formatPhone(String phone) {
+    return phone.startsWith('0') ? phone : '0$phone';
+  }
+
   @override
   Future<void> savePhoneFav(String phone) async {
     state = state.copyWith(
@@ -88,7 +92,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
 
         if (state.isSavePhone != true) {
           state = state.copyWith(
-            choosePhone: phone,
+            choosePhone: _formatPhone(phone),
             chooseProviderName: provider,
             isProviderUnknown: false,
             savePhoneValue: const AsyncValue.data(null),
@@ -97,13 +101,13 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         }
 
         state = state.copyWith(
-          choosePhone: phone,
+          choosePhone: _formatPhone(phone),
           chooseProviderName: provider,
           isProviderUnknown: false,
         );
 
-        final saveResult =
-            await _savePhoneFavUseCase(SavePhoneFavParam(number: phone));
+        final saveResult = await _savePhoneFavUseCase(
+            SavePhoneFavParam(number: _formatPhone(phone)));
 
         await saveResult.fold(
           (failure) async {
@@ -152,7 +156,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   Future<void> choosePhone(
       {required String phone, required ProviderEntity provider}) async {
     state = state.copyWith(
-      choosePhone: phone,
+      choosePhone: _formatPhone(phone),
       chooseProviderName: provider,
     );
   }
@@ -331,8 +335,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
     final statusResult = await _checkStatusAppUseCase(NoParams());
     final isAppReady = statusResult.fold(
       (_) => false,
-      (status) =>
-          status.serviceStatus == true && status.userStatus == true,
+      (status) => status.serviceStatus == true && status.userStatus == true,
     );
 
     if (!isAppReady) {
@@ -397,7 +400,8 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         final transfer = outstanding.isNotEmpty ? outstanding.first : null;
         if (transfer == null) {
           state = state.copyWith(
-            transferLoadValue: const AsyncValue.error('Transaksi tidak ditemukan'),
+            transferLoadValue:
+                const AsyncValue.error('Transaksi tidak ditemukan'),
           );
           return;
         }
@@ -425,7 +429,8 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         final transfer = outstanding.isNotEmpty ? outstanding.first : null;
         if (transfer == null) {
           state = state.copyWith(
-            transferLoadValue: const AsyncValue.error('Transaksi tidak ditemukan'),
+            transferLoadValue:
+                const AsyncValue.error('Transaksi tidak ditemukan'),
           );
           return;
         }

@@ -48,6 +48,19 @@ class TransferModel {
   final String? providerName;
   final bool? cancelByAdmin;
 
+  static DateTime? _parseDateTime(Object? value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is DateTime) {
+      return value;
+    }
+    if (value is String) {
+      return DateTime.tryParse(value);
+    }
+    return null;
+  }
+
   factory TransferModel.fromJson(Map<String, dynamic> json) {
     return TransferModel(
       dialupCode: json['dialup_code'] as String?,
@@ -65,8 +78,8 @@ class TransferModel {
       charge: json['charge'] as int?,
       credit: json['credit'] as int?,
       costPayment: json['cost_payment'] as int?,
-      createdAt: json['created_at'] as DateTime?,
-      expiredAt: json['expired_at'] as DateTime?,
+      createdAt: _parseDateTime(json['created_at']),
+      expiredAt: _parseDateTime(json['expired_at']),
       interval: json['interval'] as int?,
       evidence: json['evidence'] != null
           ? EvidenceModel.fromJson(json['evidence'] as Map<String, dynamic>)
