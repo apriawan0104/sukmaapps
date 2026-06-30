@@ -83,22 +83,25 @@ class SukmaApp extends StatelessWidget {
       );
     }
 
-    final screenUtilInit = AppScreenUtilInit(
-      designSize: _designSize,
-      minTextAdapt: true,
-      splitScreenMode: true,
-      configureFromInheritedMediaQuery: kIsWeb,
-      builder: (context, child) => buildMaterialApp(context),
-    );
-
     if (!kIsWeb) {
-      return screenUtilInit;
+      return AppScreenUtilInit(
+        designSize: _designSize,
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => buildMaterialApp(context),
+      );
     }
 
-    return WebMobileFrame(
+    return WebResponsiveShell(
       frameSize: _designSize,
       backgroundColor: AppColor.whiteHeavy,
-      child: screenUtilInit,
+      builder: (isMobileBrowser) => AppScreenUtilInit(
+        designSize: _designSize,
+        minTextAdapt: true,
+        splitScreenMode: true,
+        configureFromInheritedMediaQuery: !isMobileBrowser,
+        builder: (context, child) => buildMaterialApp(context),
+      ),
     );
   }
 
