@@ -5,4 +5,5 @@ class EnvConstant {
   static const String csPhone = 'csPhone';
   static const String appStoreUrl = 'urlAppstore';
   static const String playStoreUrl = 'urlPlaystore';
+  static const String googleWebClientId = 'googleWebClientId';
 }

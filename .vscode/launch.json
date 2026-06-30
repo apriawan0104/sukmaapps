@@ -44,6 +44,45 @@
                 "--flavor",
                 "uat"
             ]
+        },
+        {
+            "name": "Sukma Dev (Web)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "program": "lib/main_dev.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--web-hostname=localhost",
+                "--web-port=58080"
+            ]
+        },
+        {
+            "name": "Sukma Uat (Web)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "program": "lib/main_uat.dart",
+            "args": [
+                "--flavor",
+                "uat",
+                "--web-hostname=localhost",
+                "--web-port=58080"
+            ]
+        },
+        {
+            "name": "Sukma Prod (Web)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "chrome",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor",
+                "prd",
+                "--web-hostname=localhost",
+                "--web-port=58080"
+            ]
         }
     ]
 }

@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:chucker_flutter/chucker_flutter.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
@@ -9,6 +10,15 @@ import 'session_token_provider.service.dart';
 @module
 abstract class SukmaModule {
   bool get _isNonProd => EnvConstant.environment.env != FlavorType.prd.name;
+
+  String? get _googleWebClientId {
+    if (!kIsWeb) return null;
+
+    final clientId = EnvConstant.googleWebClientId.env;
+    if (clientId.isEmpty || clientId == '-') return null;
+
+    return clientId;
+  }
 
   @lazySingleton
   RemoteConfigConfig get remoteConfigConfig => RemoteConfigConfig(
@@ -27,7 +37,9 @@ abstract class SukmaModule {
   @lazySingleton
   @Named('googleAuth')
   AuthenticationService googleAuthService() =>
-      GoogleAuthenticationServiceImpl();
+      GoogleAuthenticationServiceImpl(
+        clientId: _googleWebClientId,
+      );
 
   @lazySingleton
   @Named('appleAuth')

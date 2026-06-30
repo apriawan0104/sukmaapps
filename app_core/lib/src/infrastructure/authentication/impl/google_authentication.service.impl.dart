@@ -48,12 +48,15 @@ class GoogleAuthenticationServiceImpl implements AuthenticationService {
 
   /// Creates a Google authentication service.
   ///
+  /// [clientId] - OAuth 2.0 Web Client ID. Required on web; optional on mobile.
   /// [hostedDomain] - Restrict to specific Google Workspace domain
   /// [scopes] - OAuth scopes to request
   GoogleAuthenticationServiceImpl({
+    String? clientId,
     String? hostedDomain,
     List<String>? scopes,
   })  : _googleSignIn = GoogleSignIn(
+          clientId: clientId,
           scopes: scopes ?? <String>['email', 'profile'],
           hostedDomain: hostedDomain,
         ),
