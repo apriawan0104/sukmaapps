@@ -7,9 +7,22 @@ class EvidenceModel {
 
   final int? imageId;
 
+  static int? _parseImageId(Object? value) {
+    if (value == null) {
+      return null;
+    }
+    if (value is int) {
+      return value;
+    }
+    if (value is String) {
+      return int.tryParse(value);
+    }
+    return null;
+  }
+
   factory EvidenceModel.fromJson(Map<String, dynamic> json) {
     return EvidenceModel(
-      imageId: json['image_id'] as int?,
+      imageId: _parseImageId(json['image_id']),
     );
   }
 

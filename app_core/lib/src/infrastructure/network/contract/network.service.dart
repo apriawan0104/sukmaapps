@@ -170,6 +170,27 @@ abstract class HttpClient {
     Map<String, dynamic>? headers,
   });
 
+  /// Upload raw bytes to server (used on web where [dart:io] is unavailable).
+  ///
+  /// [path] - Request path
+  /// [bytes] - File bytes to upload
+  /// [fileName] - Filename sent to the server
+  /// [fieldName] - Form field name for the file
+  /// [data] - Additional form data
+  /// [onProgress] - Optional progress callback (sent, total)
+  /// [headers] - Additional headers
+  ///
+  /// Returns [Either<NetworkFailure, HttpResponseEntity<T>>]
+  Future<Either<NetworkFailure, HttpResponseEntity<T>>> uploadBytes<T>(
+    String path,
+    List<int> bytes, {
+    String fileName = 'file',
+    String fieldName = 'file',
+    Map<String, dynamic>? data,
+    void Function(int sent, int total)? onProgress,
+    Map<String, dynamic>? headers,
+  });
+
   /// Add request interceptor
   ///
   /// Interceptors can modify requests before they are sent.

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:app_core/app_core.dart';
 import '../../../../common/common.dart';
@@ -27,6 +29,8 @@ class ConvertPulsaState extends Equatable {
     this.transferData,
     this.transferLoadValue,
     this.imagePath = '',
+    this.imageBytes,
+    this.imageFileName,
     this.uploadImageValue = const AsyncValue.data(null),
     this.deleteImageValue = const AsyncValue.data(null),
     this.transEvidenceValue = const AsyncValue.data(null),
@@ -55,6 +59,8 @@ class ConvertPulsaState extends Equatable {
   final TransferEntity? transferData;
   final AsyncValue<TransferEntity>? transferLoadValue;
   final String imagePath;
+  final Uint8List? imageBytes;
+  final String? imageFileName;
   final AsyncValue<void>? uploadImageValue;
   final AsyncValue<void>? deleteImageValue;
   final AsyncValue<void>? transEvidenceValue;
@@ -83,6 +89,8 @@ class ConvertPulsaState extends Equatable {
         transferData,
         transferLoadValue,
         imagePath,
+        imageBytes,
+        imageFileName,
         uploadImageValue,
         deleteImageValue,
         transEvidenceValue,
@@ -112,6 +120,9 @@ class ConvertPulsaState extends Equatable {
     TransferEntity? transferData,
     AsyncValue<TransferEntity>? transferLoadValue,
     String? imagePath,
+    Uint8List? imageBytes,
+    String? imageFileName,
+    bool clearLocalImage = false,
     AsyncValue<void>? uploadImageValue,
     AsyncValue<void>? deleteImageValue,
     AsyncValue<void>? transEvidenceValue,
@@ -140,7 +151,10 @@ class ConvertPulsaState extends Equatable {
           saveTransKonfirmValue ?? this.saveTransKonfirmValue,
       transferData: transferData ?? this.transferData,
       transferLoadValue: transferLoadValue ?? this.transferLoadValue,
-      imagePath: imagePath ?? this.imagePath,
+      imagePath: clearLocalImage ? '' : (imagePath ?? this.imagePath),
+      imageBytes: clearLocalImage ? null : (imageBytes ?? this.imageBytes),
+      imageFileName:
+          clearLocalImage ? null : (imageFileName ?? this.imageFileName),
       uploadImageValue: uploadImageValue ?? this.uploadImageValue,
       deleteImageValue: deleteImageValue ?? this.deleteImageValue,
       transEvidenceValue: transEvidenceValue ?? this.transEvidenceValue,

@@ -1,6 +1,7 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app_core/app_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,6 +11,8 @@ import '../../../../../app/app.dart';
 import '../../../../../common/common.dart';
 import '../../../../../core/core.dart';
 import '../../adapter/convert_pulsa.adapter.dart';
+import 'transfer_evidence_image.widget.dart';
+import 'transfer_file_image.widget.dart';
 import 'transfer_helper.widget.dart';
 
 class TransferUploadSectionWidget extends ConsumerWidget {
@@ -19,9 +22,9 @@ class TransferUploadSectionWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(convertPulsaRiverpodAdapterProvider);
     final transfer = state.transferData;
-    final imagePath = state.imagePath;
-    final hasEvidence = transfer?.evidence?.imageId != null;
-    final hasImage = imagePath.isNotEmpty || hasEvidence;
+    final imageId = transfer?.evidence?.imageId;
+    final hasLocalImage = state.imagePath.isNotEmpty || state.imageBytes != null;
+    final hasImage = imageId != null || hasLocalImage;
     final uploadValue = state.uploadImageValue ?? const AsyncValue.data(null);
     final deleteValue = state.deleteImageValue ?? const AsyncValue.data(null);
     final isProcessing = uploadValue.isLoading || deleteValue.isLoading;
@@ -82,8 +85,10 @@ class TransferUploadSectionWidget extends ConsumerWidget {
               const Center(child: CircularProgressIndicator())
             else if (hasImage)
               _TransferImageCard(
-                imagePath: imagePath,
-                imageId: transfer?.evidence?.imageId,
+                imagePath: state.imagePath,
+                imageBytes: state.imageBytes,
+                imageFileName: state.imageFileName,
+                imageId: imageId,
               )
             else
               const _TransferEmptyImageCard(),
@@ -106,11 +111,17 @@ class _TransferEmptyImageCard extends ConsumerWidget {
         TransferHelperWidget.uploadImage(
           context: context,
           ref: ref,
-          onCompleted: (file) async {
-            if (file == null) return;
+          onCompleted: (image) async {
+            if (image == null) return;
             if (!context.mounted) return;
-            Navigator.of(context).pop();
-            await ctrl.saveImagePath(file.path);
+            if (!kIsWeb) {
+              Navigator.of(context).pop();
+            }
+            await ctrl.saveImagePath(
+              image.path.isNotEmpty ? image.path : image.displayName,
+              imageBytes: image.bytes,
+              fileName: image.displayName,
+            );
           },
         );
       },
@@ -142,19 +153,26 @@ class _TransferEmptyImageCard extends ConsumerWidget {
 class _TransferImageCard extends ConsumerWidget {
   const _TransferImageCard({
     required this.imagePath,
+    required this.imageBytes,
+    required this.imageFileName,
     required this.imageId,
   });
 
   final String imagePath;
+  final Uint8List? imageBytes;
+  final String? imageFileName;
   final int? imageId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ctrl = ref.read(convertPulsaRiverpodAdapterProvider.notifier);
+    final hasServerImage = imageId != null;
+    final hasLocalImage = imagePath.isNotEmpty || imageBytes != null;
+    final canPreview = hasServerImage || hasLocalImage;
 
     return GestureDetector(
       onTap: () {
-        if (imagePath.isEmpty) return;
+        if (!canPreview) return;
 
         showDialog<void>(
           context: context,
@@ -163,10 +181,16 @@ class _TransferImageCard extends ConsumerWidget {
               padding: EdgeInsets.all(16.w),
               child: Center(
                 child: InteractiveViewer(
-                  child: Image.file(
-                    File(imagePath),
-                    fit: BoxFit.contain,
-                  ),
+                  child: hasServerImage
+                      ? TransferEvidenceImageWidget(
+                          imageId: imageId!,
+                          fit: BoxFit.contain,
+                        )
+                      : TransferFileImageWidget(
+                          imagePath: imagePath,
+                          imageBytes: imageBytes,
+                          fit: BoxFit.contain,
+                        ),
                 ),
               ),
             );
@@ -178,16 +202,17 @@ class _TransferImageCard extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            if (imageId != null)
-              Image.network(
-                WebServiceConstant.imageUrl(imageId!),
+            if (hasServerImage)
+              TransferEvidenceImageWidget(
+                imageId: imageId!,
                 height: 40.h,
                 width: 40.w,
                 fit: BoxFit.contain,
               )
             else
-              Image.file(
-                File(imagePath),
+              TransferFileImageWidget(
+                imagePath: imagePath,
+                imageBytes: imageBytes,
                 height: 40.h,
                 width: 40.w,
                 fit: BoxFit.contain,
@@ -195,9 +220,7 @@ class _TransferImageCard extends ConsumerWidget {
             SizedBox(width: 16.w),
             Expanded(
               child: Text(
-                imageId != null
-                    ? imageId.toString()
-                    : imagePath.split('/').last,
+                _displayName,
                 style: GoogleFonts.plusJakartaSans(
                   color: const Color(0xFF293142),
                   fontSize: 14.sp,
@@ -221,5 +244,15 @@ class _TransferImageCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String get _displayName {
+    if (imageFileName?.isNotEmpty == true) {
+      return imageFileName!;
+    }
+    if (imagePath.isNotEmpty) {
+      return imagePath.split('/').last;
+    }
+    return 'Bukti transfer';
   }
 }

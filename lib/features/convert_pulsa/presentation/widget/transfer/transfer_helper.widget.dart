@@ -1,28 +1,31 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:app_core/app_core.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../../../app/app.dart';
 import '../../../../../common/common.dart';
 import '../../../../../core/core.dart';
 import '../../adapter/convert_pulsa.adapter.dart';
+import 'transfer_pick_image.helper.dart';
+import 'transfer_picked_image.dart';
 
 class TransferHelperWidget {
   static Future<void> uploadImage({
     required BuildContext context,
     required WidgetRef ref,
-    required void Function(File? file) onCompleted,
+    required Future<void> Function(TransferPickedImage? image) onCompleted,
   }) async {
+    if (kIsWeb) {
+      final image = await pickTransferImage();
+      await onCompleted(image);
+      return;
+    }
+
     final item = ColoredBox(
       color: Colors.white,
       child: Wrap(
@@ -50,9 +53,10 @@ class TransferHelperWidget {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    final file =
-                        await pickImage(imageSource: ImageSource.camera);
-                    onCompleted(file);
+                    final image = await pickTransferImage(
+                      imageSource: ImageSource.camera,
+                    );
+                    await onCompleted(image);
                   },
                   child: Column(
                     children: [
@@ -74,9 +78,10 @@ class TransferHelperWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    final file =
-                        await pickImage(imageSource: ImageSource.gallery);
-                    onCompleted(file);
+                    final image = await pickTransferImage(
+                      imageSource: ImageSource.gallery,
+                    );
+                    await onCompleted(image);
                   },
                   child: Column(
                     children: [
@@ -195,63 +200,5 @@ class TransferHelperWidget {
       context: context,
       widget: item,
     );
-  }
-
-  static Future<File?> pickImage({
-    required ImageSource imageSource,
-    File? existingFile,
-    double maxSize = 400,
-  }) async {
-    try {
-      String imagePath = '';
-      double imageSize = 0;
-
-      if (existingFile == null) {
-        final picker = ImagePicker();
-        final imageFile = await picker.pickImage(
-          source: imageSource,
-          maxWidth: 1000,
-          maxHeight: 1000,
-        );
-        imagePath = imageFile?.path ?? '';
-        if (imagePath.isEmpty) return null;
-        imageSize = File(imagePath).readAsBytesSync().lengthInBytes / 1024;
-      } else {
-        imagePath = existingFile.path;
-        imageSize = File(imagePath).readAsBytesSync().lengthInBytes / 1024;
-      }
-
-      if (imageSize >= maxSize) {
-        log('image bigger than 400kb');
-
-        final dir = await getTemporaryDirectory();
-        final targetPath =
-            '${dir.absolute.path}/temp-${UtilitiesHelper.getRandomString(15)}.jpg';
-        final imageFileFile = await FlutterImageCompress.compressAndGetFile(
-          imagePath,
-          targetPath,
-          quality: 50,
-        );
-
-        if (imageFileFile == null) return null;
-
-        if (await File(imageFileFile.path).length() >= maxSize * 1024) {
-          return pickImage(
-            imageSource: imageSource,
-            existingFile: File(imageFileFile.path),
-          );
-        }
-
-        return File(imageFileFile.path);
-      }
-
-      return File(imagePath);
-    } catch (e) {
-      if (e.toString().contains('camera_access_denied')) {
-        Fluttertoast.showToast(msg: e.toString());
-      }
-    }
-
-    return null;
   }
 }

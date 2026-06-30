@@ -173,6 +173,29 @@ class SukmaHttpClient implements HttpClient {
   }
 
   @override
+  Future<Result<NetworkFailure, HttpResponseEntity<T>>> uploadBytes<T>(
+    String path,
+    List<int> bytes, {
+    String fileName = 'file',
+    String fieldName = 'file',
+    Map<String, dynamic>? data,
+    void Function(int sent, int total)? onProgress,
+    Map<String, dynamic>? headers,
+  }) {
+    return _mapResult(
+      _inner.uploadBytes<T>(
+        path,
+        bytes,
+        fileName: fileName,
+        fieldName: fieldName,
+        data: data,
+        onProgress: onProgress,
+        headers: headers,
+      ),
+    );
+  }
+
+  @override
   void addRequestInterceptor(RequestInterceptor interceptor) =>
       _inner.addRequestInterceptor(interceptor);
 

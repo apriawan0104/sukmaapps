@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart' hide AsyncValue;
 import 'package:app_core/app_core.dart';
+import 'dart:typed_data';
 import '../../../../common/common.dart';
 import '../../../../config/config.dart';
 import '../../../../core/core.dart';
@@ -449,14 +450,23 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
   }
 
   @override
-  Future<void> saveImagePath(String path) async {
+  Future<void> saveImagePath(
+    String path, {
+    Uint8List? imageBytes,
+    String? fileName,
+  }) async {
     final noTrans = state.transferData?.noTrans ?? '';
     if (noTrans.isEmpty) return;
 
     state = state.copyWith(uploadImageValue: const AsyncValue.loading());
 
     final result = await _uploadImageUseCase(
-      UploadImageParam(noTrans: noTrans, imagePath: path),
+      UploadImageParam(
+        noTrans: noTrans,
+        imagePath: path,
+        fileBytes: imageBytes,
+        fileName: fileName,
+      ),
     );
 
     await result.fold(
@@ -466,11 +476,16 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
         );
       },
       (_) async {
-        state = state.copyWith(
-          imagePath: path,
-          uploadImageValue: const AsyncValue.data(null),
-        );
         await refreshTransferData();
+
+        final imageId = state.transferData?.evidence?.imageId;
+        state = state.copyWith(
+          uploadImageValue: const AsyncValue.data(null),
+          clearLocalImage: imageId != null,
+          imagePath: imageId != null ? '' : path,
+          imageBytes: imageId != null ? null : imageBytes,
+          imageFileName: imageId != null ? null : fileName,
+        );
       },
     );
   }
@@ -494,7 +509,7 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
       },
       (_) async {
         state = state.copyWith(
-          imagePath: '',
+          clearLocalImage: true,
           deleteImageValue: const AsyncValue.data(null),
         );
         await refreshTransferData();
@@ -551,7 +566,12 @@ class ConvertPulsaRiverpodAdapter extends _$ConvertPulsaRiverpodAdapter
     state = state.copyWith(transEvidenceValue: const AsyncValue.loading());
 
     final result = await _transEvidenceUseCase(
-      TransEvidenceParam(noTrans: noTrans, imagePath: imagePath),
+      TransEvidenceParam(
+        noTrans: noTrans,
+        imagePath: imagePath,
+        fileBytes: state.imageBytes,
+        fileName: state.imageFileName,
+      ),
     );
 
     result.fold(

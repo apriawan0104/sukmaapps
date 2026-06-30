@@ -85,6 +85,17 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
 
   @override
   Future<ValueGuard<void>> uploadImage(UploadImageParam params) async {
+    if (params.fileBytes != null) {
+      return _remoteClient
+          .uploadBytes<Map<String, dynamic>>(
+            WebServiceConstant.uploadImage,
+            params.fileBytes!,
+            fileName: params.fileName ?? 'image.jpg',
+            data: {'no_trans': params.noTrans},
+          )
+          .mapSuccess((_) {});
+    }
+
     return _remoteClient.upload<Map<String, dynamic>>(
       WebServiceConstant.uploadImage,
       params.imagePath,
@@ -94,6 +105,17 @@ class ConvertPulsaRemoteImplDataSource implements ConvertPulsaRemoteDataSource {
 
   @override
   Future<ValueGuard<void>> transEvidence(TransEvidenceParam params) async {
+    if (params.fileBytes != null) {
+      return _remoteClient
+          .uploadBytes<Map<String, dynamic>>(
+            WebServiceConstant.transEvidence,
+            params.fileBytes!,
+            fileName: params.fileName ?? 'image.jpg',
+            data: {'no_trans': params.noTrans},
+          )
+          .mapSuccess((_) {});
+    }
+
     return _remoteClient.upload<Map<String, dynamic>>(
       WebServiceConstant.transEvidence,
       params.imagePath,

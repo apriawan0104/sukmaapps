@@ -255,6 +255,38 @@ class DioHttpClient implements HttpClient {
   }
 
   @override
+  Future<Either<NetworkFailure, HttpResponseEntity<T>>> uploadBytes<T>(
+    String path,
+    List<int> bytes, {
+    String fileName = 'file',
+    String fieldName = 'file',
+    Map<String, dynamic>? data,
+    void Function(int sent, int total)? onProgress,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      final formData = dio.FormData.fromMap({
+        ...?data,
+        fieldName: dio.MultipartFile.fromBytes(
+          bytes,
+          filename: fileName,
+        ),
+      });
+
+      final response = await _dio.post<T>(
+        path,
+        data: formData,
+        options: dio.Options(headers: headers),
+        onSendProgress: onProgress,
+      );
+
+      return _handleResponse<T>(response);
+    } catch (e) {
+      return Left(_handleError(e));
+    }
+  }
+
+  @override
   void addRequestInterceptor(RequestInterceptor interceptor) {
     _requestInterceptors.add(interceptor);
   }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../../../../common/common.dart';
 
 /// Template: VS Code snippet `ctrl` (prefix `ctrl`).
@@ -38,7 +40,11 @@ abstract class ConvertPulsaController {
   Future<void> loadTransferData();
   void seedTransferData(TransferEntity transfer);
   Future<void> refreshTransferData();
-  Future<void> saveImagePath(String path);
+  Future<void> saveImagePath(
+    String path, {
+    Uint8List? imageBytes,
+    String? fileName,
+  });
   Future<void> deleteImagePath();
   Future<void> cancelTrans({bool? isCancel});
   Future<void> submitTransEvidence();
