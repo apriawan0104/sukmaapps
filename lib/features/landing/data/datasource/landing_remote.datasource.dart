@@ -23,4 +23,8 @@ abstract class LandingRemoteDataSource {
   Future<ValueGuard<List<HistoryConvertModel>>> getHistoryConvert(
     NoParams params,
   );
+
+  Future<ValueGuard<List<SocialMediaModel>>> getSocialMedia(
+    NoParams params,
+  );
 }

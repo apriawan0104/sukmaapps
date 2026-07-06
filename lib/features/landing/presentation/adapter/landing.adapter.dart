@@ -29,6 +29,7 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
   late GetLocalUserUseCase _getLocalUserUseCase;
   late GetStatusTransaksiFailedUseCase _getStatusTransaksiFailedUseCase;
   late LaunchWhatsappUseCase _launchWhatsappUseCase;
+  late GetSocialMediaUseCase _getSocialMediaUseCase;
 
   Future<void>? _outstandingRequest;
 
@@ -49,6 +50,7 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     _getLocalUserUseCase = getIt<GetLocalUserUseCase>();
     _getStatusTransaksiFailedUseCase = getIt<GetStatusTransaksiFailedUseCase>();
     _launchWhatsappUseCase = getIt<LaunchWhatsappUseCase>();
+    _getSocialMediaUseCase = getIt<GetSocialMediaUseCase>();
   }
 
   @override
@@ -70,6 +72,7 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
       getPhoneFav(),
       getRekeningFav(),
       getLocalUser(),
+      getSocialMedia(),
     ], eagerError: false);
   }
 
@@ -312,6 +315,19 @@ class LandingRiverpodAdapter extends _$LandingRiverpodAdapter
     );
     appRouter.goNamed(RouteNames.login);
   }
+
   @override
   Future<void> convertPulsa() => ConvertPulsaNavigation.pushPhone();
+
+  @override
+  Future<void> getSocialMedia() async {
+    state = state.copyWith(socialMedia: const AsyncValue.loading());
+    final result = await _getSocialMediaUseCase(NoParams());
+    state = state.copyWith(
+      socialMedia: result.fold(
+        (failure) => AsyncValue.error(failure.message),
+        AsyncValue.data,
+      ),
+    );
+  }
 }

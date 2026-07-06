@@ -17,6 +17,7 @@ class LandingState extends Equatable {
     this.localUser = const AsyncValue.loading(),
     this.outstanding = const AsyncValue.loading(),
     this.statusTransaksiFailed = const AsyncValue.loading(),
+    this.socialMedia = const AsyncValue.loading(),
   });
 
   final int indexNav;
@@ -30,6 +31,7 @@ class LandingState extends Equatable {
   final AsyncValue<List<RekeningFavEntity>> rekeningFav;
   final AsyncValue<LocalUserEntity> localUser;
   final AsyncValue<List<StatusTransaksiEntity>> statusTransaksiFailed;
+  final AsyncValue<List<SocialMediaEntity>> socialMedia;
 
   @override
   List<Object?> get props => [
@@ -44,6 +46,7 @@ class LandingState extends Equatable {
         localUser,
         outstanding,
         statusTransaksiFailed,
+        socialMedia,
       ];
 
   LandingState copyWith({
@@ -58,6 +61,7 @@ class LandingState extends Equatable {
     AsyncValue<LocalUserEntity>? localUser,
     AsyncValue<TransferEntity?>? outstanding,
     AsyncValue<List<StatusTransaksiEntity>>? statusTransaksiFailed,
+    AsyncValue<List<SocialMediaEntity>>? socialMedia,
   }) {
     return LandingState(
       indexNav: indexNav ?? this.indexNav,
@@ -72,6 +76,7 @@ class LandingState extends Equatable {
       outstanding: outstanding ?? this.outstanding,
       statusTransaksiFailed:
           statusTransaksiFailed ?? this.statusTransaksiFailed,
+      socialMedia: socialMedia ?? this.socialMedia,
     );
   }
 }

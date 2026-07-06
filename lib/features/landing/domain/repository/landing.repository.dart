@@ -23,4 +23,8 @@ abstract class LandingRepository {
   Future<ValueGuard<List<HistoryConvertEntity>>> getHistoryConvert(
     NoParams params,
   );
+
+  Future<ValueGuard<List<SocialMediaEntity>>> getSocialMedia(
+    NoParams params,
+  );
 }

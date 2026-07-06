@@ -24,4 +24,5 @@ class WebServiceConstant {
   static const String statusTransaksiFailed = 'transaction/onhold';
   static String imageUrl(int imageId) =>
       '${EnvConstant.imageUrl.env}/image/$imageId';
+  static const String socialMedia = 'social-media';
 }
