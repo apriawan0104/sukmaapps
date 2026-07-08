@@ -5,37 +5,28 @@ import '../../features/auth/presentation/screen/screen.dart';
 import '../../features/convert_pulsa/presentation/page/page.dart';
 import '../../features/landing/presentation/page/page.dart';
 import '../../features/landing/presentation/screen/landing.screen.dart';
-import '../environment/environment.dart';
 import 'route_names.dart';
 
 List<RouteBase> routes = [
   GoRoute(
     path: RouteNames.login,
     name: RouteNames.login,
-    builder: (context, state) => UIBannerEnv.banner(
-      EnvironmentConfig.current,
-      const LoginScreen(),
-    ),
+    builder: (context, state) => const LoginScreen(),
     routes: [
       GoRoute(
         path: RouteNames.privacyPolicy,
         name: RouteNames.privacyPolicy,
-        builder: (context, state) => UIBannerEnv.banner(
-          EnvironmentConfig.current,
-          const PrivacyPolicyScreen(mdFileName: 'privacy_policy.md'),
-        ),
+        builder: (context, state) =>
+            const PrivacyPolicyScreen(mdFileName: 'privacy_policy.md'),
       ),
       GoRoute(
         path: RouteNames.termCondition,
         name: RouteNames.termCondition,
         builder: (context, state) {
           final isButton = state.extra as bool?;
-          return UIBannerEnv.banner(
-            EnvironmentConfig.current,
-            TermConditionScreen(
-              mdFileName: 'term_condition.md',
-              isButton: isButton,
-            ),
+          return TermConditionScreen(
+            mdFileName: 'term_condition.md',
+            isButton: isButton,
           );
         },
       ),
@@ -129,9 +120,6 @@ List<RouteBase> routes = [
   GoRoute(
     path: RouteNames.forceUpdate,
     name: RouteNames.forceUpdate,
-    builder: (context, state) => UIBannerEnv.banner(
-      EnvironmentConfig.current,
-      const ForceUpdateScreen(),
-    ),
+    builder: (context, state) => const ForceUpdateScreen(),
   ),
 ];

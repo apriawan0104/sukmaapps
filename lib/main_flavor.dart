@@ -66,12 +66,16 @@ class SukmaApp extends StatelessWidget {
         title: _appTitle,
         theme: AppTheme.light,
         routerConfig: appRouter,
+        debugShowCheckedModeBanner: false,
         builder: (context, child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(1.0),
+          return UIBannerEnv.banner(
+            EnvironmentConfig.current,
+            MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1.0),
+              ),
+              child: child!,
             ),
-            child: child!,
           );
         },
       ),
