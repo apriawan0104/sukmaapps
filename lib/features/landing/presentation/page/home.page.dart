@@ -83,6 +83,7 @@ class HomePage extends ConsumerWidget {
                     },
                   ),
                   BannerInformationWidget(listInformation: informationBanners),
+                  SizedBox(height: 16.h),
                   ProviderRateWidget(
                     rateAsync: state.rate,
                     onTapConvert: ctrl.convertPulsa,

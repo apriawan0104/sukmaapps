@@ -304,7 +304,7 @@ class ProviderRateWidget extends StatelessWidget {
               p0.length,
               (index) {
                 return InkWell(
-                  onTap: () => onTapConvert,
+                  onTap: onTapConvert,
                   child: _cardRate(
                       nameProvider: p0[index].name!,
                       rate: p0[index].rate!,
