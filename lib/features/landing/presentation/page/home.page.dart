@@ -1,9 +1,11 @@
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../common/common.dart';
+import '../../../../config/config.dart';
 import '../../../../core/core.dart';
 import '../adapter/landing.adapter.dart';
 import '../../../convert_pulsa/presentation/adapter/convert_pulsa.adapter.dart';
@@ -82,7 +84,16 @@ class HomePage extends ConsumerWidget {
                           .seedTransferData(transfer);
                     },
                   ),
-                  BannerInformationWidget(listInformation: informationBanners),
+                  if (state.statusApp.value?.serviceStatus == false) ...[
+                    ServiceOfflineWidget()
+                  ] else if (state.statusApp.value?.isHold == true) ...[
+                    TransactionFailedWidget(onPressed: () {
+                      context.pushNamed(RouteNames.statusTransaksi);
+                    })
+                  ] else ...[
+                    BannerInformationWidget(
+                        listInformation: informationBanners),
+                  ],
                   SizedBox(height: 16.h),
                   ProviderRateWidget(
                     rateAsync: state.rate,
