@@ -28,9 +28,9 @@ class PlatformVersionConfigModel {
 
   factory PlatformVersionConfigModel.fromJson(Map<String, dynamic> json) {
     return PlatformVersionConfigModel(
-      versionCode: json['versionCode'] as int? ?? 0,
-      isForced: json['isForced'] as bool? ?? false,
-      versionName: json['versionName'] as String?,
+      versionCode: json['version_code'] as int? ?? 0,
+      isForced: json['is_forced'] as bool? ?? false,
+      versionName: json['version'] as String?,
     );
   }
 
