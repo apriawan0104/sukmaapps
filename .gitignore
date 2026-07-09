@@ -48,3 +48,10 @@ app.*.map.json
 .fvm/
 .vscode/settings.json
 .fvm/flutter_sdk
+
+# Firebase CLI
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+ui-debug.log
+firepit-log.txt
