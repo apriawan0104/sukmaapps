@@ -51,4 +51,6 @@ abstract class LandingController {
   Future<List<StatusTransaksiEntity>> getStatusTransaksiFailed();
 
   Future<void> convertPulsa();
+
+  Future<void> getSocialMedia();
 }

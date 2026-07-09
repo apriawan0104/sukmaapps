@@ -58,4 +58,13 @@ class LandingImplRepository implements LandingRepository {
       (HistoryConvertModel item) => item.toEntity(),
     );
   }
+
+  @override
+  Future<ValueGuard<List<SocialMediaEntity>>> getSocialMedia(
+      NoParams params) async {
+    final result = await _remoteDataSource.getSocialMedia(params);
+    return result.mapListValue(
+      (SocialMediaModel item) => item.toEntity(),
+    );
+  }
 }

@@ -145,6 +145,8 @@ import 'package:sukmaapps/features/landing/domain/usecase/get_information_banner
     as _i448;
 import 'package:sukmaapps/features/landing/domain/usecase/get_rate.usecase.dart'
     as _i779;
+import 'package:sukmaapps/features/landing/domain/usecase/get_social_media.usecase.dart'
+    as _i342;
 import 'package:sukmaapps/features/landing/presentation/guard/convert_pulsa_access.guard.dart'
     as _i357;
 import 'package:sukmaapps/features/landing/presentation/handler/landing_notification_opened_refresher.dart'
@@ -274,6 +276,8 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i355.ConvertPulsaRemoteDataSource>()));
     gh.lazySingleton<_i852.CommonRepository>(
         () => _i564.CommonImplRepository(gh<_i493.CommonRemoteDataSource>()));
+    gh.lazySingleton<_i342.GetSocialMediaUseCase>(
+        () => _i342.GetSocialMediaUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i779.GetRateUseCase>(
         () => _i779.GetRateUseCase(gh<_i305.LandingRepository>()));
     gh.lazySingleton<_i829.GetHistoryConvertUseCase>(

@@ -83,4 +83,18 @@ class LandingRemoteImplDataSource implements LandingRemoteDataSource {
           .toList();
     });
   }
+
+  @override
+  Future<ValueGuard<List<SocialMediaModel>>> getSocialMedia(
+      NoParams params) async {
+    return _remoteClient
+        .get<Map<String, dynamic>>(
+      WebServiceConstant.socialMedia,
+    )
+        .mapSuccess((response) {
+      return ApiResponse.unwrapList(response.data)
+          .map((e) => SocialMediaModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    });
+  }
 }
