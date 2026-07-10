@@ -46,13 +46,20 @@ class CommonRemoteImplDataSource implements CommonRemoteDataSource {
   Future<ValueGuard<String>> getWaNumber(NoParams params) async {
     return _remoteClient
         .get<Map<String, dynamic>>(
-          WebServiceConstant.waNumber,
-        )
-        .mapSuccess(
-          (response) =>
-              ApiResponse.unwrapMap(response.data)['wa_number'] as String? ??
-              '',
-        );
+      WebServiceConstant.waNumber,
+    )
+        .mapSuccess((response) {
+      final whatsappUrl = ApiResponse.unwrapList(response.data)
+          .map((e) => e as Map<String, dynamic>)
+          .where((e) => e['type'] == 'whatsapp')
+          .map((e) => e['url'] as String?)
+          .firstWhere(
+            (url) => url != null && url.isNotEmpty,
+            orElse: () => null,
+          );
+
+      return whatsappUrl ?? '';
+    });
   }
 
   @override

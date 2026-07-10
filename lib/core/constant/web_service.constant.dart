@@ -19,10 +19,10 @@ class WebServiceConstant {
   static const String deleteImage = 'transaction/evidence/delete';
   static const String transHistory = 'transaction/history';
   static const String statusApp = 'status/apps';
+  static const String socialMedia = 'social-media';
   static const String accountDelete = 'auth/account/delete';
-  static const String waNumber = 'status/apps';
+  static const String waNumber = 'social-media';
   static const String statusTransaksiFailed = 'transaction/onhold';
   static String imageUrl(int imageId) =>
       '${EnvConstant.imageUrl.env}/image/$imageId';
-  static const String socialMedia = 'social-media';
 }

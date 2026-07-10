@@ -25,7 +25,11 @@ class InformationPage extends ConsumerWidget {
                   icon: IconProfileConstant.whatsappUil,
                   title: 'Chat dengan Customer Service ',
                   onTap: () {
-                    ctrl.launchWhatsapp(FormatWaConstant.general);
+                    if (data.any((element) => element.type == 'whatsapp')) {
+                      ctrl.launchWhatsapp(FormatWaConstant.general);
+                    } else {
+                      ctrl.launchUrl('https://www.sukmaconvert.co.id/');
+                    }
                   },
                   secondIcon: IconProfileConstant.instagramUil,
                   secondTitle: 'Follow akun Instagram kami',
