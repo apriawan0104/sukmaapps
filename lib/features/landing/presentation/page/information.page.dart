@@ -115,6 +115,7 @@ class InformationPage extends ConsumerWidget {
             Padding(
               padding: const app_core.REdgeInsets.fromLTRB(16, 136, 16, 16),
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: UICardPrimaryWidget(
                   child: contentListMedsos(ctrl, state.socialMedia),
                 ),

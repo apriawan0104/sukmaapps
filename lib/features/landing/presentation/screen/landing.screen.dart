@@ -23,6 +23,10 @@ class LandingScreen extends ConsumerWidget {
             await ctrl.getHistoryConvert();
             return;
           }
+          if (state.indexNav == 3) {
+            await ctrl.getSocialMedia();
+            return;
+          }
           await ctrl.loadInitial();
         },
         child: IndexedStack(
