@@ -1,7 +1,7 @@
-import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../common/common.dart';
+import '../../../../config/config.dart';
 import '../../../../core/core.dart';
 import '../controller/landing.controller.dart';
 import '../widget/widget.dart';
@@ -46,7 +46,7 @@ class ProfilePage extends StatelessWidget {
               title: 'Versi Aplikasi',
               subtitle: 'Versi',
               onTap: () {}),
-          ChuckerFlutter.chuckerButton
+          ChuckerConfig.button
         ],
       ),
     );

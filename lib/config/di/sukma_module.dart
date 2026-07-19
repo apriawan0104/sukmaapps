@@ -1,9 +1,9 @@
 import 'package:app_core/app_core.dart';
-import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../core/core.dart';
 import '../../features/auth/data/datasource/local/auth_local.datasource.dart';
+import '../chucker_config.dart';
 import 'session_token_provider.service.dart';
 
 @module
@@ -21,7 +21,7 @@ abstract class SukmaModule {
   NetworkConfig get networkConfig => NetworkConfig(
         baseUrl: EnvConstant.baseUrl.env,
         enableLogging: _isNonProd,
-        dioInterceptors: _isNonProd ? [ChuckerDioInterceptor()] : const [],
+        dioInterceptors: ChuckerConfig.dioInterceptors,
       );
 
   @lazySingleton

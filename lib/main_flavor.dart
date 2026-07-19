@@ -1,5 +1,4 @@
 import 'package:app_core/app_core.dart';
-import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,15 +20,17 @@ String _envFileName(AppFlavor flavor) {
 /// Loads the env file for this flavor, then calls [runApp].
 Future<void> runSukmaApp(AppFlavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
-  _configureChucker(flavor);
+  // Chucker is disabled for every PRD build by default.
+  // To enable it for PRD debug/profile (but keep PRD release disabled), use:
+  // enabled: flavor != AppFlavor.prd || !kReleaseMode
+  ChuckerConfig.configure(enabled: flavor != AppFlavor.prd);
   await initializeFirebaseApp();
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
   configureEnvironmentFromDotenv();
   registerPushNotificationBackgroundHandler();
   appRouter = createAppRouter(
-    observers:
-        flavor == AppFlavor.prd ? const [] : [ChuckerFlutter.navigatorObserver],
+    observers: ChuckerConfig.navigatorObservers,
   );
   runApp(
     ProviderScope(
@@ -40,15 +41,6 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
       ),
     ),
   );
-}
-
-void _configureChucker(AppFlavor flavor) {
-  if (flavor == AppFlavor.prd) {
-    return;
-  }
-
-  ChuckerFlutter.showOnRelease = false;
-  ChuckerFlutter.showNotification = true;
 }
 
 class SukmaApp extends StatelessWidget {
@@ -68,13 +60,15 @@ class SukmaApp extends StatelessWidget {
         routerConfig: appRouter,
         debugShowCheckedModeBanner: false,
         builder: (context, child) {
-          return UIBannerEnv.banner(
-            EnvironmentConfig.current,
-            MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: const TextScaler.linear(1.0),
+          return ChuckerConfig.enableGlobalLongPress(
+            child: UIBannerEnv.banner(
+              EnvironmentConfig.current,
+              MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaler: const TextScaler.linear(1.0),
+                ),
+                child: child!,
               ),
-              child: child!,
             ),
           );
         },
