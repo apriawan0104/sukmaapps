@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Build Flutter app(s) and upload to Firebase App Distribution.
 # Usage:
+#   chmod +x build.sh
 #   ./build.sh
+#   or
 #   ./build.sh --flavor dev --os android
 #   ./build.sh --flavor uat --os both --notes "QA build"
 #   ./build.sh --flavor prd --os ios --skip-upload
@@ -21,19 +23,22 @@ cd "$ROOT_DIR"
 # ---------------------------------------------------------------------------
 
 # Android Firebase App IDs (from google-services.json package mapping)
-ANDROID_APP_ID_DEV="${ANDROID_APP_ID_DEV:-1:933792903721:android:c45e92681fd12322fda238}"
-ANDROID_APP_ID_UAT="${ANDROID_APP_ID_UAT:-1:933792903721:android:8d939c8baacbb4d8fda238}"
-ANDROID_APP_ID_PRD="${ANDROID_APP_ID_PRD:-1:933792903721:android:45da105e8cf3a302fda238}"
+ANDROID_APP_ID_DEV="${ANDROID_APP_ID_DEV:-1:933792903721:android:b46611665fc39456fda238}"
+ANDROID_APP_ID_UAT="${ANDROID_APP_ID_UAT:-1:933792903721:android:970ae9e38408aa54fda238}"
+ANDROID_APP_ID_PRD="${ANDROID_APP_ID_PRD:-1:933792903721:android:12a9a824697d8e9bfda238}"
 
 # iOS Firebase App IDs — replace with real IDs from Firebase Console
-IOS_APP_ID_DEV="${IOS_APP_ID_DEV:-REPLACE_WITH_IOS_DEV_APP_ID}"
-IOS_APP_ID_UAT="${IOS_APP_ID_UAT:-REPLACE_WITH_IOS_UAT_APP_ID}"
-IOS_APP_ID_PRD="${IOS_APP_ID_PRD:-REPLACE_WITH_IOS_PRD_APP_ID}"
+IOS_APP_ID_DEV="1:933792903721:ios:60afc8324f825c40fda238"
+IOS_APP_ID_UAT="1:933792903721:ios:60afc8324f825c40fda238"
+IOS_APP_ID_PRD="1:933792903721:ios:60afc8324f825c40fda238"
 
 # Firebase App Distribution tester groups (comma-separated allowed)
 TESTER_GROUPS_DEV="hardlogicom"
 TESTER_GROUPS_UAT="hardlogicom"
 TESTER_GROUPS_PRD="hardlogicom,sukma"
+
+# Active Firebase CLI account (must already be logged in via `firebase login:add`)
+FIREBASE_ACCOUNT="${FIREBASE_ACCOUNT:-sukmaconvertpulsa@gmail.com}"
 
 # Entrypoints
 TARGET_DEV="${TARGET_DEV:-lib/main_dev.dart}"
@@ -47,8 +52,8 @@ BUILD_MODE_PRD="${BUILD_MODE_PRD:-release}"
 
 # iOS export method: development | ad-hoc | app-store | enterprise
 IOS_EXPORT_DEV="${IOS_EXPORT_DEV:-development}"
-IOS_EXPORT_UAT="${IOS_EXPORT_UAT:-ad-hoc}"
-IOS_EXPORT_PRD="${IOS_EXPORT_PRD:-ad-hoc}"
+IOS_EXPORT_UAT="${IOS_EXPORT_UAT:-development}"
+IOS_EXPORT_PRD="${IOS_EXPORT_PRD:-development}"
 
 # Android build flags
 ANDROID_TARGET_PLATFORM="${ANDROID_TARGET_PLATFORM:-android-arm64}"
@@ -214,6 +219,7 @@ echo "  Target        : $TARGET"
 echo "  Build mode    : $BUILD_MODE"
 echo "  iOS export    : $IOS_EXPORT"
 echo "  Tester groups : $TESTER_GROUPS"
+echo "  Firebase acct : ${FIREBASE_ACCOUNT:-"(current login)"}"
 echo "  Notes         : $RELEASE_NOTES"
 echo "  Upload        : $([[ "$SKIP_UPLOAD" == true ]] && echo no || echo yes)"
 echo "─────────────────────────"
@@ -292,6 +298,32 @@ esac
 # Firebase App Distribution
 # ---------------------------------------------------------------------------
 
+current_firebase_account() {
+  # Parses: "Logged in as you@example.com"
+  firebase login:list 2>/dev/null | sed -n 's/^Logged in as //p' | head -n 1
+}
+
+use_firebase_account() {
+  [[ -n "$FIREBASE_ACCOUNT" ]] || return 0
+
+  local current
+  current="$(current_firebase_account || true)"
+
+  if [[ "$current" == "$FIREBASE_ACCOUNT" ]]; then
+    ok "Already using Firebase account: $FIREBASE_ACCOUNT"
+    return 0
+  fi
+
+  log "Switch Firebase account → $FIREBASE_ACCOUNT (current: ${current:-none})"
+  firebase login:use "$FIREBASE_ACCOUNT"
+
+  current="$(current_firebase_account || true)"
+  if [[ "$current" != "$FIREBASE_ACCOUNT" ]]; then
+    die "Firebase account mismatch. Expected '$FIREBASE_ACCOUNT', got '${current:-none}'. Run: firebase login:add $FIREBASE_ACCOUNT"
+  fi
+  ok "Using Firebase account: $FIREBASE_ACCOUNT"
+}
+
 upload_artifact() {
   local platform="$1" file="$2" app_id="$3"
   [[ -f "$file" ]] || die "Artifact missing: $file"
@@ -315,6 +347,7 @@ upload_artifact() {
 if [[ "$SKIP_UPLOAD" == true ]]; then
   warn "Skip upload (--skip-upload)"
 else
+  use_firebase_account
   case "$OS" in
     ios) upload_artifact ios "$IPA_PATH" "$IOS_APP_ID" ;;
     android) upload_artifact android "$APK_PATH" "$ANDROID_APP_ID" ;;
