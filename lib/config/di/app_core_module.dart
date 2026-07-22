@@ -31,8 +31,14 @@ abstract class AppCoreModule {
   ResponsiveService get responsiveService => ResponsiveServiceImpl();
 
   @lazySingleton
-  RepositoryErrorHandler get repositoryErrorHandler =>
-      RepositoryErrorHandler(null);
+  CrashReporterService get crashReporterService =>
+      FirebaseCrashlyticsServiceImpl(enableInDebugMode: false);
+
+  @lazySingleton
+  RepositoryErrorHandler repositoryErrorHandler(
+    CrashReporterService crashReporter,
+  ) =>
+      RepositoryErrorHandler(crashReporter);
 
   @lazySingleton
   LocalNotificationService get localNotificationService =>

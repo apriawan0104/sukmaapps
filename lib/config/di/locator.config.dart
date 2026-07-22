@@ -180,8 +180,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => appCoreModule.urlLauncherService);
     gh.lazySingleton<_i130.ResponsiveService>(
         () => appCoreModule.responsiveService);
-    gh.lazySingleton<_i130.RepositoryErrorHandler>(
-        () => appCoreModule.repositoryErrorHandler);
+    gh.lazySingleton<_i130.CrashReporterService>(
+        () => appCoreModule.crashReporterService);
     gh.lazySingleton<_i130.LocalNotificationService>(
         () => appCoreModule.localNotificationService);
     gh.lazySingleton<_i130.FirebaseMessagingService>(
@@ -211,6 +211,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => sukmaModule.googleAuthService(),
       instanceName: 'googleAuth',
     );
+    gh.lazySingleton<_i130.RepositoryErrorHandler>(() =>
+        appCoreModule.repositoryErrorHandler(gh<_i130.CrashReporterService>()));
     gh.lazySingleton<_i130.RemoteConfigService>(() =>
         appCoreModule.remoteConfigService(gh<_i130.RemoteConfigConfig>()));
     gh.lazySingleton<_i130.TokenProviderService>(

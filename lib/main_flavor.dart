@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:app_core/app_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,18 +31,43 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
   configureEnvironmentFromDotenv();
+
+  final crashReporter = getIt<CrashReporterService>();
+  await crashReporter.initialize();
+
+  FlutterError.onError = (details) {
+    crashReporter.recordFlutterError(details);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    crashReporter.recordError(
+      exception: error,
+      stackTrace: stack,
+      fatal: true,
+    );
+    return true;
+  };
+
   registerPushNotificationBackgroundHandler();
   appRouter = createAppRouter(
     observers: ChuckerConfig.navigatorObservers,
   );
-  runApp(
-    ProviderScope(
-      child: PushNotificationBootstrap(
-        child: VersionCheckBootstrap(
-          child: SukmaApp(flavor: flavor),
+  runZonedGuarded(
+    () => runApp(
+      ProviderScope(
+        child: PushNotificationBootstrap(
+          child: VersionCheckBootstrap(
+            child: SukmaApp(flavor: flavor),
+          ),
         ),
       ),
     ),
+    (error, stack) {
+      crashReporter.recordError(
+        exception: error,
+        stackTrace: stack,
+        fatal: true,
+      );
+    },
   );
 }
 
