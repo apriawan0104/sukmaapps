@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:app_core/app_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app/app.dart';
 import 'common/common.dart';
@@ -23,6 +25,14 @@ String _envFileName(AppFlavor flavor) {
 /// Loads the env file for this flavor, then calls [runApp].
 Future<void> runSukmaApp(AppFlavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Use bundled Plus Jakarta Sans assets; do not download fonts at runtime.
+  GoogleFonts.config.allowRuntimeFetching = false;
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('assets/fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+
   // Chucker is disabled for every PRD build by default.
   // To enable it for PRD debug/profile (but keep PRD release disabled), use:
   // enabled: flavor != AppFlavor.prd || !kReleaseMode
@@ -34,6 +44,8 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
 
   final crashReporter = getIt<CrashReporterService>();
   await crashReporter.initialize();
+  // Best-effort; must not block startup if session/user data is missing.
+  await CrashlyticsUserContext.syncFromLocalSession();
 
   FlutterError.onError = (details) {
     crashReporter.recordFlutterError(details);

@@ -40,6 +40,15 @@ class AuthLocalImplDataSource implements AuthLocalDataSource {
   }
 
   @override
+  Future<ValueGuard<String?>> getEmail() async {
+    final result = await _storage.get<String>(UserKeyConstant.keyEmail);
+    return result.fold(
+      ValueGuards.failure,
+      ValueGuards.success,
+    );
+  }
+
+  @override
   Future<ValueGuard<String?>> getFoto() async {
     final result = await _storage.get<String>(UserKeyConstant.keyFoto);
     return result.fold(
@@ -71,12 +80,14 @@ class AuthLocalImplDataSource implements AuthLocalDataSource {
   Future<ValueGuard<void>> saveSession({
     required String userId,
     required String? fullname,
+    required String? email,
     required String? foto,
     required String? token,
   }) async {
     final result = await _storage.saveAll({
       UserKeyConstant.keyUserID: userId,
       UserKeyConstant.keyName: fullname ?? '',
+      UserKeyConstant.keyEmail: email ?? '',
       UserKeyConstant.keyFoto: foto,
       UserKeyConstant.keyToken: token,
     });

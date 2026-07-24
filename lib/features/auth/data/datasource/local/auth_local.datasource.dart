@@ -7,6 +7,8 @@ abstract class AuthLocalDataSource {
 
   Future<ValueGuard<String?>> getName();
 
+  Future<ValueGuard<String?>> getEmail();
+
   Future<ValueGuard<String?>> getFoto();
 
   Future<ValueGuard<String?>> getToken();
@@ -16,6 +18,7 @@ abstract class AuthLocalDataSource {
   Future<ValueGuard<void>> saveSession({
     required String userId,
     required String? fullname,
+    required String? email,
     required String? foto,
     required String? token,
   });

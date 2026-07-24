@@ -1,9 +1,9 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sukmaapps/common/presentation/helper/crashlytics_user_context.dart';
 
 import '../../domain/domain.dart';
 import '../datasource/datasource.dart';
-
 @LazySingleton(as: AuthRepository)
 class AuthImplRepository implements AuthRepository {
   AuthImplRepository(
@@ -58,14 +58,24 @@ class AuthImplRepository implements AuthRepository {
       );
 
       return registerResult.flatMapAsync((userModel) async {
+        final email = userModel.user?.email ?? user.email ?? '';
         final saveResult = await _localDataSource.saveSession(
           userId: accessId,
           fullname: userModel.user?.fullname ?? '',
+          email: email,
           foto: user.photoUrl ?? '',
           token: userModel.token,
         );
 
-        return saveResult.mapValue((_) => userModel.toEntity());
+        return saveResult.flatMapAsync((_) async {
+          final entity = userModel.toEntity();
+          await CrashlyticsUserContext.setUser(
+            userId: accessId,
+            email: email,
+            name: entity.user?.fullname,
+          );
+          return ValueGuards.success(entity);
+        });
       });
     });
   }
@@ -89,6 +99,10 @@ class AuthImplRepository implements AuthRepository {
         (_) => null,
         (value) => value,
       );
+      final existingEmail = (await _localDataSource.getEmail()).fold(
+        (_) => '',
+        (value) => value ?? '',
+      );
 
       final registerResult = await _remoteDataSource.register(
         RegisterParam(
@@ -98,14 +112,24 @@ class AuthImplRepository implements AuthRepository {
       );
 
       return registerResult.flatMapAsync((userModel) async {
+        final email = userModel.user?.email ?? existingEmail;
         final saveResult = await _localDataSource.saveSession(
           userId: userId,
           fullname: userModel.user?.fullname,
+          email: email,
           foto: foto,
           token: userModel.token,
         );
 
-        return saveResult.mapValue((_) => userModel.toEntity());
+        return saveResult.flatMapAsync((_) async {
+          final entity = userModel.toEntity();
+          await CrashlyticsUserContext.setUser(
+            userId: userId,
+            email: email,
+            name: entity.user?.fullname,
+          );
+          return ValueGuards.success(entity);
+        });
       });
     });
   }
@@ -153,6 +177,8 @@ class AuthImplRepository implements AuthRepository {
     final appleSignOutResult = await _appleAuth.signOut();
     appleSignOutResult.fold((_) {}, (_) {});
 
+    await CrashlyticsUserContext.clear();
+
     return ValueGuards.success(null);
   }
 
@@ -166,6 +192,10 @@ class AuthImplRepository implements AuthRepository {
       (_) => null,
       (value) => value,
     );
+    final email = (await _localDataSource.getEmail()).fold(
+      (_) => null,
+      (value) => value,
+    );
     final foto = (await _localDataSource.getFoto()).fold(
       (_) => null,
       (value) => value,
@@ -175,6 +205,7 @@ class AuthImplRepository implements AuthRepository {
       LocalUserEntity(
         userId: userId ?? '',
         fullname: fullname ?? '',
+        email: email ?? '',
         foto: foto ?? '',
       ),
     );

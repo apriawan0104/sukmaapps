@@ -1,6 +1,7 @@
 import 'package:app_core/app_core.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../common/presentation/helper/crashlytics_user_context.dart';
 import '../../common/presentation/widget/statics/static.widget.dart';
 import '../../core/core.dart';
 import '../navigation/navigation.dart';
@@ -82,6 +83,8 @@ class UnauthorizedLogoutHandler {
 
       final appleSignOutResult = await _appleAuth.signOut();
       appleSignOutResult.fold((_) {}, (_) {});
+
+      await CrashlyticsUserContext.clear();
 
       await StaticWidget.msgToast('Sesi berakhir, silakan login kembali');
       appRouter.go(RouteNames.login);

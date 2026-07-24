@@ -18,6 +18,8 @@ class TransferPage extends ConsumerStatefulWidget {
 }
 
 class _TransferPageState extends ConsumerState<TransferPage> {
+  bool _isLeaving = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,11 +29,21 @@ class _TransferPageState extends ConsumerState<TransferPage> {
   }
 
   Future<void> _onLeaveTransfer() async {
-    await ref
-        .read(landingRiverpodAdapterProvider.notifier)
-        .refreshOutstanding();
-    if (!mounted) return;
-    context.pop();
+    if (_isLeaving) return;
+    _isLeaving = true;
+    try {
+      await ref
+          .read(landingRiverpodAdapterProvider.notifier)
+          .refreshOutstanding();
+      if (!mounted) return;
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.goNamed(RouteNames.landing);
+      }
+    } finally {
+      if (mounted) _isLeaving = false;
+    }
   }
 
   @override

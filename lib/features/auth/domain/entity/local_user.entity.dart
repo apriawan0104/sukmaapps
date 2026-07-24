@@ -4,13 +4,15 @@ class LocalUserEntity extends Equatable {
   const LocalUserEntity({
     required this.userId,
     required this.fullname,
+    required this.email,
     required this.foto,
   });
 
   final String userId;
   final String fullname;
+  final String email;
   final String foto;
 
   @override
-  List<Object?> get props => [userId, fullname, foto];
+  List<Object?> get props => [userId, fullname, email, foto];
 }
