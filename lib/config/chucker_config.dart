@@ -11,8 +11,9 @@ class ChuckerConfig {
 
   static void configure({required bool enabled}) {
     _enabled = enabled;
-    ChuckerFlutter.isDebugMode = enabled && kDebugMode;
-    ChuckerFlutter.showOnRelease = enabled;
+    // Debug/profile use isDebugMode; release uses showOnRelease.
+    ChuckerFlutter.isDebugMode = enabled && (kDebugMode || kProfileMode);
+    ChuckerFlutter.showOnRelease = enabled && kReleaseMode;
     ChuckerFlutter.showNotification = enabled;
   }
 
@@ -22,7 +23,8 @@ class ChuckerConfig {
   static List<ChuckerDioInterceptor> get dioInterceptors =>
       _enabled ? [ChuckerDioInterceptor()] : const [];
 
-  static Widget get button => ChuckerFlutter.chuckerButton;
+  static Widget get button =>
+      _enabled ? ChuckerFlutter.chuckerButton : const SizedBox.shrink();
 
   static Widget enableGlobalLongPress({required Widget child}) {
     if (!_enabled) {

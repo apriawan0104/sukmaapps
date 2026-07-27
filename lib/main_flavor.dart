@@ -33,10 +33,11 @@ Future<void> runSukmaApp(AppFlavor flavor) async {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  // Chucker is disabled for every PRD build by default.
-  // To enable it for PRD debug/profile (but keep PRD release disabled), use:
-  // enabled: flavor != AppFlavor.prd || !kReleaseMode
-  ChuckerConfig.configure(enabled: flavor != AppFlavor.prd);
+  // Chucker on for all modes on dev/uat, and debug-only on prd.
+  // Hidden for prd profile + prd release (button, notification, inspector).
+  ChuckerConfig.configure(
+    enabled: flavor != AppFlavor.prd || kDebugMode,
+  );
   await initializeFirebaseApp();
   await dotenv.load(fileName: _envFileName(flavor));
   await configureDependencies();
