@@ -383,53 +383,55 @@ class DioHttpClient implements HttpClient {
 
   NetworkFailure _handleError(dynamic error) {
     if (error is dio.DioException) {
-      switch (error.type) {
-        case dio.DioExceptionType.connectionTimeout:
-        case dio.DioExceptionType.sendTimeout:
-        case dio.DioExceptionType.receiveTimeout:
-          return TimeoutFailure(
-            message: error.message ?? 'Request timeout',
-            details: error,
-          );
-
-        case dio.DioExceptionType.connectionError:
-          return ConnectionFailure(
-            message: error.message ?? 'Connection failed',
-            details: error,
-          );
-
-        case dio.DioExceptionType.badResponse:
-          final statusCode = error.response?.statusCode ?? 0;
-          return _createFailureFromStatusCode(
-            statusCode,
-            error.message,
-            error.response?.data,
-          );
-
-        case dio.DioExceptionType.cancel:
-          return CancelFailure(
-            message: 'Request was cancelled',
-            details: error,
-          );
-
-        case dio.DioExceptionType.badCertificate:
-          return ConnectionFailure(
-            message: 'SSL certificate verification failed',
-            details: error,
-          );
-
-        case dio.DioExceptionType.unknown:
-          if (error.error is SocketException) {
-            return ConnectionFailure(
-              message: 'No internet connection',
-              details: error,
-            );
-          }
-          return UnknownNetworkFailure(
-            message: error.message ?? 'An unexpected error occurred',
-            details: error,
-          );
+      final type = error.type;
+      // if/else: Dio 5.10+ adds transformTimeout; app_core still supports ^5.7.
+      if (type == dio.DioExceptionType.connectionTimeout ||
+          type == dio.DioExceptionType.sendTimeout ||
+          type == dio.DioExceptionType.receiveTimeout ||
+          type.name == 'transformTimeout') {
+        return TimeoutFailure(
+          message: error.message ?? 'Request timeout',
+          details: error,
+        );
       }
+      if (type == dio.DioExceptionType.connectionError) {
+        return ConnectionFailure(
+          message: error.message ?? 'Connection failed',
+          details: error,
+        );
+      }
+      if (type == dio.DioExceptionType.badResponse) {
+        final statusCode = error.response?.statusCode ?? 0;
+        return _createFailureFromStatusCode(
+          statusCode,
+          error.message,
+          error.response?.data,
+        );
+      }
+      if (type == dio.DioExceptionType.cancel) {
+        return CancelFailure(
+          message: 'Request was cancelled',
+          details: error,
+        );
+      }
+      if (type == dio.DioExceptionType.badCertificate) {
+        return ConnectionFailure(
+          message: 'SSL certificate verification failed',
+          details: error,
+        );
+      }
+      if (type == dio.DioExceptionType.unknown) {
+        if (error.error is SocketException) {
+          return ConnectionFailure(
+            message: 'No internet connection',
+            details: error,
+          );
+        }
+      }
+      return UnknownNetworkFailure(
+        message: error.message ?? 'An unexpected error occurred',
+        details: error,
+      );
     }
 
     return UnknownNetworkFailure(
