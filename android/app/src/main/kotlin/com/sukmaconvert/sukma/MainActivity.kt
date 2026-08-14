@@ -1,4 +1,4 @@
-package com.sukmaconvert.sukma.sukmaapps
+package com.sukmaconvert.sukma
 
 import io.flutter.embedding.android.FlutterActivity
 
