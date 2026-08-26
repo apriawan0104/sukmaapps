@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sukmaapps/core/core.dart';
 
 import '../../../../app/app.dart';
 import '../../../../common/common.dart';
@@ -20,21 +21,46 @@ class TermConditionScreen extends StatefulWidget {
 
 class _TermConditionScreenState extends State<TermConditionScreen> {
   final ScrollController _controller = ScrollController();
+  late final Future<String> _mdFuture;
   var reachEnd = false;
+  var _didCheckScroll = false;
 
-  _listener() {
+  void _markReachEnd() {
+    if (reachEnd || !mounted) return;
+    setState(() => reachEnd = true);
+  }
+
+  void _listener() {
+    if (reachEnd || !_controller.hasClients) return;
     final maxScroll = _controller.position.maxScrollExtent;
     if (_controller.offset >= maxScroll) {
-      setState(() {
-        reachEnd = true;
-      });
+      _markReachEnd();
     }
+  }
+
+  // ponytail: short md never scrolls — enable Setuju after first layout if already at end
+  void _checkIfAlreadyAtEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_controller.hasClients) return;
+      if (_controller.position.maxScrollExtent <= 0) {
+        _markReachEnd();
+      }
+    });
   }
 
   @override
   void initState() {
-    _controller.addListener(_listener);
     super.initState();
+    _mdFuture = rootBundle.loadString('assets/${widget.mdFileName}');
+    _controller.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    _controller
+      ..removeListener(_listener)
+      ..dispose();
+    super.dispose();
   }
 
   @override
@@ -44,23 +70,28 @@ class _TermConditionScreenState extends State<TermConditionScreen> {
       body: Column(
         children: [
           Expanded(
-              child: FutureBuilder(
-            future:
-                Future.delayed(const Duration(milliseconds: 150)).then((value) {
-              return rootBundle.loadString('assets/${widget.mdFileName}');
-            }),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Markdown(
-                  data: snapshot.data.toString(),
-                  controller: _controller,
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-            },
-          ))
+            child: FutureBuilder<String>(
+              future: _mdFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  if (!_didCheckScroll) {
+                    _didCheckScroll = true;
+                    _checkIfAlreadyAtEnd();
+                  }
+                  return Markdown(
+                    data: snapshot.data!,
+                    controller: _controller,
+                  );
+                }
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Gagal memuat konten'));
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),
         ],
-      ),
+      ).withSafeArea(),
       bottomNavigationBar: (widget.isButton == true)
           ? Consumer(
               builder: (context, ref, child) {
@@ -79,7 +110,7 @@ class _TermConditionScreenState extends State<TermConditionScreen> {
                   isRightEnable: reachEnd,
                 );
               },
-            )
+            ).withSafeArea()
           : null,
     );
   }
