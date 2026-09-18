@@ -65,53 +65,62 @@ class _TermConditionScreenState extends State<TermConditionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: UIAppBar.appBar(context, title: 'Ketentuan Layanan'),
-      body: Column(
-        children: [
-          Expanded(
-            child: FutureBuilder<String>(
-              future: _mdFuture,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (!_didCheckScroll) {
-                    _didCheckScroll = true;
-                    _checkIfAlreadyAtEnd();
-                  }
-                  return Markdown(
-                    data: snapshot.data!,
-                    controller: _controller,
-                  );
-                }
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Gagal memuat konten'));
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
+    final requireAccept = widget.isButton == true;
+    return Consumer(
+      builder: (context, ref, child) {
+        final ctrl = ref.read(authAdapterProvider.notifier);
+        return PopScope(
+          canPop: !requireAccept,
+          child: Scaffold(
+            appBar: UIAppBar.appBar(
+              context,
+              title: 'Ketentuan Layanan',
+              customBackButton: requireAccept
+                  ? IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.black),
+                      onPressed: ctrl.logout,
+                    )
+                  : null,
             ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: FutureBuilder<String>(
+                    future: _mdFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (!_didCheckScroll) {
+                          _didCheckScroll = true;
+                          _checkIfAlreadyAtEnd();
+                        }
+                        return Markdown(
+                          data: snapshot.data!,
+                          controller: _controller,
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return const Center(child: Text('Gagal memuat konten'));
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  ),
+                ),
+              ],
+            ).withSafeArea(),
+            bottomNavigationBar: requireAccept
+                ? UIButtonBottomMultipleWidget(
+                    leftTitleButton: 'Batal',
+                    rightTitleButton: 'Setuju',
+                    leftOnPressed: ctrl.logout,
+                    rightBgColor: AppColor.brPrimaryStrong,
+                    rightColor: Colors.white,
+                    rightOnPressed: ctrl.readTerm,
+                    isRightEnable: reachEnd,
+                  ).withSafeArea()
+                : null,
           ),
-        ],
-      ).withSafeArea(),
-      bottomNavigationBar: (widget.isButton == true)
-          ? Consumer(
-              builder: (context, ref, child) {
-                final ctrl = ref.read(authAdapterProvider.notifier);
-                return UIButtonBottomMultipleWidget(
-                  leftTitleButton: 'Batal',
-                  rightTitleButton: 'Setuju',
-                  leftOnPressed: () {
-                    Navigator.pop(context);
-                  },
-                  rightBgColor: AppColor.brPrimaryStrong,
-                  rightColor: Colors.white,
-                  rightOnPressed: () {
-                    ctrl.readTerm();
-                  },
-                  isRightEnable: reachEnd,
-                );
-              },
-            ).withSafeArea()
-          : null,
+        );
+      },
     );
   }
 }

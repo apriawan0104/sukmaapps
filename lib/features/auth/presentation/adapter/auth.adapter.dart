@@ -51,7 +51,7 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
           loginApple: AsyncValue.data(null),
           currentUser: AsyncValue.data(user),
         );
-        appRouter.goNamed(RouteNames.landing);
+        _goAfterLogin(user.user?.isReadTermCondition == true);
       },
     );
   }
@@ -72,9 +72,17 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
           loginGoogle: AsyncValue.data(null),
           currentUser: AsyncValue.data(user),
         );
-        appRouter.goNamed(RouteNames.landing);
+        _goAfterLogin(user.user?.isReadTermCondition == true);
       },
     );
+  }
+
+  void _goAfterLogin(bool hasReadTerm) {
+    if (hasReadTerm) {
+      appRouter.goNamed(RouteNames.landing);
+      return;
+    }
+    appRouter.goNamed(RouteNames.termCondition, extra: true);
   }
 
   @override
@@ -82,7 +90,7 @@ class AuthAdapter extends _$AuthAdapter implements AuthController {
     final result = await _readTermUseCase(NoParams());
     result.fold(
       FailurePresenter.show,
-      (_) {},
+      (_) => appRouter.goNamed(RouteNames.landing),
     );
   }
 
