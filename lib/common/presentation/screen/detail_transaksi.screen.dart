@@ -1,5 +1,6 @@
 import 'package:app_core/app_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide AsyncValue;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -66,9 +67,45 @@ class _DetailTransaksiScreenState extends ConsumerState<DetailTransaksiScreen> {
                     color: Color(0xFFE7E8F3),
                   ),
                 ),
-                rowDetail(
-                  leftText: 'ID Transaksi',
-                  rightText: transferModel.noTrans ?? '',
+                RPadding.all(
+                  4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      UITextPrimaryWidget(
+                        title: 'ID Transaksi',
+                        fontSize: 12.sp,
+                        color: const Color(0xFF667085),
+                        fontWeight: FontWeight.w400,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Clipboard.setData(
+                              ClipboardData(text: transferModel.noTrans ?? ''));
+                          StaticWidget.msgToast(
+                              'ID transaksi berhasil di salin');
+                        },
+                        child: UICardPrimaryWidget(
+                          colorSide: AppColor.brPrimaryStrong,
+                          padding: REdgeInsets.all(4),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              UITextPrimaryWidget(
+                                title: transferModel.noTrans ?? '',
+                                fontSize: 12.sp,
+                                color: AppColor.brPrimaryStrong,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              SizedBox(width: 8.w),
+                              Icon(Icons.copy,
+                                  size: 24.sp, color: AppColor.brPrimaryStrong),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 rowDetail(
                   leftText: 'Nomor Pengirim',

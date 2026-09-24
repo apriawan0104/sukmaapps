@@ -58,6 +58,8 @@ class IconSharedConstant {
   static String leftItem = 'assets/icons/left_items.svg';
   static String customerService = 'assets/icons/customer_service.svg';
   static String offlineSignal = 'assets/icons/offline_signal.svg';
+  static String sms = 'assets/icons/sms.svg';
+  static String phoneUssd = 'assets/icons/phone_ussd.svg';
 }
 
 class IconStatusConstant {

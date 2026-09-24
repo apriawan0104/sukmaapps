@@ -1,2 +1,7 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
 #include "Generated.xcconfig"
+
+CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements
+
+// See the note in Debug.xcconfig.
+FIREBASE_REVERSED = com.googleusercontent.apps.933792903721-np2fra6tqggloa06iq9sbjfrm9fitieo

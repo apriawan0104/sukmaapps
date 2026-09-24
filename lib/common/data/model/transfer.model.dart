@@ -4,6 +4,7 @@ import 'evidence.model.dart';
 class TransferModel {
   const TransferModel({
     this.dialupCode,
+    this.bucket,
     this.total,
     this.nominal,
     this.subtotal,
@@ -26,7 +27,8 @@ class TransferModel {
     this.cancelByAdmin,
   });
 
-  final String? dialupCode;
+  final DialupModel? dialupCode;
+  final String? bucket;
   final int? total;
   final int? nominal;
   final int? subtotal;
@@ -63,7 +65,10 @@ class TransferModel {
 
   factory TransferModel.fromJson(Map<String, dynamic> json) {
     return TransferModel(
-      dialupCode: json['dialup_code'] as String?,
+      dialupCode: json['dialup'] != null
+          ? DialupModel.fromJson(json['dialup'] as Map<String, dynamic>)
+          : null,
+      bucket: json['bucket'] as String?,
       total: json['total'] as int?,
       nominal: json['nominal'] as int?,
       subtotal: json['subtotal'] as int?,
@@ -91,7 +96,8 @@ class TransferModel {
 
   TransferEntity toEntity() {
     return TransferEntity(
-      dialupCode: dialupCode,
+      dialupCode: dialupCode?.toEntity(),
+      bucket: bucket,
       total: total,
       nominal: nominal,
       subtotal: subtotal,
@@ -112,6 +118,86 @@ class TransferModel {
       evidence: evidence?.toEntity(),
       providerName: providerName,
       cancelByAdmin: cancelByAdmin,
+    );
+  }
+}
+
+class DialupModel {
+  const DialupModel({
+    this.phone,
+    this.sms,
+  });
+
+  final PhoneModel? phone;
+  final SmsModel? sms;
+
+  factory DialupModel.fromJson(Map<String, dynamic> json) {
+    return DialupModel(
+      phone: json['phone'] != null
+          ? PhoneModel.fromJson(json['phone'] as Map<String, dynamic>)
+          : null,
+      sms: json['sms'] != null
+          ? SmsModel.fromJson(json['sms'] as Map<String, dynamic>)
+          : null,
+    );
+  }
+
+  DialupEntity toEntity() {
+    return DialupEntity(
+      phone: phone?.toEntity(),
+      sms: sms?.toEntity(),
+    );
+  }
+}
+
+class PhoneModel {
+  const PhoneModel({
+    this.active,
+    this.value,
+  });
+
+  final bool? active;
+  final String? value;
+
+  factory PhoneModel.fromJson(Map<String, dynamic> json) {
+    return PhoneModel(
+      active: json['active'] as bool?,
+      value: json['value'] as String?,
+    );
+  }
+
+  PhoneEntity toEntity() {
+    return PhoneEntity(
+      active: active,
+      value: value,
+    );
+  }
+}
+
+class SmsModel {
+  const SmsModel({
+    this.active,
+    this.value,
+    this.text,
+  });
+
+  final bool? active;
+  final String? value;
+  final String? text;
+
+  factory SmsModel.fromJson(Map<String, dynamic> json) {
+    return SmsModel(
+      active: json['active'] as bool?,
+      value: json['value'] as String?,
+      text: json['text'] as String?,
+    );
+  }
+
+  SmsEntity toEntity() {
+    return SmsEntity(
+      active: active,
+      value: value,
+      text: text,
     );
   }
 }

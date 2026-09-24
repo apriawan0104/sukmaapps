@@ -1,1 +1,3 @@
 #include "Debug.xcconfig"
+
+FIREBASE_REVERSED = com.googleusercontent.apps.933792903721-mj00aejm6lr6j7515ihrg9eiehetpedl

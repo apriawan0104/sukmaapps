@@ -77,16 +77,35 @@ class _TransferPageState extends ConsumerState<TransferPage> {
 
     Future<void> onDial(TransferEntity transfer) async {
       final dialupCode = transfer.dialupCode;
-      if (dialupCode == null || dialupCode.isEmpty) return;
+      if (dialupCode == null ||
+          dialupCode.phone == null ||
+          dialupCode.phone?.active == false) {
+        return;
+      }
 
       final urlLauncher = getIt<UrlLauncherService>();
-      await urlLauncher.launchPhone(dialupCode.replaceAll('#', '%23'));
+      await urlLauncher
+          .launchPhone(dialupCode.phone?.value?.replaceAll('#', '%23') ?? '');
     }
 
     void onCopy(TransferEntity transfer) {
-      final dialupCode = transfer.dialupCode ?? '';
-      Clipboard.setData(ClipboardData(text: dialupCode));
+      final bucket = transfer.bucket ?? '';
+      Clipboard.setData(ClipboardData(text: bucket));
       StaticWidget.msgToast('Kode Dialup berhasil di copy');
+    }
+
+    Future<void> onSms(TransferEntity transfer) async {
+      final smsCode = transfer.dialupCode;
+
+      if (smsCode == null ||
+          smsCode.sms == null ||
+          smsCode.sms?.active == false) {
+        return;
+      }
+
+      final urlLauncher = getIt<UrlLauncherService>();
+      await urlLauncher.launchSms(smsCode.sms?.value ?? '',
+          message: smsCode.sms?.text);
     }
 
     Future<void> onSubmitEvidence() async {
@@ -108,61 +127,62 @@ class _TransferPageState extends ConsumerState<TransferPage> {
             onPressed: _onLeaveTransfer,
           ),
         ),
-      body: AsyncValueWidget<TransferEntity>(
-        value: transferLoadValue,
-        onSuccess: (transfer) {
-          return Stack(
-            children: [
-              ListView(
-                children: [
-                  TransferCodeSectionWidget(
-                    transfer: transfer,
-                    onDial: () => onDial(transfer),
-                    onCopy: () => onCopy(transfer),
-                  ),
-                  const TransferUploadSectionWidget(),
-                  const TransferCancelButtonWidget(),
-                  SizedBox(height: 48.h),
-                ],
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: TransferCountdownBarWidget(
-                  expiredAt: transfer.expiredAt,
-                  onExpired: () {
-                    if (!context.mounted) return;
-                    context.goNamed(RouteNames.landing);
-                  },
+        body: AsyncValueWidget<TransferEntity>(
+          value: transferLoadValue,
+          onSuccess: (transfer) {
+            return Stack(
+              children: [
+                ListView(
+                  children: [
+                    TransferCodeSectionWidget(
+                      transfer: transfer,
+                      onDial: () => onDial(transfer),
+                      onCopy: () => onCopy(transfer),
+                      onSms: () => onSms(transfer),
+                    ),
+                    const TransferUploadSectionWidget(),
+                    const TransferCancelButtonWidget(),
+                    SizedBox(height: 48.h),
+                  ],
                 ),
-              ),
-            ],
-          );
-        },
-        onRetry: ctrl.refreshTransferData,
-      ),
-      bottomNavigationBar: SafeArea(
-        child: AsyncValueWidget<void>(
-          value: state.transEvidenceValue ?? const AsyncValue.data(null),
-          loadingWidget: Container(
-            color: Colors.white,
-            child: RPadding.all(
-              16,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          ),
-          onSuccess: (_) {
-            return UIButtonBottomWidget(
-              titleButton: 'Kirim Bukti Transfer',
-              onPressed: onSubmitEvidence,
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: TransferCountdownBarWidget(
+                    expiredAt: transfer.expiredAt,
+                    onExpired: () {
+                      if (!context.mounted) return;
+                      context.goNamed(RouteNames.landing);
+                    },
+                  ),
+                ),
+              ],
             );
           },
-          onRetry: onSubmitEvidence,
+          onRetry: ctrl.refreshTransferData,
         ),
-      ),
+        bottomNavigationBar: SafeArea(
+          child: AsyncValueWidget<void>(
+            value: state.transEvidenceValue ?? const AsyncValue.data(null),
+            loadingWidget: Container(
+              color: Colors.white,
+              child: RPadding.all(
+                16,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ),
+            onSuccess: (_) {
+              return UIButtonBottomWidget(
+                titleButton: 'Kirim Bukti Transfer',
+                onPressed: onSubmitEvidence,
+              );
+            },
+            onRetry: onSubmitEvidence,
+          ),
+        ),
       ),
     );
   }
