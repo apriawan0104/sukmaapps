@@ -24,7 +24,6 @@ class TransferCodeSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final nominal = transfer.nominal ?? 0;
     final credit = transfer.credit ?? transfer.nominal ?? 0;
-    final dialupCode = transfer.dialupCode ?? '';
 
     return RPadding.all(
       16,
