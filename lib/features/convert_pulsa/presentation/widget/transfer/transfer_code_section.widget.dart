@@ -188,31 +188,34 @@ class TransferCodeSectionWidget extends StatelessWidget {
               ),
               SizedBox(height: 8.h),
             ],
-            GestureDetector(
-              onTap: onDial,
-              child: UICardPrimaryWidget(
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      IconSharedConstant.phoneUssd,
-                      height: 24.h,
-                      width: 24.w,
-                    ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: UITextPrimaryWidget(
-                        title: 'Telepon/USSD',
-                        fontSize: 14.sp,
-                        color: AppColor.blackMassive,
-                        fontWeight: FontWeight.w700,
+            if (transfer.dialupCode?.phone != null &&
+                transfer.dialupCode?.phone?.active == true) ...[
+              GestureDetector(
+                onTap: onDial,
+                child: UICardPrimaryWidget(
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        IconSharedConstant.phoneUssd,
+                        height: 24.h,
+                        width: 24.w,
                       ),
-                    ),
-                    Icon(Icons.arrow_forward_ios,
-                        color: AppColor.blackMassive, size: 20.sp),
-                  ],
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: UITextPrimaryWidget(
+                          title: 'Telepon/USSD',
+                          fontSize: 14.sp,
+                          color: AppColor.blackMassive,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios,
+                          color: AppColor.blackMassive, size: 20.sp),
+                    ],
+                  ),
                 ),
-              ),
-            )
+              )
+            ],
           ],
         ),
       ),

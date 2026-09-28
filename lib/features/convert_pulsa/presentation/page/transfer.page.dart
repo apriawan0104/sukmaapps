@@ -84,8 +84,8 @@ class _TransferPageState extends ConsumerState<TransferPage> {
       }
 
       final urlLauncher = getIt<UrlLauncherService>();
-      await urlLauncher
-          .launchPhone(dialupCode.phone?.value?.replaceAll('#', '%23') ?? '');
+      var phone = dialupCode.phone?.value?.replaceAll('#', '%23') ?? '';
+      await urlLauncher.launchPhone(phone);
     }
 
     void onCopy(TransferEntity transfer) {
