@@ -11,18 +11,19 @@ class TransferCodeSectionWidget extends StatelessWidget {
     super.key,
     required this.transfer,
     required this.onDial,
+    required this.onSms,
     required this.onCopy,
   });
 
   final TransferEntity transfer;
   final VoidCallback onDial;
+  final VoidCallback onSms;
   final VoidCallback onCopy;
 
   @override
   Widget build(BuildContext context) {
     final nominal = transfer.nominal ?? 0;
     final credit = transfer.credit ?? transfer.nominal ?? 0;
-    final dialupCode = transfer.dialupCode ?? '';
 
     return RPadding.all(
       16,
@@ -30,6 +31,7 @@ class TransferCodeSectionWidget extends StatelessWidget {
         color: AppColor.whiteFair,
         colorSide: AppColor.whiteFair,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -95,43 +97,16 @@ class TransferCodeSectionWidget extends StatelessWidget {
                 ),
               ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
                     child: UITextPrimaryWidget(
-                      title: dialupCode,
+                      title: transfer.bucket ?? '',
                       fontSize: 18.sp,
                       color: AppColor.blackMassive,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(width: 8.w),
-                  GestureDetector(
-                    onTap: onDial,
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: REdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: AppColor.brPrimaryStrong,
-                            borderRadius: BorderRadius.circular(6.w),
-                          ),
-                          child: SvgPicture.asset(
-                            IconSharedConstant.send,
-                            height: 20.h,
-                            width: 20.w,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        UITextPrimaryWidget(
-                          title: 'Send',
-                          fontSize: 12.sp,
-                          color: AppColor.brPrimaryStrong,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
                   GestureDetector(
                     onTap: onCopy,
                     child: Column(
@@ -147,13 +122,6 @@ class TransferCodeSectionWidget extends StatelessWidget {
                             color: AppColor.whiteMassive,
                             size: 20.sp,
                           ),
-                        ),
-                        SizedBox(height: 4.h),
-                        UITextPrimaryWidget(
-                          title: 'Copy',
-                          fontSize: 12.sp,
-                          color: AppColor.brPrimaryStrong,
-                          fontWeight: FontWeight.w700,
                         ),
                       ],
                     ),
@@ -179,6 +147,75 @@ class TransferCodeSectionWidget extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
+            SizedBox(height: 16.h),
+            DashedDividerWidget(
+              color: AppColor.blackFair,
+              height: 1,
+            ),
+            SizedBox(height: 16.h),
+            UITextPrimaryWidget(
+                title: 'Pilihan metode transfer pulsa',
+                fontSize: 14.sp,
+                color: AppColor.blackMassive,
+                fontWeight: FontWeight.w400),
+            SizedBox(height: 16.h),
+            if (transfer.dialupCode?.sms != null &&
+                transfer.dialupCode?.sms?.active == true) ...[
+              GestureDetector(
+                onTap: onSms,
+                child: UICardPrimaryWidget(
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        IconSharedConstant.sms,
+                        height: 24.h,
+                        width: 24.w,
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: UITextPrimaryWidget(
+                          title: 'SMS',
+                          fontSize: 14.sp,
+                          color: AppColor.blackMassive,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios,
+                          color: AppColor.blackMassive, size: 20.sp),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.h),
+            ],
+            if (transfer.dialupCode?.phone != null &&
+                transfer.dialupCode?.phone?.active == true) ...[
+              GestureDetector(
+                onTap: onDial,
+                child: UICardPrimaryWidget(
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        IconSharedConstant.phoneUssd,
+                        height: 24.h,
+                        width: 24.w,
+                      ),
+                      SizedBox(width: 16.w),
+                      Expanded(
+                        child: UITextPrimaryWidget(
+                          title: 'Telepon/USSD',
+                          fontSize: 14.sp,
+                          color: AppColor.blackMassive,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward_ios,
+                          color: AppColor.blackMassive, size: 20.sp),
+                    ],
+                  ),
+                ),
+              )
+            ],
           ],
         ),
       ),

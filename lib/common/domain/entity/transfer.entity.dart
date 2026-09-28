@@ -5,6 +5,7 @@ import 'evidence.entity.dart';
 class TransferEntity extends Equatable {
   const TransferEntity({
     this.dialupCode,
+    this.bucket,
     this.total,
     this.nominal,
     this.subtotal,
@@ -27,7 +28,8 @@ class TransferEntity extends Equatable {
     this.cancelByAdmin,
   });
 
-  final String? dialupCode;
+  final DialupEntity? dialupCode;
+  final String? bucket;
   final int? total;
   final int? nominal;
   final int? subtotal;
@@ -52,6 +54,7 @@ class TransferEntity extends Equatable {
   @override
   List<Object?> get props => [
         dialupCode,
+        bucket,
         total,
         nominal,
         subtotal,
@@ -73,4 +76,45 @@ class TransferEntity extends Equatable {
         providerName,
         cancelByAdmin
       ];
+}
+
+class DialupEntity extends Equatable {
+  const DialupEntity({
+    this.phone,
+    this.sms,
+  });
+
+  final PhoneEntity? phone;
+  final SmsEntity? sms;
+
+  @override
+  List<Object?> get props => [phone, sms];
+}
+
+class PhoneEntity extends Equatable {
+  const PhoneEntity({
+    this.active,
+    this.value,
+  });
+
+  final bool? active;
+  final String? value;
+
+  @override
+  List<Object?> get props => [active, value];
+}
+
+class SmsEntity extends Equatable {
+  const SmsEntity({
+    this.active,
+    this.value,
+    this.text,
+  });
+
+  final bool? active;
+  final String? value;
+  final String? text;
+
+  @override
+  List<Object?> get props => [active, value, text];
 }

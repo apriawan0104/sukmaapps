@@ -178,10 +178,13 @@ class UrlLauncherServiceImpl implements UrlLauncherService {
     String? message,
   }) async {
     try {
+      // Use `query` instead of `queryParameters` so spaces are encoded as
+      // `%20` instead of `+`. iOS does not decode `+` back into a space.
       final uri = Uri(
         scheme: 'sms',
         path: phoneNumber,
-        queryParameters: message != null ? {'body': message} : null,
+        query:
+            message != null ? _encodeQueryParameters({'body': message}) : null,
       );
 
       final launched = await url_launcher.launchUrl(uri);
